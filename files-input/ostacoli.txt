@@ -1,0 +1,60 @@
+8
+Perdi tutto
+Prof. Loddo chiede se i PC vanno e il tuo esplode perdendo il parziale
+Sbiccato copiare
+Federico passa tra i banchi e ti becca con Discord aperto
+Maledetto Lab T
+I PC del laboratorio non partono e il parziale inizia con 45 minuti di ritardo
+Debugging infinito
+Dopo ore di debugging, scopri che il problema era una parentesi mancante
+Troppo veloce
+Ti distrai mezzo secondo per guardare TikTok e la Prof. Carrisi ha spiegato gli integrali tripli
+Va tutto bene?
+Prof. Puglisi ti chiede se va tutto bene, ma non va tutto bene
+Printf scurrili
+Consegni il progetto di PR1 e scopri che hai lasciato un printf con una parolaccia
+Tutti fermi
+Durante PR1 parte la musica di Pokemon Smeraldo, Luca si ferma e tutti si girano a guardarti
+8
+Una fila infinita
+Arrivi in mensa in via Trentino e c'è una fila chilometrica
+Macchinetta ladra
+La macchinetta del piano terra ti prende i soldi ma non ti dà nulla
+Sciopero del CTM
+Il CTM è in sciopero e non puoi tornare a casa
+Rotta della caffeina
+La macchinetta del caffè è fuori servizio e devi affrontare la giornata senza caffeina
+Mauro infuriato
+Durante la pausa pranzo sposti i puff e Mauro ti urla contro
+Intossicazione alimentare
+In mensa prendi le polpette e torni a casa con un colorito strano
+Batteria scarica
+Torni a casa e ti accorgi che ti sei dimenticato il caricabatterie in aula magna
+Metti il caschetto
+Stai seguendo la lezione e crolla un calcinaccio dal soffitto
+8
+Festa in casa
+I tuoi coinquilini organizzano una festa in casa e non riesci a studiare per il parziale di PR1
+Doppio appuntamento
+Inviti il tuo collega a studiare, ma lui porta anche il suo gruppo di amici (ingegneri)
+Ateneika fallimentare
+Ti iscrivi al torneo di biliardino di Ateneika e arrivi ultimo (e neanche di poco)
+Le priorità della vita
+Vorresti studiare per il parziale di PR1 ma esce Fortnite OG
+Ignorato come sempre
+Arrivi in biblioteca di ingegneria e i tuoi colleghi non ti hanno tenuto il posto
+Parcheggio not found
+Non trovi parcheggio e ti tocca mettere le macchina a Buon Cammino
+Nessuno mi vuole
+Compri il gioco di società Happy Little Dinosaurs ma nessuno vuole giocare con te
+Molletta per il naso
+Arrivi tardi a lezione e ti tocca sedere vicino al collega che puzza di sudore
+4
+PR1 Teoria
+Prof. Scateni scatena la sua furia e ti boccia al parziale di PR1
+PR1 Lab
+Il progetto di PR1 non compila e non riesci a consegnarlo
+Analisi
+Sbagli e vai all'esame di Analisi di quelli di Matematica
+Fondamenti
+Questa volta l'intero esame è scritto in binario

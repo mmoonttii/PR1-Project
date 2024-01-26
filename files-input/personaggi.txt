@@ -1,0 +1,4 @@
+1 0 -1 0 Andreosauro
+0 -1 1 0 Federicosauro
+-1 1 0 0 Lucasauro
+0 0 0 1 Ricosauro
