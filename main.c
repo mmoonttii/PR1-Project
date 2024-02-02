@@ -3,16 +3,22 @@
 // Tipologia progetto:
 
 #include "general.h"
+#include "preparazione.h"
+
 #define FILE_PERSONAGGI "../files-input/personaggi.txt"
 
 
 
 int main() {
+	// Inizializzazione seed random
+	srand(time(NULL));
 	// ============ PERSONAGGI ================================================
 	// Apertura file personaggi
 	FILE *fPersonaggi = NULL;
-	fPersonaggi = fopen(FILE_PERSONAGGI, "r");
-	if (fPersonaggi == NULL) exit(ERR_OPEN_FILE_CHARACTERS);
+	fPersonaggi = openCharacters(FILE_PERSONAGGI);
+
+	Personaggio personaggi[N_PERSONAGGI] = {};
+	parseCharacters(fPersonaggi, personaggi);
 
 	// ============ CARTE CFU =================================================
 

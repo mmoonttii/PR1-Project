@@ -2,7 +2,12 @@
 #define PR1_PROJECT_PREPARAZIONE_H
 #include "general.h"
 
+// ============ UTILITIES =================================================
+
+int randRange(int min, int max);
+
 // ============ PERSONAGGI ================================================
+FILE *openCharacters(char filePath[]);
 void parseCharacters (FILE *fp, Personaggio characters[]);
 
 // ============ CARTE CFU =================================================
