@@ -2,10 +2,8 @@
 #ifndef PR1_PROJECT_ERRORS_H
 #define PR1_PROJECT_ERRORS_H
 
-// Errori apertura file         [1xx]
-#define ERR_OPEN_FILE_CHARACTERS 101
-#define ERR_OPEN_FILE_CFU        102
-#define ERR_OPEN_FILE_OSTACOLI   103
+// Errore apertura file
+#define ERR_OPEN_FILE    101
 
 // =======================================
 

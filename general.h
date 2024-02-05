@@ -11,7 +11,7 @@
 #define LONG_STR 127
 #define N_OSTACOLI 4
 #define N_PERSONAGGI 4
-
+#define READ "r"
 
 // =========== CARTE CFU =====================================================
 
@@ -79,7 +79,7 @@ typedef struct player {
 	Personaggio   character; /**< Personaggio scelto dal giocatore */
 	int           cfu; /**< Punti CFU del giocatore */
 	CartaCfu      *listaCarte; /**< Lista contenente la mano del giocatore */
-	CartaOstacolo *listaOstacoli; /**< Lista degli ostacoli del giocatore*/
+	CartaOstacolo *listaOstacoli; /**< Lista degli ostacoli del giocatore */
 	struct player *nextPlayer; /**< Giocatore successivo */
 } Giocatore;
 

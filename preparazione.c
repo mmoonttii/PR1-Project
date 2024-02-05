@@ -18,21 +18,21 @@ int randRange(int min, int max) {
 	return random;
 }
 
-
-// ============ PERSONAGGI ================================================
-
-/** openCharacters() è la funzione che apre il file dei personaggi
+/**
+ * openFile() è la funzione che apre i file forniti in modalità lettura
  *
- * @param filePath è il percorso al file "personaggi.txt" da aprire
+ * @param filePath è il percorso al file da aprire
  * @return è un puntatore al file aperto
  */
-FILE *openCharacters(char filePath[]){
+FILE *openFile(char filePath[], char mode[]){
 	FILE *fp = NULL;
-	fp = fopen(filePath, "r");
-	if (fp == NULL) exit(ERR_OPEN_FILE_CHARACTERS);
+	fp = fopen(filePath, mode);
+	if (fp == NULL) exit(ERR_OPEN_FILE);
 	return fp;
 }
 
+
+// ============ PERSONAGGI ================================================
 /**
  * parseCharacters() è la funzione che legge il file dei personaggi e conserva le informazioni di ogni personaggio in
  * un'array di sturtture personaggio
@@ -57,18 +57,6 @@ void parseCharacters(FILE *fp, Personaggio characters[]) {
 
 
 // ============ CARTE CFU =================================================
-/**
- * openCfu() è la funzione che apre il file delle carte CFU
- * @param filePath è il percorso al file "carte.txt" da aprire
- * @return puntatore al file aperto
- */
-FILE *openCfu(char *filePath) {
-	FILE *fp = NULL;
-	fp = fopen(filePath, "r");
-	if (fp == NULL) exit(ERR_OPEN_FILE_CFU);
-	return fp;
-}
-
 
 /**
  * nuovaCfu() è la subroutine che si occupa di allocare in memoria lo spazio necessario a contenere una carta
@@ -85,12 +73,13 @@ CartaCfu *nuovaCfu() {
 	return newCard;
 }
 
-/** mazzoCfu() è la subroutine che legge il file delle carte CFU e crea un mazzo mischiato delle carte
+/**
+ * creaMazzoCfu() è la subroutine che legge il file delle carte CFU e crea un mazzo mischiato delle carte
  *
  * @param fp è il file da leggere [carte.txt]
  * @return un puntatore alla testa del mazzo
  */
-CartaCfu *mazzoCfu(FILE *fp) {
+CartaCfu *creaMazzoCfu(FILE *fp) {
 	int read = 0,       // Numero di letture avvenute con successo
 		occurences = 0, // Numero di carte dello stesso tipo
 		carte = 0,      // Numero di carte nel mazzo
@@ -151,22 +140,24 @@ CartaCfu *mazzoCfu(FILE *fp) {
 	return mazzo;
 }
 
-
-
-
-// ============ CARTE OSTACOLO ================================================
 /**
- * openOstacoli() è la funzione che apre il file delle carte Ostacolo
- * @param filePath è il percorso al file "ostacoli.txt" da aprire
- * @return puntatore al file aperto
+ * freeCfu() è la funzione per liberare la memoria precedentemente allocata per una lista
+ * @param mazzoCfu è il puntatore alla testa della lista
  */
-FILE *openOstacoli(char *filePath) {
-	FILE *fp = NULL;
-	fp = fopen(filePath, "r");
-	if (fp == NULL) exit(ERR_OPEN_FILE_OSTACOLI);
-	return fp;
-}
+CartaCfu *freeCfu(CartaCfu *mazzoCfu) {
+	CartaCfu *next = NULL;
 
+	while (mazzoCfu->next != NULL) {
+		next = mazzoCfu->next;
+		free(mazzoCfu);
+		mazzoCfu = next;
+	}
+
+	mazzoCfu = NULL;
+	return mazzoCfu;
+
+}
+// ============ CARTE OSTACOLO ================================================
 /**
  * nuovoOstacolo() è la funzione che si occupa di allocare in memoria lo spazio necessario a contenere una carta
  *
@@ -183,12 +174,12 @@ CartaOstacolo *nuovoOstacolo() {
 }
 
 /**
- * mazzoOstacoli() è la subroutine che legge il file delle carte Ostacolo e crea un mazzo mischiato delle carte
+ * creaMazzoOstacoli() è la subroutine che legge il file delle carte Ostacolo e crea un mazzo mischiato delle carte
  *
  * @param fp è il file da leggere [ostacoli.txt]
  * @return un puntatore alla testa del mazzo
  */
-CartaOstacolo *mazzoOstacoli(FILE *fp) {
+CartaOstacolo *creaMazzoOstacoli(FILE *fp) {
 	int nOstacoliTipo,
 		carte = 0,
 		random;
@@ -248,8 +239,66 @@ CartaOstacolo *mazzoOstacoli(FILE *fp) {
 		}
 		tipo++;
 	}
-	return NULL;
+	return mazzo;
 }
 
+/**
+ * freeOstacolo() è la funzione per liberare la memoria precedentemente allocata per una lista
+ * @param mazzoOstacoli è il puntatore alla testa della lista
+ */
+CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
+	CartaOstacolo *next = NULL;
+
+	while (mazzoOstacoli->next != NULL) {
+		next = mazzoOstacoli->next;
+		free(mazzoOstacoli);
+		mazzoOstacoli = next;
+	}
+
+	mazzoOstacoli = NULL;
+
+	return mazzoOstacoli;
+}
+
+
+// ============ GIOCATORI =====================================================
+/**
+ * acquisisciNumGiocatore() è la funzione che acquisisce il numero dei partecipanti alla partita
+ * La funzione si occupa di controllare che l'input sia valido e invita a ritentare in caso di input non valido
+ * @return il numero di giocatori alla partita
+ */
+int acquisisciNumGiocatori() {
+	int nGiocatori,
+		read = 0;
+
+	do {
+		printf("Quanti giocatori parteciperanno oggi? [2-4] ");
+		read = scanf(" %d", &nGiocatori);
+
+		if (read && (nGiocatori < 2 || nGiocatori > 4)){
+			printf("Il numero di giocatori deve essere compreso tra 2 e 4:\n"
+				   "\t controlla l'input o organizzatevi in squadre :)\n");
+		}
+	} while (!read && (nGiocatori < 2 || nGiocatori > 4));
+
+	return nGiocatori;
+}
+
+/**
+ * initGiocatori() è la funzione che, dati il numero dei giocatori e il mazzo di carte Cfu, restituisce una lista di
+ * giocatori, occupandosi di inizializzarla, assegnando un username, personaggio e una mano di cinque carte iniziali
+ * @param nGiocatori è il numero di giocatori che partecipano alla partita
+ * @param mazzoCfu è un puntatore alla testa della lista che rappresenta il mazzo delle carte Cfu, passata alla
+ * funzione per permettere l'assegnamento della mano iniziale di carte
+ * @return la funzione restituisce listaGiocatori, una lista di strutture di tipo giocatore
+ */
+Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu) {
+	Giocatore *listaGiocatori = NULL;
+
+	for (int i = 0; i < nGiocatori; ++i) {
+
+	}
+	return listaGiocatori;
+}
 
 

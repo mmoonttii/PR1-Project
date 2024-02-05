@@ -15,28 +15,40 @@ int main() {
 	// Inizializzazione seed random
 	srand(time(NULL));
 
-	// ============ PERSONAGGI ================================================
-	// Apertura file personaggi
+	// Puntatori ai file
 	FILE *fPersonaggi = NULL;
-	fPersonaggi = openCharacters(FILE_PERSONAGGI);
+	FILE *fCfu        = NULL;
+	FILE *fOstacoli   = NULL;
 
+	// Mazzi delle carte
+	CartaCfu      *mazzoCfu      = NULL;
+	CartaOstacolo *mazzoOstacoli = NULL;
+
+	// Apertura file
+	fPersonaggi = openFile(FILE_PERSONAGGI, READ);
+	fCfu        = openFile(FILE_CARTE_CFU, READ);
+	fOstacoli   = openFile(FILE_CARTE_OSTACOLO, READ);
+
+	// Creazione array personaggi
 	Personaggio personaggi[N_PERSONAGGI] = {};
 	parseCharacters(fPersonaggi, personaggi);
 
-	for (int i = 0; i < N_PERSONAGGI; ++i) {
-		printf("%s: ", personaggi[i].name);
-		for (int j = 0; j < N_OSTACOLI; ++j) {
-			printf("%d ", personaggi[i].bonusMalus[j]);
-		}
-		printf("\n");
-	}
+	// Lettura carte e creazione mazzo mischiato
+	mazzoCfu      = creaMazzoCfu(fCfu);
+	mazzoOstacoli = creaMazzoOstacoli(fOstacoli);
 
+	// Giocatori
+	int nGiocatori = acquisisciNumGiocatori();
+	Giocatore *listaGiocatori = NULL;
+	listaGiocatori = initGiocatori(nGiocatori, &mazzoCfu);
+
+	// Chiusura file e free mem
 	fclose(fPersonaggi);
-	// ============ CARTE CFU =================================================
-
-
-
-
-
+	fclose(fOstacoli);
+	fclose(fCfu);
+	mazzoCfu = freeCfu(mazzoCfu);
+	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	return 0;
 }
+
+
