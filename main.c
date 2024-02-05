@@ -4,6 +4,7 @@
 
 #include "general.h"
 #include "preparazione.h"
+#include "memManagement.h"
 
 #define FILE_PERSONAGGI "../files-input/personaggi.txt"
 #define FILE_CARTE_CFU "../files-input/carte.txt"
@@ -48,6 +49,7 @@ int main() {
 	fclose(fCfu);
 	mazzoCfu = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
+	listaGiocatori = freeGiocatore(listaGiocatori);
 	return 0;
 }
 

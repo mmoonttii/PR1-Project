@@ -7,4 +7,6 @@ add_executable(PR1_Project main.c
 		general.h
 		preparazione.c
 		preparazione.h
-		errors.h)
+		errors.h
+		memManagement.c
+		memManagement.h)

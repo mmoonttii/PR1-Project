@@ -75,7 +75,7 @@ typedef struct character {
 
 /** @brief Struttura che definisce il giocatore */
 typedef struct player {
-	char          username[STR_LEN + 1]; /**< Nome del giocatore [char]: len 127 + \0 */
+	char          username[STR_LEN + 1]; /**< Nome del giocatore [char]: len 31 + \0 */
 	Personaggio   character; /**< Personaggio scelto dal giocatore */
 	int           cfu; /**< Punti CFU del giocatore */
 	CartaCfu      *listaCarte; /**< Lista contenente la mano del giocatore */
