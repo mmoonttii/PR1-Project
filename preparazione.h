@@ -7,19 +7,21 @@
 int randRange(int min, int max);
 FILE *openFile(char filePath[], char mode[]);
 
-// ============ PERSONAGGI ================================================
-void parseCharacters (FILE *fp, Personaggio personaggi[]);
-
 // ============ CARTE CFU =================================================
 CartaCfu *creaMazzoCfu(FILE *fp);
-CartaCfu *distribuisciCarte(CartaCfu **mazzoCfu);
+CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu);
 
+void printCarteCfu(CartaCfu *mazzoCfu);
 // ============ CARTE OSTACOLO ============================================
 CartaOstacolo *creaMazzoOstacoli(FILE *fp);
 
-// ============ GIOCATORI =================================================
+// ============ PERSONAGGI E GIOCATORI =================================================
+void parseCharacters (FILE *fp, Personaggio personaggi[]);
+
 int acquisisciNumGiocatori();
 
 Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu);
+
+void printGiocatori(Giocatore *listaGiocatori);
 
 #endif //PR1_PROJECT_PREPARAZIONE_H

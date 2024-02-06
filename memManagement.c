@@ -12,7 +12,7 @@
  */
 CartaCfu *allocaCartaCfu() {
 	CartaCfu *newCard = NULL;
-	newCard = (CartaCfu *)malloc(sizeof(CartaCfu));
+	newCard = (CartaCfu *)calloc(1, sizeof(CartaCfu));
 	if (newCard == NULL) {
 		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOCATION_CFU);
@@ -46,7 +46,7 @@ CartaCfu *freeCfu(CartaCfu *mazzoCfu) {
  */
 CartaOstacolo *allocaCartaOstacolo() {
 	CartaOstacolo *newCard = NULL;
-	newCard = (CartaOstacolo *)malloc(sizeof(CartaOstacolo));
+	newCard = (CartaOstacolo *)calloc(1, sizeof(CartaOstacolo));
 	if (newCard == NULL) {
 		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOCATION_OSTACOLO);
@@ -79,7 +79,7 @@ CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
  */
 Giocatore *allocaGiocatore() {
 	Giocatore *player = NULL;
-	player = (Giocatore *)malloc(sizeof(Giocatore));
+	player = (Giocatore *)calloc(1, sizeof(Giocatore));
 	if (player == NULL) {
 		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOCATION_PLAYER);

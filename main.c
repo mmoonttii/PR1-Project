@@ -16,6 +16,8 @@ int main() {
 	// Inizializzazione seed random
 	srand(time(NULL));
 
+	setvbuf(stdout, NULL, _IONBF, 0);
+
 	// Puntatori ai file
 	FILE *fPersonaggi = NULL;
 	FILE *fCfu        = NULL;
@@ -38,15 +40,20 @@ int main() {
 	mazzoCfu      = creaMazzoCfu(fCfu);
 	mazzoOstacoli = creaMazzoOstacoli(fOstacoli);
 
+	// Chiusura file
+	fclose(fPersonaggi);
+	fclose(fOstacoli);
+	fclose(fCfu);
+
 	// Giocatori
 	int nGiocatori = acquisisciNumGiocatori();
 	Giocatore *listaGiocatori = NULL;
 	listaGiocatori = initGiocatori(nGiocatori, &mazzoCfu);
 
-	// Chiusura file e free mem
-	fclose(fPersonaggi);
-	fclose(fOstacoli);
-	fclose(fCfu);
+	// printCarteCfu(mazzoCfu);
+	printGiocatori(listaGiocatori);
+
+	// Free mem
 	mazzoCfu = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	listaGiocatori = freeGiocatore(listaGiocatori);
