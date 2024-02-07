@@ -34,7 +34,7 @@ int main() {
 
 	// Creazione array personaggi
 	Personaggio personaggi[N_PERSONAGGI] = {};
-	sparseCharacters(fPersonaggi, personaggi);
+	parseCharacters(fPersonaggi, personaggi);
 
 	// Lettura carte e creazione mazzo mischiato
 	mazzoCfu      = creaMazzoCfu(fCfu);
@@ -45,7 +45,7 @@ int main() {
 	fclose(fOstacoli);
 	fclose(fCfu);
 
-
+	printCarteCfu(mazzoCfu);
 	// Giocatori
 	int nGiocatori = acquisisciNumGiocatori();
 	Giocatore *listaGiocatori = NULL;

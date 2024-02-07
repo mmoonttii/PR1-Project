@@ -51,42 +51,71 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 			 *head    = NULL;   // Puntatore alla testa
 
 	do {
+		// Lettura riga dal file, se read == 4 lettura success
 		read = 0;
 		read = fscanf(fp, "%d %d %d %[^\n]31s", &occurences, &cartaCfu.effect, &cartaCfu.cfu, cartaCfu.name);
 		fscanf(fp, "\n");
 
-		while (occurences > 0){
-			newCard = allocaCartaCfu();
-			*newCard = cartaCfu;
+		cartaCfu.next = NULL;
 
-			if (mazzo == NULL){
-				mazzo = newCard;
-			} else {
-				pos = randRange(-1, carte - 1);
+		// Se lettura success
+		if (read == 4) {
+			// Per ogni carte di tipo x
+			while (occurences > 0) {
+				newCard = allocaCartaCfu(); // Alloca nuova carta e salva in var
+				*newCard = cartaCfu; // Inizializza spazio allocato con dati letti
 
-				if (pos == -1){
-					auxP = mazzo;
+				if (mazzo == NULL) {
+					// Se il mazzo è vuoto la carta letta diventa la testa del mazzo
 					mazzo = newCard;
-					mazzo->next = auxP;
 				} else {
-					for (int i = 0; head != NULL && i < pos; ++i) {
-						head = head->next;
-					}
-					if (head != NULL) {
-						auxP = head->next;
+					// Altrimenti genera posizione in cui aggiungere la carta
+					// -1 aggiungere in testa
+					// n aggiungere dopo carta di indice n
+					// carte - 1 aggiungere in coda
+					pos = randRange(-1, carte - 1);
+
+					// Aggiunta in testa
+					if (pos == -1) {
+						auxP  = mazzo; // Salvo testa del mazzo precedente
+						mazzo = newCard; // La nuova testa del mazzo diventa la carta appena allocata
+						mazzo->next = auxP; // Dopo la nuova testa collego il resto del mazzo vecchio
+
+					// Aggiunta in coda
+					} else if (pos == carte - 1){
+						// Raggiungo l'ultima posizione della lista
+						while (head != NULL){
+							// Salvo il puntatore alla struttura attuale
+							auxP = head;
+							head = head->next;
+							// Quando head è NULL, sono andato troppo avanti
+						}
+						// Quinid ritorno alla posizione precedente
+						head = auxP;
+						// Il campo next dell'attuale head, ultimo della lista, può accogliere la carta appena allocata
 						head->next = newCard;
-						newCard->next = auxP;
+						newCard->next = NULL;
 					} else {
-						head = newCard;
-						head->next = NULL;
+						// Scorro fino alla carta in posizione pos
+						for (int i = 0; i < pos; ++i) {
+							head = head->next;
+						}
+						auxP = head->next; // Salvo il puntatore alla carta successiva a pos
+						head->next    = newCard; // La successiva alla carta pos, sarà la nuova carta
+						newCard->next = auxP; // Dopo la nuova carta riaggiungo il resto del mazzo
 					}
 				}
+				head = mazzo;
+				occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
+				carte++; // Il numero delle carte totali nel mazzo è aumentato
 			}
-			head = mazzo;
-			occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-			carte++; // Il numero delle carte totali nel mazzo è aumentato
+		} else {
+			// In caso di lettura fallita
+			printf("\n--printf scurrile rimosso--\n");
 		}
 	} while (read == 4);
+	printf("\nCarte lette %d\n", carte);
+
 	return mazzo;
 }
 
@@ -139,9 +168,14 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 	return mano;
 }
 
+/**
+ * printCarteCfu è la subroutine che si occupa di stampare una lista di carte
+ * @param listaCarteCfu è la lista da stampare
+ */
 void printCarteCfu(CartaCfu *listaCarteCfu) {
-	CartaCfu *head = listaCarteCfu;
-	int count = 0;
+	CartaCfu *head = listaCarteCfu; // Testa della lista
+	int count = 0; // Contatore delle carte
+	bool stop = true; // Condizione di uscita dalla stampa
 	char *effetti[] = {"Carta senza effetto",
 					   "Scarta una carta CFU punto e aggiungi il suo punteggio quello del turno",
 					   "Guarda la mano di un collega e ruba una carta a scelta",
@@ -160,18 +194,23 @@ void printCarteCfu(CartaCfu *listaCarteCfu) {
 					   "Dai la carta che stai per prendere ad un altro giocatore a tua scelta"
 	};
 
-	printf("\n==== MAZZO CARTE CFU ====\n");
-	while (head != NULL){
+	printf("\n==== CARTE CFU ====\n");
+	// Finchè la condizione di stop è rispettata
+	while (stop){
+		// Stampa la struttura carta
 		printf("Nome: %s,\n"
-			   "CFU: %d,\n"
-			   "Effetto: %s\n",
+			   "CFU: %d,\t Effetto: %s\n",
 			   head->name, head->cfu, effetti[head->effect]);
-		if (head->next != NULL){
+		// In caso la prossima carta sia NULL, esci dal loop
+		if (head->next == NULL){
+			stop = false;
+		// Altrimenti continua con la prossima carta
+		} else {
 			head = head->next;
 		}
 		count++;
 	}
-	printf("Le carte sono %d", count);
+	printf("\nLe carte sono %d\n", count);
 
 }
 // ============ CARTE OSTACOLO ================================================
@@ -281,11 +320,11 @@ int acquisisciNumGiocatori() {
 		printf("Quanti giocatori parteciperanno oggi? [2-4] ");
 		read = scanf(" %d", &nGiocatori);
 
-		if (read && (nGiocatori < 2 || nGiocatori > 4)){
+		if (nGiocatori < 2 || nGiocatori > 4){
 			printf("Il numero di giocatori deve essere compreso tra 2 e 4:\n"
 				   "\t controlla l'input o organizzatevi in squadre :)\n");
 		}
-	} while (!read && (nGiocatori < 2 || nGiocatori > 4));
+	} while (nGiocatori < 2 || nGiocatori > 4);
 
 	return nGiocatori;
 }
@@ -301,27 +340,30 @@ int acquisisciNumGiocatori() {
  */
 Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu) {
 	Giocatore *listaGiocatori = NULL,
-			  *head = NULL,
-			  *newPlayer = NULL,
+			  *head           = NULL,
+			  *newPlayer      = NULL,
 			  aux;
 
 	printf("\n=== PARTECIPANTI ===\n");
+	// Per ogni giocatore
 	for (int i = 0; i < nGiocatori; ++i) {
+		// Richiedi username
 		printf("\nGIOCATORE %d\n", i);
 		printf("Inserire username: ");
 		scanf(" %[^\n]31s", aux.username);
 
-		aux.cfu = 0;
+		// Inizializza la struttura
+		aux.cfu = 0; // Punteggio di partenza
 		aux.listaCarte = NULL;
-		aux.listaCarte = distribuisciCarte(aux.listaCarte, mazzoCfu);
+		aux.listaCarte = distribuisciCarte(aux.listaCarte, mazzoCfu); // Mano iniziale
 		aux.listaOstacoli = NULL;
 		aux.nextPlayer = NULL;
 
+		// Creazione lista dei giocatori
 		if (listaGiocatori == NULL) {
 			listaGiocatori = allocaGiocatore();
 			*listaGiocatori = aux;
 			head = listaGiocatori;
-
 		} else {
 			head->nextPlayer = allocaGiocatore();
 			*head->nextPlayer = aux;
@@ -332,16 +374,22 @@ Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu) {
 	return listaGiocatori;
 }
 
-
+/**
+ * printGiocatori() è la subroutine che stampa la lista dei giocatori, il loro nome, personaggio, punteggio e mano
+ * @param listaGiocatori è la lista di giocatori da stampare
+ */
 void printGiocatori(Giocatore *listaGiocatori) {
 	Giocatore *head = listaGiocatori;
 	printf("\n=== GIOCATORI ===\n");
 
 	for (int i = 0; head != NULL; ++i) {
-		printf("\nGiocatore %d\n"
-			   "\t Username: %s\n"
-			   "\t Cfu: %d\n", i, head->username, head->cfu);
+		printf("\n+----------------------------------------\n"
+			   "|Giocatore %d\n"
+			   "|\t Username: %s\n"
+			   "|\t Cfu: %d\n",
+			   i, head->username, head->cfu);
 		printCarteCfu(head->listaCarte);
+		printf("+----------------------------------------\n");
 		head = head->nextPlayer;
 	}
 }
