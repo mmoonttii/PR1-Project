@@ -336,13 +336,16 @@ int acquisisciNumGiocatori() {
  * @param nGiocatori è il numero di giocatori che partecipano alla partita
  * @param mazzoCfu è un puntatore alla testa della lista che rappresenta il mazzo delle carte Cfu, passata alla
  * funzione per permettere l'assegnamento della mano iniziale di carte
+ * @param personaggi è l'array delle strutture dei personaggi
  * @return la funzione restituisce listaGiocatori, una lista di strutture di tipo giocatore
  */
-Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu) {
+Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Personaggio personaggi[]) {
 	Giocatore *listaGiocatori = NULL,
 			  *head           = NULL,
 			  *newPlayer      = NULL,
 			  aux;
+	int k; // Indice per l'accesso all'array di personaggi
+	Personaggio emptyCharacter = {}; // Struttura personaggio ausiliaria vuota
 
 	printf("\n=== PARTECIPANTI ===\n");
 	// Per ogni giocatore
@@ -358,6 +361,16 @@ Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu) {
 		aux.listaCarte = distribuisciCarte(aux.listaCarte, mazzoCfu); // Mano iniziale
 		aux.listaOstacoli = NULL;
 		aux.nextPlayer = NULL;
+
+		do {
+			// Genero una posizione casuale dall'array dei personaggi
+			k = randRange(0, N_PERSONAGGI - 1);
+			// Se personaggi[k] è uguale a emptyCharacter vuol dire che quel personaggio è già stato usato, quindi ne
+			// genero un'altro, fino a quando non saranno diverso
+		} while (strcmp(personaggi[k].name, emptyCharacter.name) == 0);
+			aux.character = personaggi[k]; // Assegno il personaggio dall'array
+			personaggi[k] = emptyCharacter; // Sostiuisco il posto nell'array con il personaggio vuoto
+
 
 		// Creazione lista dei giocatori
 		if (listaGiocatori == NULL) {
@@ -386,10 +399,17 @@ void printGiocatori(Giocatore *listaGiocatori) {
 		printf("\n+----------------------------------------\n"
 			   "|Giocatore %d\n"
 			   "|\t Username: %s\n"
-			   "|\t Cfu: %d\n",
-			   i, head->username, head->cfu);
+			   "|\t Cfu: %d\n"
+			   "|\t Personaggio: %s, Bonus-malus[",
+			   i, head->username, head->cfu, head->character.name);
+
+		for (int j = 0; j < N_OSTACOLI; ++j) {
+			printf("%d ", head->character.bonusMalus[j]);
+		}
+		printf("]\n");
 		printCarteCfu(head->listaCarte);
 		printf("+----------------------------------------\n");
 		head = head->nextPlayer;
 	}
 }
+

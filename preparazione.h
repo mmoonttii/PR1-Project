@@ -18,10 +18,9 @@ CartaOstacolo *creaMazzoOstacoli(FILE *fp);
 // ============ PERSONAGGI E GIOCATORI =================================================
 void parseCharacters (FILE *fp, Personaggio personaggi[]);
 
+
 int acquisisciNumGiocatori();
-
-Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu);
-
+Giocatore *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Personaggio personaggi[]);
 void printGiocatori(Giocatore *listaGiocatori);
 
 #endif //PR1_PROJECT_PREPARAZIONE_H

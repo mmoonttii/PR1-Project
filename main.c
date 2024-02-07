@@ -49,7 +49,7 @@ int main() {
 	// Giocatori
 	int nGiocatori = acquisisciNumGiocatori();
 	Giocatore *listaGiocatori = NULL;
-	listaGiocatori = initGiocatori(nGiocatori, &mazzoCfu);
+	listaGiocatori = initGiocatori(nGiocatori, &mazzoCfu, personaggi);
 
 	printCarteCfu(mazzoCfu);
 	printGiocatori(listaGiocatori);
