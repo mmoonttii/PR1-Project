@@ -40,15 +40,15 @@ FILE *openFile(char filePath[], char mode[]){
  * @return un puntatore alla testa del mazzo
  */
 CartaCfu *creaMazzoCfu(FILE *fp) {
-	int read = 0,       // Numero di letture avvenute con successo
+	int read       = 0,       // Numero di letture avvenute con successo
 		occurences = 0, // Numero di carte dello stesso tipo
-		carte = 0,      // Numero di carte nel mazzo
-		random;         // Posizione in cui inserire una nuova carta
+		carte      = 0,      // Numero di carte nel mazzo
+		pos        = 0;         // Posizione in cui inserire una nuova carta
 	CartaCfu cartaCfu,        // Struttura ausiliaria dove viene salvata la nuova carta letta
 			 *newCard = NULL, // Puntatore per l'allocazione di una nuova carta
-			 *mazzo = NULL,   // Puntatore all'inizio del mazzo [return]
-			 *auxP = NULL,    // Puntatore ausiliario
-			 *head = NULL;   // Puntatore alla testa
+			 *mazzo   = NULL,   // Puntatore all'inizio del mazzo [return]
+			 *auxP    = NULL,    // Puntatore ausiliario
+			 *head    = NULL;   // Puntatore alla testa
 
 	do {
 		read = 0;
@@ -56,55 +56,35 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 		fscanf(fp, "\n");
 
 		while (occurences > 0){
-			// Caso in cui il mazzo sia vuoto
+			newCard = allocaCartaCfu();
+			*newCard = cartaCfu;
+
 			if (mazzo == NULL){
-				mazzo = allocaCartaCfu(); // Viene allocato lo spazio per una nuova carta
-				*mazzo = cartaCfu; // La nuova carta viene inizializzata
-				mazzo->next = NULL; // Inizializzo anche il puntatore alla carta successiva
-				occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-				carte++; // Il numero delle carte totali nel mazzo è aumentato
-				head = mazzo; // Inizializzo il puntatore alla testa con la testa del mazzo
-
+				mazzo = newCard;
 			} else {
-				// random è la posizione nel quale inserire una nuova carta, dove
-				// 0 è la posizione immediatamente successiva alla prima carta del mazzo
-				// -1 è la posizione come nuova prima carta del mazzo
-				random = randRange(-1, carte - 1);
+				pos = randRange(-1, carte - 1);
 
-				// Posizionamento carta all'inizio del mazzo
-				if (random == -1) {
-					newCard = allocaCartaCfu(); // Viene allocata la nuova carta
-					*newCard = cartaCfu; // Lo spazio allocato viene inizializzato alla carta letta
-					newCard->next = mazzo; // Il pointer next della nuova carta prende tutto il mazzo
-					mazzo = newCard; // L'inizio del mazzo è aggiornato alla nuova carta
-					occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-					carte++; // Il numero delle carte totali nel mazzo è aumentato
-
+				if (pos == -1){
+					auxP = mazzo;
+					mazzo = newCard;
+					mazzo->next = auxP;
 				} else {
-
-					// Posizionamento carta nel mezzo del mazzo
-					// Entro nel mazzo fino alla posizione generata randomicamente
-					for (int i = 0; i < random - 1 && head->next != NULL; ++i) {
+					for (int i = 0; head != NULL && i < pos; ++i) {
 						head = head->next;
 					}
-
 					if (head != NULL) {
-						auxP = head->next; // Salvo il puntatore alla carta che risulterà la successiva a quella letta
-						newCard = allocaCartaCfu(); // Alloco la memoria per nuova carta
-						*newCard = cartaCfu; // Inizializzo la nuova carta
-						head->next = newCard; // La nuova carta viene inserita in posizione successiva a head
-						newCard->next = auxP; // Il resto della lista viene messo successivamente alla nuova carta
-						occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-						carte++; // Il numero delle carte totali nel mazzo è aumentato
+						auxP = head->next;
+						head->next = newCard;
+						newCard->next = auxP;
 					} else {
-						newCard = allocaCartaCfu(); // Alloco la memoria per nuova carta
-						*newCard = cartaCfu; // Inizializzo la nuova carta
-						head = newCard; // La nuova carta viene inserita in posizione successiva a head
-						occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-						carte++; // Il numero delle carte totali nel mazzo è aumentato
+						head = newCard;
+						head->next = NULL;
 					}
 				}
 			}
+			head = mazzo;
+			occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
+			carte++; // Il numero delle carte totali nel mazzo è aumentato
 		}
 	} while (read == 4);
 	return mazzo;
@@ -138,7 +118,7 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 			// La testa della mano prende la testa del mazzo
 			head = *mazzoCfu;
 			// La testa del mazzo diventa la carta successiva a quella appena "distribuita"
-			mazzoCfu = &(*mazzoCfu)->next;
+			*mazzoCfu = (*mazzoCfu)->next;
 			// Salvo la nuova testa come inizio della mano
 			mano = head;
 
@@ -147,7 +127,7 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 			// La prossima carta della mano diventa la prima carta del mazzo
 			head->next = *mazzoCfu;
 			// La prima carta del mazzo diventa la carta successiva a quella appena "distribuita"
-			mazzoCfu = &(*mazzoCfu)->next;
+			*mazzoCfu = (*mazzoCfu)->next;
 			// La testa diventa la carta successiva
 			head = head->next;
 		}
@@ -182,15 +162,16 @@ void printCarteCfu(CartaCfu *listaCarteCfu) {
 
 	printf("\n==== MAZZO CARTE CFU ====\n");
 	while (head != NULL){
-		printf("+--------------------------------+\n"
-			   "| Nome carta: %s\n"
-			   "| CFU carta: %d\n"
-			   "| Effetto della carta: %s\n",
+		printf("Nome: %s,\n"
+			   "CFU: %d,\n"
+			   "Effetto: %s\n",
 			   head->name, head->cfu, effetti[head->effect]);
+		if (head->next != NULL){
+			head = head->next;
+		}
 		count++;
-		head = head->next;
 	}
-	printf("\n Le carte sono %d\n", count);
+	printf("Le carte sono %d", count);
 
 }
 // ============ CARTE OSTACOLO ================================================
@@ -202,9 +183,9 @@ void printCarteCfu(CartaCfu *listaCarteCfu) {
  * @return un puntatore alla testa del mazzo
  */
 CartaOstacolo *creaMazzoOstacoli(FILE *fp) {
-	int nOstacoliTipo,
-		carte = 0,
-		random;
+	int      nOstacoliTipo,
+	         carte = 0,
+	         pos;
 	Ostacolo tipo = 1;
 	CartaOstacolo cartaOstacolo,
 				  *mazzo = NULL,
@@ -223,51 +204,39 @@ CartaOstacolo *creaMazzoOstacoli(FILE *fp) {
 			fscanf(fp, "\n");
 			cartaOstacolo.type = tipo;
 
+			newCard = allocaCartaOstacolo();
+			*newCard = cartaOstacolo;
+
 			if (mazzo == NULL){
-				mazzo = allocaCartaOstacolo();
-				*mazzo = cartaOstacolo;
+				mazzo = newCard;
 				mazzo->next = NULL;
-				head = mazzo;
-				carte++;
 			} else {
-				// random è la posizione nel quale inserire una nuova carta, dove
+				// pos è la posizione nel quale inserire una nuova carta, dove
 				// 0 è la posizione immediatamente successiva alla prima carta del mazzo
 				// -1 è la posizione come nuova prima carta del mazzo
-				random = randRange(-1, carte - 1);
+				pos = randRange(-1, carte - 1);
 
 				// Posizionamento carta all'inizio del mazzo
-				if (random == -1) {
-					newCard = allocaCartaOstacolo(); // Viene allocata la nuova carta
-					*newCard = cartaOstacolo; // Lo spazio allocato viene inizializzato alla carta letta
-					newCard->next = mazzo; // Il pointer next della nuova carta prende tutto il mazzo
-					mazzo = newCard; // L'inizio del mazzo è aggiornato alla nuova carta
-					carte++; // Il numero delle carte totali nel mazzo è aumentato
-
+				if (pos == -1) {
+					auxP = mazzo;
+					mazzo = newCard;
+					mazzo->next = auxP;
 				} else {
-
-					// Posizionamento carta nel mezzo del mazzo
-					// Entro nel mazzo fino alla posizione generata randomicamente
-					for (int k = 0; k < random && head != NULL; ++k) {
+					for (int k = 0; head != NULL && k < pos; ++k) {
 						head = head->next;
 					}
 					if (head != NULL) {
 						auxP = head->next; // Salvo il puntatore alla carta che risulterà la successiva a quella letta
-						newCard = allocaCartaOstacolo(); // Alloco la memoria per nuova carta
-						*newCard = cartaOstacolo; // Inizializzo la nuova carta
 						head->next = newCard; // La nuova carta viene inserita in posizione successiva a head
 						newCard->next = auxP; // Il resto della lista viene messo successivamente alla nuova carta
-						carte++; // Il numero delle carte totali nel mazzo è aumentato
 					} else {
-						newCard = allocaCartaOstacolo();
-						*newCard = cartaOstacolo;
 						head = newCard;
 						head->next = NULL;
-						carte++;
-
 					}
 				}
-
 			}
+			head = mazzo;
+			carte++;
 		}
 		tipo++;
 	}
@@ -375,10 +344,4 @@ void printGiocatori(Giocatore *listaGiocatori) {
 		printCarteCfu(head->listaCarte);
 		head = head->nextPlayer;
 	}
-}
-
-int *randomShuffle(int nGiocatori){
-	int arr[N_PERSONAGGI];
-
-	return arr;
 }
