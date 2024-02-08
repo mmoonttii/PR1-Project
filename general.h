@@ -1,11 +1,14 @@
 #ifndef PR1_PROJECT_GENERAL_H
 #define PR1_PROJECT_GENERAL_H
 
+// Header di libreria
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
+
+// Header user-defined
 #include "errors.h"
 
 #define STR_LEN 31
@@ -72,16 +75,31 @@ typedef struct character {
 	char name[STR_LEN + 1]; 	 /**< Nome della carta [char]: len 31 + \0 */
 	int  bonusMalus[N_OSTACOLI]; /**< Array per bonus/malus con corrispondenza biunivoca con la tipologia
  									* dell'ostacolo */
-} Personaggio;
+} Character;
 
 /** @brief Struttura che definisce il giocatore */
 typedef struct player {
 	char          username[STR_LEN + 1]; /**< Nome del giocatore [char]: len 31 + \0 */
-	Personaggio   character; 			 /**< Personaggio scelto dal giocatore */
+	Character     character; 			 /**< Character scelto dal giocatore */
 	int           cfu; 					 /**< Punti CFU del giocatore */
-	CartaCfu      *listaCarte; 			 /**< Lista contenente la mano del giocatore */
-	CartaOstacolo *listaOstacoli; 		 /**< Lista degli ostacoli del giocatore */
-	struct player *nextPlayer; 			 /**< Giocatore successivo */
-} Giocatore;
+	CartaCfu      *manoCarteCfu; 		 /**< Lista contenente la mano del giocatore */
+	CartaOstacolo *listaCarteOstacolo;	 /**< Lista degli ostacoli del giocatore */
+	struct Player *nextPlayer; 			 /**< Player successivo */
+} Player;
+
+// ============ TURNO =====================================================
+/**
+ * Struttura che definisce un turno di gioco
+ */
+typedef struct {
+	int numTurno;                   /**< Numero del turno */
+	CartaOstacolo *cartaOstacolo;   /**< Carta ostacolo pescata questo turno */
+	CartaCfu *carteGiocate;         /**< Carte giocate dai giocatori a questo turno */
+} Turno;
+
+// ============ UTILITIES =================================================
+int randRange(int min, int max);
+
+FILE *openFile(char filePath[], char mode[]);
 
 #endif //PR1_PROJECT_GENERAL_H

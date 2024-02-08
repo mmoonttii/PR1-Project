@@ -3,10 +3,16 @@ project(PR1_Project C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(PR1_Project main.c
+add_executable(PR1_Project
+		main.c
+		general.c
 		general.h
-		preparazione.c
-		preparazione.h
 		errors.h
-		memManagement.c
-		memManagement.h)
+		carteCfu.c
+		carteCfu.h
+		carteOstacolo.c
+		carteOstacolo.h
+		giocatori.c
+		giocatori.h
+		turno.c
+		turno.h)
