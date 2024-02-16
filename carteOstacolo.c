@@ -63,9 +63,9 @@ CartaOstacolo *creaMazzoOstacoli(FILE *fp) {
 
 		for (int j = 0; j < nOstacoliTipo; ++j) {
 
-			fscanf(fp, "%31s", cartaOstacolo.name);
+			fscanf(fp, "%31[^\n]s", cartaOstacolo.name);
 			fscanf(fp, "\n");
-			fscanf(fp, "%127s", cartaOstacolo.desc);
+			fscanf(fp, "%127[^\n]s", cartaOstacolo.desc);
 			fscanf(fp, "\n");
 			cartaOstacolo.type = tipo;
 
@@ -147,6 +147,6 @@ void printOstacoli(CartaOstacolo *listaOstacoli){
 		}
 		count++;
 	}
-	printf("\nLe carte sono %d\n", count);
+	//printf("\nLe carte sono %d\n", count);
 }
 

@@ -33,9 +33,10 @@ int main() {
 				  *mazzoScarti                = NULL;  // Lista mazzo scarti Carte Cfu
 	CartaOstacolo *mazzoOstacoli              = NULL;  // Lista mazzo Carte Ostacolo
 
-	int nGiocatori = 0,                             // Numero giocatori partecipanti
-		input;
+	int nGiocatori = 0,                                // Numero giocatori partecipanti
+		input;                                         // Input di menu
 
+	bool leave;                                        // Condizione di uscita dal menu
 	Turno turno = {};
 
 	// ========== PREPARAZIONE ================================================
@@ -73,24 +74,29 @@ int main() {
 	for (int i = 0; i < nGiocatori; ++i) {
 		printGiocatore(pPlayer, false);   // Stampa statistiche giocatore senza mano delle carte
 
-		input = acquisisciAzione();
-		switch (input) {
-			case 1:
-				giocaCarta(&pPlayer->manoCarteCfu, turno.carteGiocate);
-				break;
-			case 2:
-				infoGiocatori(playerList);
-				break;
-			case 0:
-				end();
-		}
+
+		do {
+			input = acquisisciAzione();
+			switch (input) {
+				case 1:
+					giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate);
+					leave = true;
+					break;
+				case 2:
+					infoGiocatori(playerList, pPlayer);
+					leave = false;
+					break;
+				case 0:
+					break;
+			}
+		} while (leave != true);
 	}
 
 
 	//}
 
 	// Free mem
-	mazzoCfu = freeCfu(mazzoCfu);
+	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	playerList    = freeGiocatore(playerList);
 	return 0;

@@ -177,10 +177,10 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 // ============ OUTPUT ========================================================
 
 /**
- * printCarteCfu è la subroutine che si occupa di stampare una lista di carte
+ * printCarteCfu è la subroutine che si occupa di stampare una lista di carte e restituisce quante ne ha stampate
  * @param listaCarteCfu è la lista da stampare
  */
-void printCarteCfu(CartaCfu *listaCarteCfu) {
+int printCarteCfu(CartaCfu *listaCarteCfu) {
 	CartaCfu *head = listaCarteCfu; // Testa della lista
 	int count = 0; // Contatore delle carte
 	bool stop = true; // Condizione di uscita dalla stampa
@@ -218,5 +218,27 @@ void printCarteCfu(CartaCfu *listaCarteCfu) {
 		}
 		count++;
 	}
+	// count è incrementato per indicare il numero di carte stampate
+	count++;
+	return count;
+}
 
+int choiceCarta(int count){
+	int last = count - 1, // last è count - di uno per indicare l'indice dell'ultima carta anziche la dimensione
+		choice;
+	bool wrong = false;
+
+	do {
+		printf("\nQuale carta vuoi scegliere? [0-%d]\n>>> ", last);
+		scanf("%d", &choice);
+
+		if (choice < 0 || choice > last) {
+			printf("\nIl numero inserito non è accettabile. Riprovare");
+			wrong = true;
+		} else {
+			wrong = false;
+		}
+	} while (wrong);
+
+	return choice;
 }

@@ -84,7 +84,7 @@ typedef struct player {
 	int           cfu; 					 /**< Punti CFU del giocatore */
 	CartaCfu      *manoCarteCfu; 		 /**< Lista contenente la mano del giocatore */
 	CartaOstacolo *listaCarteOstacolo;	 /**< Lista degli ostacoli del giocatore */
-	struct Player *nextPlayer; 			 /**< Player successivo */
+	struct player *nextPlayer; 			 /**< Player successivo */
 } Player;
 
 // ============ TURNO =====================================================

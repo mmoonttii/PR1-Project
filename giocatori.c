@@ -34,7 +34,7 @@ void parseCharacters(FILE *fp, Character characters[]) {
  */
 Player *allocaGiocatore() {
 	Player *player = NULL;
-	player = (player *)calloc(1, sizeof(player));
+	player = (Player *)malloc(sizeof(Player));
 	if (player == NULL) {
 		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOCATION_PLAYER);
@@ -79,7 +79,7 @@ int acquisisciNumGiocatori() {
 }
 
 void printGiocatore(Player *giocatore, bool stampaCarte) {
-	printf("\nGiocatore:");
+	printf("\nGiocatore:\n");
 	printf("|\t Username: %s\n"
 	       "|\t Cfu: %d\n"
 	       "|\t Character: %s, Bonus-malus [",
