@@ -14,18 +14,17 @@
 
 
 int main() {
-	// Inizializzazione seed random
-	srand(time(NULL));
-	setvbuf(stdout, NULL, _IONBF, 0);
+	// ========== DICHIARAZIONI E INIT =================================================================================
+	srand(time(NULL)); // Inizializzazione seed random
+	setvbuf(stdout, NULL, _IONBF, 0); // DEBUG stdout
 
-	// ========== VARIABILI ==========
 	// Puntatori ai file
-	FILE *fPersonaggi = NULL,
-		 *fCfu        = NULL,
-		 *fOstacoli   = NULL;
+	FILE *fPersonaggi = NULL, // path: FILE_PERSONAGGI
+		 *fCfu        = NULL, // path: FILE_CARTE_CFU
+		 *fOstacoli   = NULL; // path: FILE_CARTE_OSTACOLO
 
 	// Personaggi e giocatori
-	Character     charactersArr[N_PERSONAGGI] = {};    // Array strutture personaggio
+	Character     charactersArr[N_PERSONAGGI] = {};    // Array personaggi
 	Player        *playerList                 = NULL,  // Lista giocatori
 				  *pPlayer                    = NULL;  // Puntatore al Player attuale
 	// Carte
@@ -34,12 +33,13 @@ int main() {
 	CartaOstacolo *mazzoOstacoli              = NULL;  // Lista mazzo Carte Ostacolo
 
 	int nGiocatori = 0,                                // Numero giocatori partecipanti
-		input;                                         // Input di menu
+		input;                                         // Input menu
 
-	bool leave;                                        // Condizione di uscita dal menu
-	Turno turno = {};
+	bool leave   = false,                              // Condizione di uscita dal menu
+		 endGame = false;                              // Condizione di termine partita
+	Turno turno = {};                                  // Struttura turno
 
-	// ========== PREPARAZIONE ================================================
+	// ========== PREPARAZIONE =========================================================================================
 	// Apertura file
 	fPersonaggi = openFile(FILE_PERSONAGGI, READ);
 	fCfu        = openFile(FILE_CARTE_CFU, READ);
@@ -61,44 +61,52 @@ int main() {
 	nGiocatori = acquisisciNumGiocatori();
 	playerList = initGiocatori(nGiocatori, &mazzoCfu, charactersArr);
 
-	// ========== TURNO =======================================================
+	// ========== TURNI ================================================================================================
 
 	turno.numTurno = 1;
+	pPlayer = playerList;
 
-	//while (endGame != true){
-		pPlayer   = playerList;
+	while (endGame != true){
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);
 		printOstacoli(turno.cartaOstacolo);
 
-	for (int i = 0; i < nGiocatori; ++i) {
-		printGiocatore(pPlayer, false);   // Stampa statistiche giocatore senza mano delle carte
+		for (int i = 0; i < nGiocatori; ++i) {
+			printGiocatore(pPlayer, false);   // Stampa statistiche giocatore senza mano delle carte
+			do {
+				input = acquisisciAzione();
+				switch (input) {
+					case 1:
+						giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate);
+						leave = true;
+						break;
+					case 2:
+						infoGiocatori(playerList, pPlayer, nGiocatori);
+						leave = false;
+						break;
+					case 0:
+						leave = true, endGame = true;
+						break;
+					default:
+						printf("\nErrore menu\n");
+				}
+			} while (leave != true);
 
-
-		do {
-			input = acquisisciAzione();
-			switch (input) {
-				case 1:
-					giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate);
-					leave = true;
-					break;
-				case 2:
-					infoGiocatori(playerList, pPlayer);
-					leave = false;
-					break;
-				case 0:
-					break;
+			if (pPlayer->nextPlayer != NULL){
+				pPlayer = pPlayer->nextPlayer;
+			} else {
+				turno.numTurno ++;
 			}
-		} while (leave != true);
 	}
 
 
-	//}
+	}
 
 	// Free mem
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	playerList    = freeGiocatore(playerList);
+	mazzoScarti   = freeCfu(mazzoScarti);
 	return 0;
 }
 

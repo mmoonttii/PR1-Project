@@ -10,6 +10,7 @@ int acquisisciAzione();
 
 void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate);
 
-void infoGiocatori(Player *listaGiocatori, Player *currentPlayer);
+void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers);
 
+void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti);
 #endif //PR1_PROJECT_TURNO_H

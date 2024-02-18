@@ -1,4 +1,5 @@
 #include "turno.h"
+#include "carteOstacolo.h"
 
 // ============ TURNO - FASE 1 ================================================
 
@@ -78,15 +79,16 @@ void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate) {
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno
  * @param listaGiocatori è la lista dei giocatori
  */
-void infoGiocatori(Player *listaGiocatori, Player *currentPlayer){
+void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) {
 	Player *head = listaGiocatori,
 		   *choosenPlayer = listaGiocatori;
 	int count = 0,
 		input;
 
 	printf("\nDi quale giocatore vuoi avere informazioni?\n");
+
 	// Stampa dei giocatori dei quali si possono avere informazioni
-	do {
+	for (int i = 0; i < nPlayers; ++i) {
 		if (strcmp(head->username, currentPlayer->username) != 0) {
 			printf("[%d] %s\n", count, head->username);
 		}
@@ -94,8 +96,7 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer){
 			head = head->nextPlayer;
 		}
 		count++;
-	} while (head->nextPlayer != NULL);
-
+	}
 	// Acquisizione del giocatore del quale si vogliono avere infomrmazioni
 	do {
 		printf("\n>>> ");
@@ -114,4 +115,19 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer){
 	}
 
 	printGiocatore(choosenPlayer, false);
+}
+
+/**
+ * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria
+ * @param mazzoCfu
+ * @param mazzoOstacoli
+ * @param playerList
+ * @param mazzoScarti
+ */
+void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti){
+	mazzoCfu      = freeCfu(mazzoCfu);
+	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
+	playerList    = freeGiocatore(playerList);
+	mazzoScarti   = freeCfu(mazzoScarti);
+	exit(EXIT_SUCCESS);
 }
