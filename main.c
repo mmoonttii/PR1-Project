@@ -64,20 +64,22 @@ int main() {
 	// ========== TURNI ================================================================================================
 
 	turno.numTurno = 1;
-	pPlayer = playerList;
 
 	while (endGame != true){
+		pPlayer = playerList;
+		enterClear();
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);
 		printOstacoli(turno.cartaOstacolo);
 
+		// Svolgimento turno
 		for (int i = 0; i < nGiocatori; ++i) {
 			printGiocatore(pPlayer, false);   // Stampa statistiche giocatore senza mano delle carte
 			do {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate);
+						giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate, mazzoScarti, mazzoCfu);
 						leave = true;
 						break;
 					case 2:
@@ -89,6 +91,7 @@ int main() {
 						break;
 					default:
 						printf("\nErrore menu\n");
+						exit(ERR_MENU);
 				}
 			} while (leave != true);
 
@@ -97,7 +100,9 @@ int main() {
 			} else {
 				turno.numTurno ++;
 			}
-	}
+			enterClear();
+		}
+
 
 
 	}

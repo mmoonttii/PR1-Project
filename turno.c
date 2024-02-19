@@ -3,6 +3,7 @@
 
 // ============ TURNO - FASE 1 ================================================
 
+void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti);
 /**
  * Acquisisci azione che si occupa di ricevere l'input del giocatore che corrisponde a un azione da compiere
  * all'inzio del turno
@@ -32,33 +33,74 @@ int acquisisciAzione() {
  * @param manoCarteCfu é la lista delle carte in mano al giocatore
  * @param listaCarteGiocate è la lista delle carte che sono state giocate in questo turno
  */
-void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate) {
-	CartaCfu *headMano    = manoCarteCfu,
-	         *headGiocate = listaCarteGiocate,
-	         *choosenCard = NULL,
-	         *prev        = NULL,
-			 *auxP        = NULL;
-	int      choice       = 0,
-	         count;
+void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu) {
+	CartaCfu *headMano    = manoCarteCfu,      // Puntatore della lista delle carte in mano
+	         *headGiocate = listaCarteGiocate, // Puntatore della lista delle carte giocate per questo turno
+	         *choosenCard = NULL,              // Pointer alla carta giocata in questo turno
+	         *prev        = NULL;              // Pointer alla carta precedente quella giocata
+	int      choice       = 0;                 // Indice della carta scelta dal player
+	bool instant,                              // Flag carta istantanea per chiedere una carta diversa
+	     tutteIstantanee  = true;              // Flag mano tutta di carte istantanee per rimescolare la mano
 
-
-	count  = printCarteCfu(manoCarteCfu);
-	choice = choiceCarta(count);
-
-	// Se la carta scelta non è la prima
-	if (choice != 0) {
-		for (int i = 0; i < choice; i++) {
-			// Scorro fino alla prossima carta, salvando la posizione della carta precedente
-			prev     = headMano;
-			headMano = headMano->next;
+	do {
+		tutteIstantanee = true;
+		for (int i = 0; i < CARTE_PER_MANO; ++i) {
+			// Stampa di tutte le carte
+			printf("\n[%d] ", i);
+			printSingleCartaCfu(headMano);
+			// Check istantanea
+			if (headMano->cfu == 0 && headMano->effect != SCARTAP) {
+				printf("| CARTA ISTANTANEA - non puoi giocarla in questa fase del turno\n");
+			} else {
+				tutteIstantanee = false;
+			}
+			if (headMano->next != NULL) {
+				headMano = headMano->next;
+			}
 		}
-		choosenCard = headMano;
-		prev->next = choosenCard->next;
-		choosenCard->next = NULL;
-	// Se dobbiamo estrarre la prima carta,
+		if (tutteIstantanee == true){
+			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
+			enterClear();
+			scartaCarte(manoCarteCfu, mazzoScarti);
+			manoCarteCfu = distribuisciCarte(manoCarteCfu, &mazzoCarteCfu);
+		}
+	} while (tutteIstantanee == true);
+
+	do {
+		// Acquisizione carta scelta
+		headMano = manoCarteCfu;
+		printf(">>> ");
+		scanf("%d", &choice);
+
+		// Se la carta scelta non è la prima
+		if (choice != 0) {
+			for (int i = 0; i < choice; i++) {
+				// Scorro fino alla prossima carta, salvando la posizione della carta precedente
+				prev     = headMano;
+				headMano = headMano->next;
+			}
+			choosenCard = headMano; // La carta scelta è la testa della mano
+		}
+
+		// Check istantanea
+		if (choosenCard->cfu == 0 && choosenCard->effect != SCARTAP) {
+			instant = true;
+		} else {
+			instant = false;
+		}
+
+		if (instant) {
+			printf("\nLa carta scelta è una carta istantanea, scegliere un'altra carta\n");
+		}
+	} while (instant);
+
+	// Quando la carta non è istantanea posso estrarla dalla lista
+	if (choice != 0) {
+		prev->next = choosenCard->next; // Il next della precedente prende quello che era il next della carta presa
+		choosenCard->next = NULL; // Il next della carta presa viene resettato a NULL
 	} else {
-		manoCarteCfu = headMano->next; // la testa della mano prende la carta successiva
-		choosenCard = headMano; // La carta scelta è la testa della mano
+		manoCarteCfu = choosenCard->next; // la testa della mano prende la carta successiva
+		choosenCard->next = NULL;
 	}
 
 	// Se la lista delle carte giocate è vuota, allora la lista è la prima carta
@@ -74,6 +116,7 @@ void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate) {
 		choosenCard->next = NULL;
 	}
 }
+
 
 /**
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno
@@ -113,7 +156,7 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 			choosenPlayer = choosenPlayer->nextPlayer;
 		}
 	}
-
+	// Stampa giocatore richiesto
 	printGiocatore(choosenPlayer, false);
 }
 

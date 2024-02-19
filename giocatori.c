@@ -43,12 +43,14 @@ Player *allocaGiocatore() {
 }
 
 Player *freeGiocatore(Player *listagiocatori){
-	Player *next   = NULL;
+	Player *pAux = NULL;
 
-	while (listagiocatori->nextPlayer != NULL) {
-		next = listagiocatori->nextPlayer;
-		free(listagiocatori);
-		listagiocatori = next;
+	while (listagiocatori != NULL) {
+		pAux = listagiocatori;
+		listagiocatori = listagiocatori->nextPlayer;
+		if (pAux != NULL){
+			free(listagiocatori);
+		}
 	}
 	listagiocatori = NULL;
 	return listagiocatori;

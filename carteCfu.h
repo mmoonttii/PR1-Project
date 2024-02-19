@@ -16,8 +16,10 @@ CartaCfu *freeCfu(CartaCfu *mazzoCfu);
 CartaCfu *creaMazzoCfu(FILE *fp);
 CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu);
 
+void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti);
+
 // ============ OUTPUT ========================================================
-int printCarteCfu(CartaCfu *mazzoCfu);
-int choiceCarta(int count);
+void printSingleCartaCfu(CartaCfu *pCfu);
+void printCarteCfu(CartaCfu *listaCarteCfu);
 
 #endif //PR1_PROJECT_CARTECFU_H

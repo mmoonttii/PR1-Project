@@ -26,16 +26,16 @@ CartaOstacolo *allocaCartaOstacolo() {
  * @param mazzoOstacoli è il puntatore alla testa della lista
  */
 CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
-	CartaOstacolo *next = NULL;
+	CartaOstacolo *pAux = NULL;
 
-	while (mazzoOstacoli->next != NULL) {
-		next = mazzoOstacoli->next;
-		free(mazzoOstacoli);
-		mazzoOstacoli = next;
+	while (mazzoOstacoli != NULL) {
+		pAux = mazzoOstacoli;
+		mazzoOstacoli = mazzoOstacoli->next;
+		if (pAux != NULL) {
+			free(pAux);
+		}
 	}
-
 	mazzoOstacoli = NULL;
-
 	return mazzoOstacoli;
 }
 

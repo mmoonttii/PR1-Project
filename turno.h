@@ -8,7 +8,7 @@
 // ============ TURNO - FASE 1 ================================================
 int acquisisciAzione();
 
-void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate);
+void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu);
 
 void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers);
 

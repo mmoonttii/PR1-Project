@@ -25,14 +25,15 @@ CartaCfu *allocaCartaCfu() {
  * @param mazzoCfu è il puntatore alla testa della lista
  */
 CartaCfu *freeCfu(CartaCfu *mazzoCfu) {
-	CartaCfu *next = NULL;
+	CartaCfu *pAux = NULL;
 
-	while (mazzoCfu->next != NULL) {
-		next = mazzoCfu->next;
-		free(mazzoCfu);
-		mazzoCfu = next;
+	while (mazzoCfu != NULL) {
+		pAux = mazzoCfu;
+		mazzoCfu = mazzoCfu->next;
+		if (pAux != NULL) {
+			free(mazzoCfu);
+		}
 	}
-
 	mazzoCfu = NULL;
 	return mazzoCfu;
 
@@ -141,7 +142,7 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 		counter++;
 	}
 	// Fin quando la mano è composta da 5 carte o meno
-	while (counter < 5){
+	while (counter < CARTE_PER_MANO){
 		// Se il mazzo delle carte è vuoto
 		if (mazzoCfu == NULL){
 			// Rimescolo il mazzo degli scarti
@@ -174,16 +175,23 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 	return mano;
 }
 
+void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti) {
+	CartaCfu *head = mazzoScarti;
+
+	while (head->next != NULL){
+		head = head->next;
+	}
+
+	head->next = manoCarteCfu;
+	manoCarteCfu = NULL;
+}
 // ============ OUTPUT ========================================================
 
 /**
- * printCarteCfu è la subroutine che si occupa di stampare una lista di carte e restituisce quante ne ha stampate
- * @param listaCarteCfu è la lista da stampare
+ * printSigleCartaCfu() è la subroutine che stampa una singola carta Cfu
+ * @param pCfu è la carta Cfu da stampare
  */
-int printCarteCfu(CartaCfu *listaCarteCfu) {
-	CartaCfu *head = listaCarteCfu; // Testa della lista
-	int count = 0; // Contatore delle carte
-	bool stop = true; // Condizione di uscita dalla stampa
+void printSingleCartaCfu(CartaCfu *pCfu) {
 	char *effetti[] = {"Carta senza effetto",
 	                   "Scarta una carta CFU punto e aggiungi il suo punteggio quello del turno",
 	                   "Guarda la mano di un collega e ruba una carta a scelta",
@@ -201,14 +209,23 @@ int printCarteCfu(CartaCfu *listaCarteCfu) {
 	                   "Metti la carta Ostacolo che stai per prendere in fondo al mazzo",
 	                   "Dai la carta che stai per prendere ad un altro giocatore a tua scelta"
 	};
+	// Stampa la struttura carta
+	printf("%s\n"
+	       "|\tCFU: %d\t Effetto: %s\n",
+	       pCfu->name, pCfu->cfu, effetti[pCfu->effect]);
+}
+/**
+ * printCarteCfu() è la subroutine che si occupa di stampare una lista di carte e restituisce quante ne ha stampate
+ * @param listaCarteCfu è la lista di carte da stampare
+ */
+void printCarteCfu(CartaCfu *listaCarteCfu) {
+	CartaCfu *head = listaCarteCfu; // Testa della lista
+	bool stop = true; // Condizione di uscita dalla stampa
 
 	printf("\n==== CARTE CFU ====\n");
 	// Finchè la condizione di stop è rispettata
 	while (stop){
-		// Stampa la struttura carta
-		printf("\n[%d] Nome: %s,\n"
-		       "|\tCFU: %d,\t Effetto: %s\n",
-		       count, head->name, head->cfu, effetti[head->effect]);
+		printSingleCartaCfu(head);
 		// In caso la prossima carta sia NULL, esci dal loop
 		if (head->next == NULL){
 			stop = false;
@@ -216,29 +233,5 @@ int printCarteCfu(CartaCfu *listaCarteCfu) {
 		} else {
 			head = head->next;
 		}
-		count++;
 	}
-	// count è incrementato per indicare il numero di carte stampate
-	count++;
-	return count;
-}
-
-int choiceCarta(int count){
-	int last = count - 1, // last è count - di uno per indicare l'indice dell'ultima carta anziche la dimensione
-		choice;
-	bool wrong = false;
-
-	do {
-		printf("\nQuale carta vuoi scegliere? [0-%d]\n>>> ", last);
-		scanf("%d", &choice);
-
-		if (choice < 0 || choice > last) {
-			printf("\nIl numero inserito non è accettabile. Riprovare");
-			wrong = true;
-		} else {
-			wrong = false;
-		}
-	} while (wrong);
-
-	return choice;
 }

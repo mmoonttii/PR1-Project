@@ -16,6 +16,7 @@
 #define N_OSTACOLI 4
 #define N_PERSONAGGI 4
 #define READ "r"
+#define CARTE_PER_MANO 5
 
 // =========== CARTE CFU =====================================================
 
@@ -102,4 +103,5 @@ int randRange(int min, int max);
 
 FILE *openFile(char filePath[], char mode[]);
 
+void enterClear();
 #endif //PR1_PROJECT_GENERAL_H

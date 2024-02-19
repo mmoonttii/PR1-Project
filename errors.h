@@ -12,5 +12,6 @@
 #define ERR_FAIL_ALLOCATION_OSTACOLO 203
 #define ERR_FAIL_ALLOCATION_PLAYER   204
 
-
+// Errore menu
+#define ERR_MENU    901
 #endif //PR1_PROJECT_ERRORS_H

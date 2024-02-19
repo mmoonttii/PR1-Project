@@ -27,3 +27,20 @@ FILE *openFile(char filePath[], char mode[]){
 	if (fp == NULL) exit(ERR_OPEN_FILE);
 	return fp;
 }
+
+/**
+ * enterClear() è la subroutine che aspetta dell'input da parte di un giocatore e pulisce lo schermo
+ */
+void enterClear() {
+	printf("Premi INVIO per continuare...");
+	getchar();
+	getchar();
+
+	#ifdef _WIN64 // codice per win
+		system("cls");
+	#elif __APPLE__ // codice per macOs
+		system("clear");
+	#elif __linux__ // codice per Linux
+		sys	prtem("clear");
+	#endif
+}
