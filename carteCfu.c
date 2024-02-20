@@ -127,12 +127,67 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 }
 
 /**
+ * mescolaMazzo() è la subroutine che dato una lista di Carte CFU la restituisce in un ordine diverso
+ * @param mazzoScarti è il mazzo da mescolare
+ * @return
+ */
+CartaCfu *mescolaMazzo(CartaCfu **mazzoScarti) {
+	CartaCfu *mazzoMescolato = NULL,
+	         *headMescolato  = NULL,
+	         *headScarti     = *mazzoScarti,
+	         *cartaEstratta  = NULL,
+	         *prev           = NULL;
+	int count    = 0,
+	    randCarta;
+
+	// Conto le carte nella lista
+	while (headScarti->next != NULL){
+		headScarti = headScarti->next;
+		count++;
+	}
+	headScarti = *mazzoScarti;
+
+	while (headScarti != NULL) {
+		randCarta = randRange(0, count);// Genero una posizione di una carta random
+		// Scorro fino a tale carta random
+		for (int i = 0; i < randCarta; ++i) {
+			prev       = headScarti;
+			headScarti = headScarti->next;
+		}
+
+		cartaEstratta = headScarti;
+
+		// Se la carta era in prima posizione
+		if (randCarta == 0) {
+			// la testa del mazzo diventa la carta successiva
+			headScarti = headScarti->next;
+		} else {
+			// Altrimenti la sua posizione viene saltata
+			prev->next = headScarti->next;
+		}
+
+		// Se il mazzo mescolato è vuoto
+		if (mazzoMescolato == NULL) {
+			// Posso mettere la carta appena estratta in prima posizione
+			mazzoMescolato = cartaEstratta;
+		} else {
+			headMescolato = mazzoMescolato;
+			// Altrimenti ciclo fino alla prima posizione libera e la inserisco
+			while (headMescolato->next != NULL) {
+				headMescolato = headMescolato->next;
+			}
+			headMescolato->next = cartaEstratta;
+		}
+	}
+	return mazzoMescolato;
+}
+/**
  * distribuisciCarte è la subroutine che si occupa di distribuire carte ai giocatori fin quando questi non hanno
  * 5 carte in mano
  * @param mazzoCfu è un puntatore al puntatore alla prima carta del mazzo
  * @return un puntatore alla prima carta del mazzo
  */
-CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
+CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti) {
 	CartaCfu *head = mano;
 	int counter = 0;
 
@@ -144,12 +199,10 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 	// Fin quando la mano è composta da 5 carte o meno
 	while (counter < CARTE_PER_MANO){
 		// Se il mazzo delle carte è vuoto
-		if (mazzoCfu == NULL){
-			// Rimescolo il mazzo degli scarti
-			// TODO: mescola mazzo
-			// mazzoCfu = mescolaMazzo(mazzoScarti);
+		if (*mazzoCfu == NULL){
+			*mazzoCfu = mescolaMazzo(mazzoScarti);
 		}
-		// Se la testa è NULL, questo si verifica nel caso di una mano completamente vuota
+		// Se la testa è NULL (nel caso di una mano completamente vuota)
 		if (head == NULL){
 			// La testa della mano prende la testa del mazzo
 			head = *mazzoCfu;
@@ -164,27 +217,28 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu){
 			head->next = *mazzoCfu;
 			// La prima carta del mazzo diventa la carta successiva a quella appena "distribuita"
 			*mazzoCfu = (*mazzoCfu)->next;
-			// La testa diventa la carta successiva
+			// La testa diventa la carta appena ricevuta
 			head = head->next;
 		}
-		// Incremento il contatore che tiene traccia delle carte nella mano
-		counter++;
+		counter++; // Incremento il contatore che tiene traccia delle carte nella mano
 	}
 	head->next = NULL;
 
 	return mano;
 }
 
-void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti) {
+void scartaCarte(CartaCfu **manoCarteCfu, CartaCfu *mazzoScarti) {
 	CartaCfu *head = mazzoScarti;
 
 	while (head->next != NULL){
 		head = head->next;
 	}
 
-	head->next = manoCarteCfu;
+	head->next = *manoCarteCfu;
 	manoCarteCfu = NULL;
 }
+
+
 // ============ OUTPUT ========================================================
 
 /**

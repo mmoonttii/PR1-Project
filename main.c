@@ -59,7 +59,7 @@ int main() {
 
 	// Giocatori
 	nGiocatori = acquisisciNumGiocatori();
-	playerList = initGiocatori(nGiocatori, &mazzoCfu, charactersArr);
+	playerList = initGiocatori(nGiocatori, &mazzoCfu, charactersArr, NULL);
 
 	// ========== TURNI ================================================================================================
 
@@ -79,7 +79,7 @@ int main() {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCarta(pPlayer->manoCarteCfu, turno.carteGiocate, mazzoScarti, mazzoCfu);
+						giocaCarta(&pPlayer->manoCarteCfu, &turno.carteGiocate, mazzoScarti, mazzoCfu);
 						leave = true;
 						break;
 					case 2:
@@ -103,7 +103,12 @@ int main() {
 			enterClear();
 		}
 
-
+		printf("\nDistribuendo le nuove carte...\n");
+		pPlayer = playerList;
+		for (int i = 0; i < nGiocatori; ++i) {
+			distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
+			pPlayer = pPlayer->nextPlayer;
+		}
 
 	}
 

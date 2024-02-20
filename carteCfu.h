@@ -14,9 +14,10 @@ CartaCfu *freeCfu(CartaCfu *mazzoCfu);
 
 // ============ LIST MANAGEMENT ===============================================
 CartaCfu *creaMazzoCfu(FILE *fp);
-CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu);
+CartaCfu *mescolaMazzo(CartaCfu **mazzoScarti);
+CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
 
-void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti);
+void scartaCarte(CartaCfu **manoCarteCfu, CartaCfu *mazzoScarti);
 
 // ============ OUTPUT ========================================================
 void printSingleCartaCfu(CartaCfu *pCfu);

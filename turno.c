@@ -2,8 +2,6 @@
 #include "carteOstacolo.h"
 
 // ============ TURNO - FASE 1 ================================================
-
-void scartaCarte(CartaCfu *manoCarteCfu, CartaCfu *mazzoScarti);
 /**
  * Acquisisci azione che si occupa di ricevere l'input del giocatore che corrisponde a un azione da compiere
  * all'inzio del turno
@@ -33,9 +31,9 @@ int acquisisciAzione() {
  * @param manoCarteCfu é la lista delle carte in mano al giocatore
  * @param listaCarteGiocate è la lista delle carte che sono state giocate in questo turno
  */
-void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu) {
-	CartaCfu *headMano    = manoCarteCfu,      // Puntatore della lista delle carte in mano
-	         *headGiocate = listaCarteGiocate, // Puntatore della lista delle carte giocate per questo turno
+void giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu) {
+	CartaCfu *headMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
+	         *headGiocate = *listaCarteGiocate, // Puntatore della lista delle carte giocate per questo turno
 	         *choosenCard = NULL,              // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;              // Pointer alla carta precedente quella giocata
 	int      choice       = 0;                 // Indice della carta scelta dal player
@@ -62,25 +60,24 @@ void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *m
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
 			scartaCarte(manoCarteCfu, mazzoScarti);
-			manoCarteCfu = distribuisciCarte(manoCarteCfu, &mazzoCarteCfu);
+			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, &mazzoCarteCfu, &mazzoScarti);
 		}
 	} while (tutteIstantanee == true);
 
 	do {
 		// Acquisizione carta scelta
-		headMano = manoCarteCfu;
+		headMano = *manoCarteCfu;
 		printf(">>> ");
 		scanf("%d", &choice);
 
-		// Se la carta scelta non è la prima
-		if (choice != 0) {
-			for (int i = 0; i < choice; i++) {
-				// Scorro fino alla prossima carta, salvando la posizione della carta precedente
-				prev     = headMano;
-				headMano = headMano->next;
-			}
-			choosenCard = headMano; // La carta scelta è la testa della mano
+		// Se la carta scelta non è la prima, quindi choice != 0
+		for (int i = 0; i < choice; i++) {
+			// Scorro fino alla prossima carta, salvando la posizione della carta precedente
+			prev     = headMano;
+			headMano = headMano->next;
 		}
+
+		choosenCard = headMano; // La carta scelta è in ogni caso headMano
 
 		// Check istantanea
 		if (choosenCard->cfu == 0 && choosenCard->effect != SCARTAP) {
@@ -94,18 +91,18 @@ void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *m
 		}
 	} while (instant);
 
-	// Quando la carta non è istantanea posso estrarla dalla lista
+	// Quando la carta scelta non è istantanea posso estrarla dalla lista
 	if (choice != 0) {
 		prev->next = choosenCard->next; // Il next della precedente prende quello che era il next della carta presa
 		choosenCard->next = NULL; // Il next della carta presa viene resettato a NULL
 	} else {
-		manoCarteCfu = choosenCard->next; // la testa della mano prende la carta successiva
+		manoCarteCfu = &(choosenCard->next); // la testa della mano prende la carta successiva
 		choosenCard->next = NULL;
 	}
 
 	// Se la lista delle carte giocate è vuota, allora la lista è la prima carta
-	if (listaCarteGiocate == NULL) {
-		listaCarteGiocate = choosenCard;
+	if (*listaCarteGiocate == NULL) {
+		*listaCarteGiocate = choosenCard;
 	} else {
 		// Altrimenti si scorre fino alla prima carta il cui next è null e si aggiunge la carta in coda
 		while (headGiocate->next != NULL) {
@@ -116,7 +113,6 @@ void giocaCarta(CartaCfu *manoCarteCfu, CartaCfu *listaCarteGiocate, CartaCfu *m
 		choosenCard->next = NULL;
 	}
 }
-
 
 /**
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno

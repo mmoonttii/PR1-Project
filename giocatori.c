@@ -128,7 +128,7 @@ void printGiocatori(Player *listaGiocatori, bool stampaCarte) {
  * @param personaggi è l'array delle strutture dei personaggi
  * @return la funzione restituisce listaGiocatori, una lista di strutture di tipo giocatore
  */
-Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[]) {
+Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti) {
 	Player    *listaGiocatori = NULL,
 	          *head           = NULL,
 	          *newPlayer      = NULL,
@@ -147,7 +147,7 @@ Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[
 		// Inizializza la struttura
 		aux.cfu           = 0; // Punteggio di partenza
 		aux.manoCarteCfu  = NULL;
-		aux.manoCarteCfu  = distribuisciCarte(aux.manoCarteCfu, mazzoCfu); // Mano iniziale
+		aux.manoCarteCfu  = distribuisciCarte(aux.manoCarteCfu, mazzoCfu, &mazzoScarti); // Mano iniziale
 		aux.listaCarteOstacolo = NULL;
 		aux.nextPlayer         = NULL;
 

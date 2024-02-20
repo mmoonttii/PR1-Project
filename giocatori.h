@@ -21,6 +21,6 @@ int acquisisciNumGiocatori();
 void printGiocatori(Player *listaGiocatori, bool stampaCarte);
 void printGiocatore(Player *giocatore, bool stampaCarte);
 // ============ LIST MANAGEMENT ===============================================
-Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[]);
+Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti);
 
 #endif //PR1_PROJECT_GIOCATORI_H
