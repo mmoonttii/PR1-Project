@@ -1,7 +1,7 @@
 #include "turno.h"
 #include "carteOstacolo.h"
 
-// ============ TURNO - FASE 1 ================================================
+// ============ TURNO - FASE 1 =========================================================================================
 /**
  * Acquisisci azione che si occupa di ricevere l'input del giocatore che corrisponde a un azione da compiere
  * all'inzio del turno
@@ -59,7 +59,7 @@ void giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **listaCarteGiocate, CartaCfu 
 		if (tutteIstantanee == true){
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
-			scartaCarte(manoCarteCfu, mazzoScarti);
+			scartaCarte(manoCarteCfu, &mazzoScarti);
 			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, &mazzoCarteCfu, &mazzoScarti);
 		}
 	} while (tutteIstantanee == true);
@@ -156,6 +156,8 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 	printGiocatore(choosenPlayer, false);
 }
 
+// ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
+
 /**
  * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria
  * @param mazzoCfu
@@ -170,3 +172,7 @@ void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, C
 	mazzoScarti   = freeCfu(mazzoScarti);
 	exit(EXIT_SUCCESS);
 }
+
+
+
+

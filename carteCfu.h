@@ -16,8 +16,7 @@ CartaCfu *freeCfu(CartaCfu *mazzoCfu);
 CartaCfu *creaMazzoCfu(FILE *fp);
 CartaCfu *mescolaMazzo(CartaCfu **mazzoScarti);
 CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
-
-void scartaCarte(CartaCfu **manoCarteCfu, CartaCfu *mazzoScarti);
+void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti);
 
 // ============ OUTPUT ========================================================
 void printSingleCartaCfu(CartaCfu *pCfu);

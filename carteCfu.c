@@ -192,8 +192,11 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 	int counter = 0;
 
 	// Se la mano non è vuota, scorro fino all'ultima carta, tenendo conto di quante carte sto scorrendo
-	while (head != NULL && head->next != NULL){
-		head = head->next;
+	if (head != NULL) {
+		while (head->next != NULL) {
+			head = head->next;
+			counter++;
+		}
 		counter++;
 	}
 	// Fin quando la mano è composta da 5 carte o meno
@@ -227,15 +230,29 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 	return mano;
 }
 
-void scartaCarte(CartaCfu **manoCarteCfu, CartaCfu *mazzoScarti) {
-	CartaCfu *head = mazzoScarti;
+/**
+ * scartaCarte() è la subroutine che scarta una lista di carte, senza liberare la memoria
+ * che rappresenta
+ * @param daScartare
+ * @param mazzoScarti
+ */
+void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti) {
+	CartaCfu *head = *mazzoScarti;
 
-	while (head->next != NULL){
-		head = head->next;
+	// Se il mazzo degli scarti è vuoto
+	if (head == NULL){
+		// Il mazzzo degli scarti prende la lista di carte da scartare
+		*mazzoScarti = *daScartare;
+	} else {
+		// Altrimenti, scorro fino alla fine del mazzo
+		while (head->next != NULL) {
+			head = head->next;
+		}
+		// E aggiungo in coda la lista di carte
+		head->next = *daScartare;
 	}
-
-	head->next = *manoCarteCfu;
-	manoCarteCfu = NULL;
+	// Mi assicuro che la lista di carte scartate sia NULL
+	daScartare = NULL;
 }
 
 

@@ -5,12 +5,12 @@
 #include "errors.h"
 #include "giocatori.h"
 
-// ============ TURNO - FASE 1 ================================================
+// ============ TURNO - FASE 1 =========================================================================================
 int acquisisciAzione();
-
 void giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu);
-
 void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers);
+
+// ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
 
 void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti);
 #endif //PR1_PROJECT_TURNO_H

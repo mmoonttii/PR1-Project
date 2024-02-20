@@ -59,7 +59,7 @@ int main() {
 
 	// Giocatori
 	nGiocatori = acquisisciNumGiocatori();
-	playerList = initGiocatori(nGiocatori, &mazzoCfu, charactersArr, NULL);
+	playerList = initGiocatori(nGiocatori, &mazzoCfu, charactersArr, mazzoScarti);
 
 	// ========== TURNI ================================================================================================
 
@@ -102,6 +102,8 @@ int main() {
 			}
 			enterClear();
 		}
+
+		scartaCarte(&turno.carteGiocate, &mazzoScarti);
 
 		printf("\nDistribuendo le nuove carte...\n");
 		pPlayer = playerList;

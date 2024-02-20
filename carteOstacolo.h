@@ -12,7 +12,6 @@ CartaOstacolo *allocaCartaOstacolo();
 CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli);
 
 // ============ LIST MANAGEMENT ===============================================/**
-
 CartaOstacolo *creaMazzoOstacoli(FILE *fp);
 CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli);
 
