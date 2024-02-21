@@ -7,20 +7,21 @@
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
+#include <limits.h>
 
 // Header user-defined
 #include "errors.h"
 
-#define STR_LEN 31
-#define LONG_STR 127
-#define N_OSTACOLI 4
-#define N_PERSONAGGI 4
-#define READ "r"
-#define CARTE_PER_MANO 5
+#define STR_LEN        31  // Lunghezza stringa standard
+#define LONG_STR       127 // Lunghezza descrizione carta ostacolo
+#define N_OSTACOLI     4   // Numero di tipologie di ostacoli
+#define N_PERSONAGGI   4   // Numero di personaggi
+#define READ           "r" // Parametro di lettura files
+#define CARTE_PER_MANO 5   // Numero di carte che un giocatore deve avere
 
-// =========== CARTE CFU =====================================================
+// =========== CARTE CFU ===============================================================================================
 
-/** @brief Enumerazione per i tipi di effetti */
+/** Enumerazione per i tipi di effetti */
 typedef enum {
 	NESSUNO, 	/**< Carta senza effetto */
 	SCARTAP, 	/**< Scarta una carta CFU punto e aggiungi il suo punteggio a quello del turno */
@@ -40,8 +41,7 @@ typedef enum {
 	DIROTTA 	/**< Dai la carta che stai per prendere ad un altro giocatore a tua scelta */
 } Effect;
 
-
-/** @brief Struttura che definisce una carta di tipo CFU */
+/** Struttura che definisce una carta di tipo CFU */
 typedef struct cartaCfu {
 	char            name[STR_LEN + 1]; /**< Nome della carta [char]: len 31 + \0 */
 	int             cfu; 			   /**< Punti CFU della carta */
@@ -50,9 +50,9 @@ typedef struct cartaCfu {
 } CartaCfu;
 
 
-// =========== CARTE OSTACOLO ================================================
+// =========== CARTE OSTACOLO ==========================================================================================
 
-/** @brief Enumerazione per i tipi di carte ostacolo*/
+/** Enumerazione per i tipi di carte ostacolo*/
 typedef enum {
 	STUDIO = 1,
 	SOPRAVVIVENZA,
@@ -60,7 +60,7 @@ typedef enum {
 	ESAME
 } Ostacolo;
 
-/** @brief Struttura che definisce una carta Ostacolo */
+/** Struttura che definisce una carta Ostacolo */
 typedef struct cartaOstacolo {
 	char                 name[STR_LEN + 1];  /**< Nome della carta [char]: len 31 + \0 */
 	char                 desc[LONG_STR + 1]; /**< Descrizione della carta [char]: len 127 + \0 */
@@ -69,16 +69,16 @@ typedef struct cartaOstacolo {
 } CartaOstacolo;
 
 
-// =========== GIOCATORE =====================================================
+// =========== GIOCATORE ===============================================================================================
 
-/** @brief Struttura che definisce un personaggio */
+/** Struttura che definisce un personaggio */
 typedef struct character {
 	char name[STR_LEN + 1]; 	 /**< Nome della carta [char]: len 31 + \0 */
 	int  bonusMalus[N_OSTACOLI]; /**< Array per bonus/malus con corrispondenza biunivoca con la tipologia
  									* dell'ostacolo */
 } Character;
 
-/** @brief Struttura che definisce il giocatore */
+/** Struttura che definisce il giocatore */
 typedef struct player {
 	char          username[STR_LEN + 1]; /**< Nome del giocatore [char]: len 31 + \0 */
 	Character     character; 			 /**< Character scelto dal giocatore */
@@ -88,20 +88,25 @@ typedef struct player {
 	struct player *nextPlayer; 			 /**< Player successivo */
 } Player;
 
-// ============ TURNO =====================================================
-/**
- * Struttura che definisce un turno di gioco
- */
+
+// ============ TURNO ==================================================================================================
+/** Struttura che definisce un turno di gioco */
 typedef struct {
 	int numTurno;                   /**< Numero del turno */
+	int *points;                    /**< Array dinamico contenente i punteggi del turno di ciascun giocatore, con
+ 									   * corrispondenza biunivoca tra giocatore e relativo punteggio */
+	int cfuToWin;                   /**< Numero di CFU dei giocatori vincenti */
+	int cfuToLose;                  /**< Numero di CFU dei giocatori perdenti */
 	CartaOstacolo *cartaOstacolo;   /**< Carta ostacolo pescata questo turno */
 	CartaCfu *carteGiocate;         /**< Carte giocate dai giocatori a questo turno */
 } Turno;
 
-// ============ UTILITIES =================================================
+// ============ UTILITIES ==============================================================================================
 int randRange(int min, int max);
 
 FILE *openFile(char filePath[], char mode[]);
 
 void enterClear();
+
+void minMax(int arr[], int size, int *min, int *max);
 #endif //PR1_PROJECT_GENERAL_H

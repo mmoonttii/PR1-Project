@@ -21,7 +21,7 @@ int randRange(int min, int max) {
  * @param mode è la modalità di apertura
  * @return è un puntatore al file aperto
  */
-FILE *openFile(char filePath[], char mode[]){
+FILE *openFile(char filePath[], char mode[]) {
 	FILE *fp = NULL;
 	fp = fopen(filePath, mode);
 	if (fp == NULL) exit(ERR_OPEN_FILE);
@@ -43,4 +43,25 @@ void enterClear() {
 	#elif __linux__ // codice per Linux
 		sys	prtem("clear");
 	#endif
+}
+
+/**
+ * minMax() è una subroutine che, dato un array di interi, ne restituisce il valore minimo e il valore massimo
+ * @param arr è un puntatore all'array da elaborare
+ * @param size è il numero di elementi nell'array
+ * @param min è un puntatore alla locazione di memoria dove verrà salvato il valore minimo
+ * @param max è un punttore alla locazione di memoria dove verrà salvato il valore massimo
+ */
+void minMax(int arr[], int size, int *min, int *max) {
+	*min = INT_MAX,
+	*max = INT_MIN;
+
+	for (int i = 0; i < size; ++i) {
+		if (arr[i] < *min) {
+			*min = arr[i];
+		}
+		if (arr[i] > *max) {
+			*max = arr[i];
+		}
+	}
 }

@@ -157,7 +157,64 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 }
 
 // ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
+/**
+ * calcolaPunteggio() è la subroutine che si occupa di calcolare il punteggio ottenuto da ciascun giocatore in un
+ * turno, considerando i punti cfu di ciascuna carta e i bonus/malus di ogni personaggio e li salva in un array
+ * allocato dinamicamente nella struttura turno
+ * @param turno è la struttura di tipo Turno che rappresenta un turno di gioco
+ * @param playerList è la lista dei giocatori nella partita
+ * @param nPlayers è il numero di giocatori ing iococ
+ */
+void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers) {
+	Player *headPlayer = playerList;
+	CartaCfu *headCarte = turno->carteGiocate;
+	int modifier = 0;
 
+	if (turno->points == NULL) {
+		turno->points = (int *)calloc(nPlayers, sizeof(int));
+		if (turno->points == NULL){
+			exit(ERR_FAIL_ALLOCATION_POINTS);
+		}
+	} else {
+		turno->points = (int *)realloc(turno->points, nPlayers * sizeof(int));
+		if (turno->points == NULL){
+			exit(ERR_FAIL_ALLOCATION_POINTS);
+		}
+	}
+	for (int i = 0; i < nPlayers; ++i) {
+		modifier = headPlayer->character.bonusMalus[turno->cartaOstacolo->type];
+		turno->points[i] = headCarte->cfu + modifier;
+		headPlayer = headPlayer->nextPlayer;
+		headCarte = headCarte->next;
+	}
+}
+
+void printPuntiParziali(Turno *turno, Player *playerList, int nPlayers) {
+	Player *pPlayer = playerList;
+
+	printf("\nPunti Cfu del turno %d\n", turno->numTurno);
+	for (int i = 0; i < nPlayers; ++i) {
+		printf("%31s: %d\n", pPlayer->username, turno->points[i]);
+		pPlayer = pPlayer->nextPlayer;
+	}
+	printf("+------------------------------+\n");
+}
+
+void winnersLosers(Turno *turno, Player *playersList, int nPlayers){
+	Player *pPlayer = playersList;
+	minMax(turno->points, nPlayers, &turno->cfuToLose, &turno->cfuToWin);
+
+	for (int i = 0; i < nPlayers; ++i) {
+		if (turno->points[i] == turno->cfuToWin){
+			printf("Vincitore turno: %s", pPlayer->username);
+		}
+		if (turno->points[i] == turno->cfuToLose) {
+			printf("Perdente turno: %s", pPlayer->username);
+		}
+		pPlayer = pPlayer->nextPlayer;
+	}
+}
+// ============ CHIUSURA ===============================================================================================
 /**
  * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria
  * @param mazzoCfu

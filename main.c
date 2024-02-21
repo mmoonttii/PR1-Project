@@ -66,6 +66,7 @@ int main() {
 	turno.numTurno = 1;
 
 	while (endGame != true){
+		turno.points = NULL;
 		pPlayer = playerList;
 		enterClear();
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
@@ -103,6 +104,11 @@ int main() {
 			enterClear();
 		}
 
+		// Calcolo punteggio
+		calcolaPunteggio(&turno, playerList, nGiocatori);
+		printPuntiParziali(&turno, playerList, nGiocatori);
+
+		winnersLosers(&turno, playerList, nGiocatori);
 		scartaCarte(&turno.carteGiocate, &mazzoScarti);
 
 		printf("\nDistribuendo le nuove carte...\n");
@@ -121,5 +127,7 @@ int main() {
 	mazzoScarti   = freeCfu(mazzoScarti);
 	return 0;
 }
+
+
 
 

@@ -11,6 +11,9 @@ void giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **listaCarteGiocate, CartaCfu 
 void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers);
 
 // ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
-
+void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers);
+void printPuntiParziali(Turno *turno, Player *playerList, int nPlayers);
+void winnersLosers(Turno *turno, Player *playersList, int nPlayers);
+// ============ CHIUSURA ===============================================================================================
 void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti);
 #endif //PR1_PROJECT_TURNO_H
