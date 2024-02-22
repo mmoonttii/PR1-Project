@@ -22,5 +22,5 @@ void printGiocatori(Player *listaGiocatori, bool stampaCarte);
 void printGiocatore(Player *giocatore, bool stampaCarte);
 // ============ LIST MANAGEMENT ===============================================
 Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti);
-
+Player *addPlayerInCoda(Player *playerList, Player *playerToAdd);
 #endif //PR1_PROJECT_GIOCATORI_H

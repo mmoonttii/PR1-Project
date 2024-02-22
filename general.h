@@ -18,6 +18,7 @@
 #define N_PERSONAGGI   4   // Numero di personaggi
 #define READ           "r" // Parametro di lettura files
 #define CARTE_PER_MANO 5   // Numero di carte che un giocatore deve avere
+#define CFU_WINNER     60  // Numero di CFU per vincere la partita
 
 // =========== CARTE CFU ===============================================================================================
 
@@ -99,6 +100,8 @@ typedef struct {
 	int cfuToLose;                  /**< Numero di CFU dei giocatori perdenti */
 	CartaOstacolo *cartaOstacolo;   /**< Carta ostacolo pescata questo turno */
 	CartaCfu *carteGiocate;         /**< Carte giocate dai giocatori a questo turno */
+	Player *winners;                /**< Liste di giocatori vincitori */
+	Player *losers;                 /**< Lista di giocatori perdenti */
 } Turno;
 
 // ============ UTILITIES ==============================================================================================

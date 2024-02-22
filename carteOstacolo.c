@@ -122,6 +122,25 @@ CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
 	return carta;
 }
 
+/**
+ * ostacoloInCoda() è la subroutine che assegna a un giocatore una carta ostacolo.
+ * La carta ostacolo è un doppio puntatore, per poter modificare a NULL il puntatore che puntava alla carta ostacolo
+ * ora assegnata
+ * @param pOstacolo è un doppio puntatore a lla carta ostacolo da assegnare
+ * @param listaOstacoli è un puntatore al giocatore a cui assegnare la carta
+ */
+void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo *listaOstacoli){
+	CartaOstacolo *headOstacoli = listaOstacoli;
+	if (listaOstacoli != NULL) {
+		while (headOstacoli->next != NULL) {
+			headOstacoli = headOstacoli->next;
+		}
+		headOstacoli->next = *pOstacolo;
+	} else {
+		listaOstacoli = *pOstacolo;
+	}
+	pOstacolo = NULL;
+}
 // ============ OUTPUT ========================================================
 /**
  * printOstacoli è la subroutine che si occupa di stampare una lista di ostacoli

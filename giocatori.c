@@ -128,7 +128,7 @@ void printGiocatori(Player *listaGiocatori, bool stampaCarte) {
  * @param personaggi è l'array delle strutture dei personaggi
  * @return la funzione restituisce listaGiocatori, una lista di strutture di tipo giocatore
  */
-Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti) {
+Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti)  {
 	Player    *listaGiocatori = NULL,
 	          *head           = NULL,
 	          *newPlayer      = NULL,
@@ -177,3 +177,31 @@ Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[
 	return listaGiocatori;
 }
 
+/**
+ * addPlayerInCoda() è la subroutine che, presi in input una lista e un nuovo nodo, COPIA tale nodo alla coda di
+ * tale lista, assicurandosi che il puntatore next di questo sia NULL
+ * @param playerList è la lista alla quale aggiungere il nodo
+ * @param playerToAdd è il nodo da aggiungere
+ * @return la testa della lista con il nodo aggiunto
+ */
+Player *addPlayerInCoda(Player *playerList, Player *playerToAdd){
+
+	Player *head = playerList,
+	       aux = *playerToAdd;
+	aux.nextPlayer = NULL;
+
+	// Se la lista è vuota
+	if (playerList == NULL) {
+		// Posso direttamente allocare il nuovo nodo sulla testa
+		playerList = allocaGiocatore();
+		*playerList = aux;
+	} else {
+		// Altrimenti scorro fino all'ultimo nodo e lo aggiungo dopo questo
+		while (head->nextPlayer != NULL) {
+			head = head->nextPlayer;
+		}
+		head->nextPlayer = allocaGiocatore();
+		*(head->nextPlayer) = aux;
+	}
+	return playerList;
+}
