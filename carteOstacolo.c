@@ -3,41 +3,10 @@
 //
 
 #include "carteOstacolo.h"
+#include "memoria.h"
 
 
 // ============ MEMORY MANAGEMENT =============================================
-/**
- * allocaCartaOstacolo() è la funzione che si occupa di allocare in memoria lo spazio necessario a contenere una carta
- *
- * @return un puntatore alla locazione della nuova carta
- */
-CartaOstacolo *allocaCartaOstacolo() {
-	CartaOstacolo *newCard = NULL;
-	newCard = (CartaOstacolo *)calloc(1, sizeof(CartaOstacolo));
-	if (newCard == NULL) {
-		// TODO: FREE MEM
-		exit(ERR_FAIL_ALLOCATION_OSTACOLO);
-	}
-	return newCard;
-}
-
-/**
- * freeOstacolo() è la funzione per liberare la memoria precedentemente allocata per una lista
- * @param mazzoOstacoli è il puntatore alla testa della lista
- */
-CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
-	CartaOstacolo *pAux = NULL;
-
-	while (mazzoOstacoli != NULL) {
-		pAux = mazzoOstacoli;
-		mazzoOstacoli = mazzoOstacoli->next;
-		if (pAux != NULL) {
-			free(pAux);
-		}
-	}
-	mazzoOstacoli = NULL;
-	return mazzoOstacoli;
-}
 
 // ============ LIST MANAGEMENT ===============================================/**
 
@@ -127,17 +96,17 @@ CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
  * La carta ostacolo è un doppio puntatore, per poter modificare a NULL il puntatore che puntava alla carta ostacolo
  * ora assegnata
  * @param pOstacolo è un doppio puntatore a lla carta ostacolo da assegnare
- * @param listaOstacoli è un puntatore al giocatore a cui assegnare la carta
+ * @param listaOstacoli è un doppio puntatore alla lista al quale aggiungere la carta ostacolo
  */
-void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo *listaOstacoli){
-	CartaOstacolo *headOstacoli = listaOstacoli;
-	if (listaOstacoli != NULL) {
+void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo **listaOstacoli){
+	CartaOstacolo *headOstacoli = *listaOstacoli;
+	if (*listaOstacoli != NULL) {
 		while (headOstacoli->next != NULL) {
 			headOstacoli = headOstacoli->next;
 		}
 		headOstacoli->next = *pOstacolo;
 	} else {
-		listaOstacoli = *pOstacolo;
+		*listaOstacoli = *pOstacolo;
 	}
 	pOstacolo = NULL;
 }
@@ -149,23 +118,16 @@ void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo *listaOstacoli){
 void printOstacoli(CartaOstacolo *listaOstacoli){
 	CartaOstacolo *head = listaOstacoli;
 	char *types[] = {"null", "Studio", "Sopravvivenza", "Sociale", "Esame"};
-	bool stop = true;
 	int count = 0;
 
-	while (stop){
+	while (head != NULL){
 		printf("\nNome: %s\n"
 		       "|\tDescrizione: %s\n"
 		       "|\tTipo: %s\n",
 		       head->name, head->desc, types[head->type]);
-		// In caso la prossima carta sia NULL, esci dal loop
-		if (head->next == NULL){
-			stop = false;
-			// Altrimenti continua con la prossima carta
-		} else {
-			head = head->next;
-		}
+
+		head = head->next;
 		count++;
 	}
-	//printf("\nLe carte sono %d\n", count);
 }
 

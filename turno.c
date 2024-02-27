@@ -1,7 +1,11 @@
 #include "turno.h"
 #include "carteOstacolo.h"
+#include "giocatori.h"
+#include "memoria.h"
+#include "mazzoCfu.h"
 
 // ============ TURNO - FASE 1 =========================================================================================
+
 /**
  * Acquisisci azione che si occupa di ricevere l'input del giocatore che corrisponde a un azione da compiere
  * all'inzio del turno
@@ -26,92 +30,73 @@ int acquisisciAzione() {
 }
 
 /**
- * giocaCarta() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
+ * giocaCartaTurno() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
  * vuole giocare e aggiungere la carta alla lista delle carte giocate
  * @param manoCarteCfu é la lista delle carte in mano al giocatore
- * @param listaCarteGiocate è la lista delle carte che sono state giocate in questo turno
  */
-void giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **listaCarteGiocate, CartaCfu *mazzoScarti, CartaCfu *mazzoCarteCfu) {
+CartaCfu *giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano) {
 	CartaCfu *headMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
-	         *headGiocate = *listaCarteGiocate, // Puntatore della lista delle carte giocate per questo turno
-	         *choosenCard = NULL,              // Pointer alla carta giocata in questo turno
-	         *prev        = NULL;              // Pointer alla carta precedente quella giocata
-	int      choice       = 0;                 // Indice della carta scelta dal player
-	bool instant,                              // Flag carta istantanea per chiedere una carta diversa
-	     tutteIstantanee  = true;              // Flag mano tutta di carte istantanee per rimescolare la mano
+	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
+	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
+	int      choice       = 0;                  // Indice della carta scelta dal player
+	bool instant,                               // Flag carta istantanea per chiedere una carta diversa
+	     tutteIstantanee  = true,               // Flag mano tutta di carte istantanee per rimescolare la mano
+		 giocabile        = true;
 
 	do {
-		tutteIstantanee = true;
-		for (int i = 0; i < CARTE_PER_MANO; ++i) {
-			// Stampa di tutte le carte
-			printf("\n[%d] ", i);
-			printSingleCartaCfu(headMano);
-			// Check istantanea
-			if (headMano->cfu == 0 && headMano->effect != SCARTAP) {
-				printf("| CARTA ISTANTANEA - non puoi giocarla in questa fase del turno\n");
-			} else {
-				tutteIstantanee = false;
-			}
-			if (headMano->next != NULL) {
-				headMano = headMano->next;
-			}
-		}
-		if (tutteIstantanee == true){
+		tutteIstantanee = printMano(*manoCarteCfu);
+		if (tutteIstantanee == true && rimescolaMano == true){
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
-			scartaCarte(manoCarteCfu, &mazzoScarti);
-			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, &mazzoCarteCfu, &mazzoScarti);
+			scartaCarte(manoCarteCfu, mazzoScarti);
+			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, &mazzoCarteCfu, mazzoScarti);
+		} else if (tutteIstantanee == true && rimescolaMano == false) {
+			printf("Non puoi giocare nessuna carta in questo momento");
+			giocabile = false;
 		}
-	} while (tutteIstantanee == true);
+	} while (tutteIstantanee == true && rimescolaMano == true);
+
+	if (giocabile) {
+		do {
+			choice = acquisisciCarta(CARTE_PER_MANO);
+			choosenCard = findCartaCfu(manoCarteCfu, choice);
+
+			// Check istantanea
+			instant = isIstantanea(choosenCard) ? true : false;
+			if (instant) {
+				printf("\nLa carta scelta è una carta istantanea, scegliere un'altra carta\n");
+			}
+		} while (instant);
+	} else {
+		choosenCard = NULL;
+	}
+	return choosenCard;
+}
+
+void giocaCartaTurno(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu) {
+	CartaCfu *choosenCard = NULL,
+			 **manoCarteCfu = NULL;
+
+	manoCarteCfu = &(pPlayer->manoCarteCfu);
+
+	choosenCard = giocaCarta(manoCarteCfu, mazzoScarti, mazzoCfu, !SPAREGGIO);
+	choosenCard = estraiCartaCfu(manoCarteCfu, choosenCard);
+	cartaCfuInCoda(&(turno->carteGiocate), choosenCard);
+}
+
+int acquisisciCarta(int i) {
+	int choice;
 
 	do {
-		// Acquisizione carta scelta
-		headMano = *manoCarteCfu;
-		printf(">>> ");
+		printf("[0 - %d]>>> ", i - 1);
 		scanf("%d", &choice);
 
-		// Se la carta scelta non è la prima, quindi choice != 0
-		for (int i = 0; i < choice; i++) {
-			// Scorro fino alla prossima carta, salvando la posizione della carta precedente
-			prev     = headMano;
-			headMano = headMano->next;
+		if (choice < 0 || choice > i) {
+			printf("\n\t%d non è una scelta valida, riprova", choice);
 		}
+	} while (choice < 0 || choice > i);
 
-		choosenCard = headMano; // La carta scelta è in ogni caso headMano
-
-		// Check istantanea
-		if (choosenCard->cfu == 0 && choosenCard->effect != SCARTAP) {
-			instant = true;
-		} else {
-			instant = false;
-		}
-
-		if (instant) {
-			printf("\nLa carta scelta è una carta istantanea, scegliere un'altra carta\n");
-		}
-	} while (instant);
-
-	// Quando la carta scelta non è istantanea posso estrarla dalla lista
-	if (choice != 0) {
-		prev->next = choosenCard->next; // Il next della precedente prende quello che era il next della carta presa
-		choosenCard->next = NULL; // Il next della carta presa viene resettato a NULL
-	} else {
-		manoCarteCfu = &(choosenCard->next); // la testa della mano prende la carta successiva
-		choosenCard->next = NULL;
-	}
-
-	// Se la lista delle carte giocate è vuota, allora la lista è la prima carta
-	if (*listaCarteGiocate == NULL) {
-		*listaCarteGiocate = choosenCard;
-	} else {
-		// Altrimenti si scorre fino alla prima carta il cui next è null e si aggiunge la carta in coda
-		while (headGiocate->next != NULL) {
-			headGiocate = headGiocate->next;
-		}
-		// La carta successiva della lista delle carte giocate è la carta scelta dal giocatore
-		headGiocate->next = choosenCard;
-		choosenCard->next = NULL;
-	}
+	return choice;
 }
 
 /**
@@ -153,7 +138,7 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 		}
 	}
 	// Stampa giocatore richiesto
-	printGiocatore(choosenPlayer, false);
+	printGiocatore(choosenPlayer);
 }
 
 // ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
@@ -164,8 +149,9 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
  * @param turno è la struttura di tipo Turno che rappresenta un turno di gioco
  * @param playerList è la lista dei giocatori nella partita
  * @param nPlayers è il numero di giocatori ing iococ
+ * @param characters indica se le personalità dei personaggi debbano inficiare sul calcolo dei punteggi
  */
-void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers) {
+void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers, bool characters) {
 	Player *headPlayer = playerList;
 	CartaCfu *headCarte = turno->carteGiocate;
 	int modifier = 0;
@@ -173,16 +159,13 @@ void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers) {
 	if (turno->points == NULL) {
 		turno->points = (int *)calloc(nPlayers, sizeof(int));
 		if (turno->points == NULL){
-			exit(ERR_FAIL_ALLOCATION_POINTS);
-		}
-	} else {
-		turno->points = (int *)realloc(turno->points, nPlayers * sizeof(int));
-		if (turno->points == NULL){
-			exit(ERR_FAIL_ALLOCATION_POINTS);
+			exit(ERR_FAIL_ALLOC_POINTS);
 		}
 	}
 	for (int i = 0; i < nPlayers; ++i) {
-		modifier = headPlayer->character.bonusMalus[turno->cartaOstacolo->type - 1];
+		// Se characters è vero devo considerare anche i bonus/malus dei giocatori
+		modifier = characters ? headPlayer->character.bonusMalus[turno->cartaOstacolo->type - 1] : 0;
+
 		turno->points[i] = headCarte->cfu + modifier;
 		headPlayer = headPlayer->nextPlayer;
 		headCarte = headCarte->next;
@@ -266,18 +249,19 @@ void assegnaPunti(Turno *turno, Player *playerList, int nPlayers){
 		if (pointsWinners == turno->points[i]) { // Se i punti fatti in questo turno sono uguali ai punti per vincere
 			pPlayer->cfu += pointsWinners;       // Allora incremento i suoi punti cfu
 		}
+		pPlayer = pPlayer->nextPlayer;
 	}
 }
 // ============ SPAREGGI ===============================================================================================
 
 /**
- * spareggiCheck() è la funzione che si occupa di controllare se sia necessario far partire spareggi tra i giocatori
+ * contaLosers() è la funzione che si occupa di controllare se sia necessario far partire spareggi tra i giocatori
  * perdenti, in caso questo non sia necessario, chiama la funzione ostacoloInCoda() che da la carta ostacolo al
  * giocatore perdente
  * @param turno è la struttura di tipo Turno che identifica un turno in particolare
  * @param playerList è la lista dei giocatori in partita
  */
-void spareggiCheck(Turno *turno, Player *playerList) {
+int contaLosers(Turno *turno, Player *playerList) {
 	Player *losersHead = turno->losers,
 	       *pPlayer = playerList;
 	int losersCount = 0;
@@ -288,16 +272,7 @@ void spareggiCheck(Turno *turno, Player *playerList) {
 		losersHead = losersHead->nextPlayer;
 	}
 
-	if (losersCount == 0) {
-
-	} else if (losersCount == 1) {
-		while (strcmp(pPlayer->username, turno->losers->username) != 0) {
-			pPlayer = pPlayer->nextPlayer;
-		}
-		ostacoloInCoda(&turno->cartaOstacolo, pPlayer->listaCarteOstacolo);
-	} else {
-		// svolgiTurno(turno->losers, losersCount);
-	}
+	return losersCount;
 }
 
 /**
@@ -305,7 +280,7 @@ void spareggiCheck(Turno *turno, Player *playerList) {
  * ostacolo hanno
  * @param playerList è la lista di giocatori
  */
-void puntiCarteOstacolo(Player *playerList){
+void puntiCarteOstacolo (Player *playerList){
 	Player        *headPlayer   = playerList; // Testa della lista giocatori
 	CartaOstacolo *headOstacoli = NULL;       // Testa della lista di ostacoli di ogni giocatore
 	int countOstacoli = 0;                    // Contatore di ostacoli per ogni giocatore
@@ -323,41 +298,37 @@ void puntiCarteOstacolo(Player *playerList){
 		headPlayer = headPlayer->nextPlayer; // Passa al giocatore successivo
 	}
 }
-// ============ CHIUSURA ===============================================================================================
-void loseCondition(Player *playersList) {
-	Player *headPlayers = playersList;
-	int ostacoliCounter[N_OSTACOLI] = {};
 
+/*
+void spareggio (Player *playerList, int nPlayers, CartaCfu *mazzoScarti, CartaCfu *mazzoCfu) {
+	bool endSpareggio = false;
+	Player *pPlayer = playerList;
+	Turno turnoSpareggio;
+	int losersCount;
 
-}
-
-/**
- * winConditions() è la subroutine che controlla se un giocatore sia vincitore della partita
- * @param playersList è la lista dei giocatori
- * @return true se si ha un giocatore vincente e quindi la partita può terminare
- */
-bool winConditions(Player *playersList) {
-	bool end = false;
-	Player *headPlayer = playersList;
-
-	while (headPlayer != NULL){
-		if (headPlayer->cfu >= CFU_WINNER || playersList->nextPlayer == NULL) {
-			end = true;
-			printf("\n%s hai vinto la partita\n"
-			       "*************************************************************************\n"
-			       "*   ____ ___  __  __ ____  _     ___ __  __ _____ _   _ _____ ___   _ _ *\n"
-			       "*  / ___/ _ \\|  \\/  |  _ \\| |   |_ _|  \\/  | ____| \\ | |_   _|_ _| | | |*\n"
-			       "* | |  | | | | |\\/| | |_) | |    | || |\\/| |  _| |  \\| | | |  | |  | | |*\n"
-			       "* | |__| |_| | |  | |  __/| |___ | || |  | | |___| |\\  | | |  | |  |_|_|*\n"
-			       "*  \\____\\___/|_|  |_|_|   |_____|___|_|  |_|_____|_| \\_| |_| |___| (_|_)*\n"
-			       "*                                                                       *\n"
-			       "*************************************************************************\n",
-			       headPlayer->username);
+	while (endSpareggio != true) {
+		pPlayer = playerList;
+		for (int i = 0; i < nPlayers; ++i) {
+			printGiocatore(pPlayer);
+			enterClear();
+			giocaCartaSpareggio();
+			enterClear();
 		}
-		headPlayer = headPlayer->nextPlayer;
+		calcolaPunteggio(&turnoSpareggio, playerList, nPlayers, SPAREGGIO);
+		winnersLosers(&turnoSpareggio, playerList, nPlayers);
+
+		losersCount = contaLosers(&turnoSpareggio, playerList);
+
+		if (losersCount > 1) {
+			spareggio(turnoSpareggio.losers, losersCount, mazzoScarti, mazzoCfu);
+		} else {
+			endSpareggio = true;
+		}
 	}
-	return end;
 }
+*/
+
+// ============ CHIUSURA ===============================================================================================
 
 /**
  * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria
@@ -366,14 +337,10 @@ bool winConditions(Player *playersList) {
  * @param playerList
  * @param mazzoScarti
  */
-void end(CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti){
+void end (CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti){
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	playerList    = freeGiocatore(playerList);
 	mazzoScarti   = freeCfu(mazzoScarti);
 	exit(EXIT_SUCCESS);
 }
-
-
-
-

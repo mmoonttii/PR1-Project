@@ -41,7 +41,7 @@ void enterClear() {
 	#elif __APPLE__ // codice per macOs
 		system("clear");
 	#elif __linux__ // codice per Linux
-		sys	prtem("clear");
+		system("clear");
 	#endif
 }
 

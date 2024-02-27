@@ -7,20 +7,34 @@
 
 #include "general.h"
 #include "errors.h"
-#include "carteCfu.h"
 
 // ============ PERSONAGGI =====================================================
-void parseCharacters(FILE *fp, Character personaggi[]);
-
-// ============ MEMORY MANAGEMENT =============================================
-Player *allocaGiocatore();
-Player *freeGiocatore(Player *listaGiocatore);
+void parseCharacters(FILE      *fp,
+                     Character personaggi[]);
+void printBonusMalus(int arr[N_OSTACOLI]);
 
 // ============ IO ============================================================
 int acquisisciNumGiocatori();
-void printGiocatori(Player *listaGiocatori, bool stampaCarte);
-void printGiocatore(Player *giocatore, bool stampaCarte);
+void printGiocatori(Player *listaGiocatori,
+                    bool   stampaCarte);
+
+void printGiocatore(Player *pPlayer);
 // ============ LIST MANAGEMENT ===============================================
-Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu *mazzoScarti);
-Player *addPlayerInCoda(Player *playerList, Player *playerToAdd);
+Player *initGiocatori(int       nGiocatori,
+                      CartaCfu  **mazzoCfu,
+                      Character personaggi[],
+                      CartaCfu  *mazzoScarti);
+
+Player *addPlayerInCoda(Player *playerList,
+                        Player *playerToAdd);
+
+// ============ ANDAMENTO PARTITA =============================================
+bool hasLost(Player *pPlayer);
+bool hasWon(Player *pPlayer);
+
+bool playerCheck(Player        **playersList,
+				 CartaOstacolo **mazzoOstacoli,
+				 CartaCfu      **mazzoScarti,
+				 int           *nPlayers);
+
 #endif //PR1_PROJECT_GIOCATORI_H

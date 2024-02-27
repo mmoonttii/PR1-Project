@@ -8,10 +8,13 @@
 // ============ TURNO - AZIONI GIOCATORI ===============================================================================
 int acquisisciAzione();
 
-void giocaCarta(CartaCfu **manoCarteCfu,
-                CartaCfu **listaCarteGiocate,
-                CartaCfu *mazzoScarti,
-                CartaCfu *mazzoCarteCfu);
+CartaCfu *giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano);
+
+int acquisisciCarta(int i);
+
+void giocaCartaTurno(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu);
+
+CartaCfu *scegliCarta(CartaCfu **manoCarteCfu);
 
 void infoGiocatori(Player *listaGiocatori,
                    Player *currentPlayer,
@@ -20,7 +23,8 @@ void infoGiocatori(Player *listaGiocatori,
 // ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
 void calcolaPunteggio(Turno  *turno,
                       Player *playerList,
-                      int    nPlayers);
+                      int    nPlayers,
+					  bool   characters);
 
 void printPuntiParziali(Turno  *turno,
                         Player *playerList,
@@ -40,21 +44,22 @@ void assegnaPunti(Turno  *turno,
                   int    nPlayers);
 
 // ============ PERDENTI ===============================================================================================
-void spareggiCheck(Turno  *turno,
-                   Player *playerList);
+int contaLosers(Turno  *turno,
+                Player *playerList);
 
 void ostacoloInCoda(CartaOstacolo **pOstacolo,
-                    CartaOstacolo *listaOstacoli);
+                    CartaOstacolo **listaOstacoli);
 
 void puntiCarteOstacolo(Player *playerList);
 
 // ============ CHIUSURA ===============================================================================================
-void loseCondition(Player *playersList);
-
-bool winConditions(Player *playersList);
 
 void end(CartaCfu      *mazzoCfu,
          CartaOstacolo *mazzoOstacoli,
          Player        *playerList,
          CartaCfu      *mazzoScarti);
+
+void spareggio(Player *playerList, int nPlayers, CartaCfu *mazzoScarti, CartaCfu *mazzoCfu);
+
+void giocaCartaSpareggio();
 #endif //PR1_PROJECT_TURNO_H

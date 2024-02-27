@@ -2,11 +2,14 @@
 // Matricola: 60/61/66424
 // Tipologia progetto:
 
-#include "general.h"
 #include "carteOstacolo.h"
-#include "carteCfu.h"
-#include "turno.h"
+#include "general.h"
 #include "giocatori.h"
+#include "mazzoCfu.h"
+#include "memoria.h"
+#include "turno.h"
+#include "spareggi.h"
+#include "effetti.h"
 
 #define FILE_PERSONAGGI "../files-input/personaggi.txt"
 #define FILE_CARTE_CFU "../files-input/carte.txt"
@@ -25,17 +28,20 @@ int main() {
 	// Personaggi e giocatori
 	Character     charactersArr[N_PERSONAGGI] = {};    // Array personaggi
 	Player        *playerList                 = NULL,  // Lista giocatori
-				  *pPlayer                    = NULL;  // Puntatore al Player attuale
+				  *pPlayer                    = NULL,  // Puntatore al Player attuale
+				  *pLoser                     = NULL;  // Puntatore al Player perdente
 	// Carte
 	CartaCfu      *mazzoCfu                   = NULL,  // Lista mazzo pesca Carte Cfu
 				  *mazzoScarti                = NULL;  // Lista mazzo scarti Carte Cfu
 	CartaOstacolo *mazzoOstacoli              = NULL;  // Lista mazzo Carte Ostacolo
 
 	int nPlayers = 0,                                  // Numero giocatori partecipanti
-		input;                                         // Input menu
+		input,
+		losersCount;                                         // Input menu
 
 	bool leave   = false,                              // Condizione di uscita dal menu
-		 endGame = false;                              // Condizione di termine partita
+		 endGame = false,                              // Condizione di termine partita
+		 spareggi;
 	Turno turno = {};                                  // Struttura turno
 
 	// ========== PREPARAZIONE =========================================================================================
@@ -49,6 +55,7 @@ int main() {
 
 	// Lettura carte e creazione mazzo mischiato
 	mazzoCfu      = creaMazzoCfu(fCfu);
+	mazzoCfu      = mescolaMazzo(&mazzoCfu);
 	mazzoOstacoli = creaMazzoOstacoli(fOstacoli);
 
 	// Chiusura file
@@ -64,21 +71,19 @@ int main() {
 	turno.numTurno = 1;
 
 	while (endGame != true){
-		turno.points = NULL;
 		pPlayer = playerList;
-		enterClear();
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);
 		printOstacoli(turno.cartaOstacolo);
 
-		// Svolgimento turno
-		for (int i = 0; i < nPlayers; ++i) {
-			printGiocatore(pPlayer, false);   // Stampa statistiche giocatore senza mano delle carte
+		// ==== SVOLGIMENTO TURNO ==========
+		for (int i = 0; i < nPlayers && endGame != true; ++i) {
+			printGiocatore(pPlayer);   // Stampa statistiche giocatore senza mano delle carte
 			do {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCarta(&pPlayer->manoCarteCfu, &turno.carteGiocate, mazzoScarti, mazzoCfu);
+						giocaCartaTurno(&turno, pPlayer, &mazzoScarti, mazzoCfu);
 						leave = true;
 						break;
 					case 2:
@@ -102,38 +107,53 @@ int main() {
 			enterClear();
 		}
 
-		// Calcolo punteggio
-		calcolaPunteggio(&turno, playerList, nPlayers);
+		// ==== CALCOLO PUNTEGGI ==========
+		calcolaPunteggio(&turno, playerList, nPlayers, true);
 		printPuntiParziali(&turno, playerList, nPlayers);
+
+		gestioneEffetti(&turno, playerList, nPlayers, &mazzoCfu, &mazzoScarti);
 
 		winnersLosers(&turno, playerList, nPlayers);
 		printLosers(turno.losers);
 		printWinners(turno.winners);
+
 
 		// Se non ci sono vincitori o perdenti, dopo aver eseguito winnersLosers(), vuol dire che tutti i giocatori
 		// hanno pareggiato e la carta ostacolo viene rimessa in fondo al mazzo
 		if (turno.winners == NULL && turno.losers == NULL) {
 			printf("\nTutti i giocatori sono a parimerito, la carta ostacolo di questo turno verrà messa alla fine del "
 				   "mazzo\n");
-			ostacoloInCoda(&turno.cartaOstacolo, mazzoOstacoli);
+			ostacoloInCoda(&turno.cartaOstacolo, &mazzoOstacoli);
 		} else {
-			assegnaPunti(&turno, playerList, nPlayers); // Assegnazione punti ai vincitori
-			spareggiCheck(&turno, playerList);          // Gestione spareggi e assegnazione ostacoli ai perdenti
+			assegnaPunti(&turno, playerList, nPlayers);   // Assegnazione punti ai vincitori
+
+			losersCount = contaLosers(&turno, playerList); // Conta i giocatori che hanno perso
+
+			if (losersCount == 1) {
+				pLoser = turno.losers;
+			} else {
+				printf("\nRisoluzione spareggi");
+				// pLoser = gestisciSpareggi();
+			}
+			ostacoloInCoda(&turno.cartaOstacolo, &pLoser->listaCarteOstacolo);
 		}
-		// Fine turno
+
+		// ==== FINE DEL TURNO ==========
 		scartaCarte(&turno.carteGiocate, &mazzoScarti);
-
 		puntiCarteOstacolo(playerList);
+		endGame = playerCheck(&playerList, &mazzoOstacoli, &mazzoScarti, &nPlayers);
 
-		loseCondition(playerList);
-		endGame = winConditions(playerList);
-
-		printf("\nDistribuendo le nuove carte...\n");
-		pPlayer = playerList;
-		for (int i = 0; i < nPlayers; ++i) {
-			distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
-			pPlayer = pPlayer->nextPlayer;
+		if (!endGame) {
+			printf("\nDistribuendo le nuove carte...\n");
+			pPlayer = playerList;
+			for (int i = 0; i < nPlayers; ++i) {
+				distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
+				pPlayer = pPlayer->nextPlayer;
+			}
 		}
+		turno.winners = NULL;
+		turno.losers = NULL;
+		turno.points = freeIntArr(turno.points);
 
 	}
 

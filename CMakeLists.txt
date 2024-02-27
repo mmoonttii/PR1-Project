@@ -8,11 +8,17 @@ add_executable(PR1_Project
 		general.c
 		general.h
 		errors.h
-		carteCfu.c
-		carteCfu.h
 		carteOstacolo.c
 		carteOstacolo.h
 		giocatori.c
 		giocatori.h
 		turno.c
-		turno.h)
+		turno.h
+		memoria.c
+		memoria.h
+		mazzoCfu.c
+		mazzoCfu.h
+		effetti.c
+		effetti.h
+		spareggi.c
+		spareggi.h)
