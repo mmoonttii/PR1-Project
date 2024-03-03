@@ -17,6 +17,7 @@
 #define N_OSTACOLI     4    // Numero di tipologie di ostacoli
 #define N_PERSONAGGI   4    // Numero di personaggi
 #define READ           "r"  // Parametro di lettura files
+#define WRITE          "w"  // Parametro di scrittura files
 #define CARTE_PER_MANO 5    // Numero di carte che un giocatore deve avere
 #define CFU_WINNER     60   // Numero di CFU per vincere la partita
 #define SPAREGGIO      false // Flag per indicare se gestire il turno come spareggio o come turno regolare

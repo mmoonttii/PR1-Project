@@ -23,90 +23,83 @@
 //	DIROTTA 	/**< Dai la carta che stai per prendere ad un altro giocatore a tua scelta */
 //} Effect;
 
-
 void gestioneEffetti(Turno *turno, Player *playerList, int nPlayers, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti) {
-	CartaCfu *headGiocate = turno->carteGiocate,
-			 *prev        = NULL;
-	Player   *pPlayer     = NULL;
-	bool     *isRisolta   = NULL;
-	int max = INT_MIN,
-		i   = 0;
-
-	isRisolta = allocaArrBool(nPlayers); // isRisolta indica se l'effetto di ogni carta è stato risolto
+	bool *arrRisolte = NULL;
+	int cfuMax = INT_MIN;
+	Player *pPlayer = NULL;
+	pPlayer = playerList;
+	CartaCfu *pCarta = NULL;
+	arrRisolte = allocaArrBool(nPlayers);
 
 	for (int j = 0; j < nPlayers; ++j) {
-		while (headGiocate != NULL) {
-			while (headGiocate->cfu > max && !isRisolta[i]) {
-				max = headGiocate->cfu;
+		pCarta = turno->carteGiocate;
+		cfuMax = INT_MIN;
+		for (int i = 0; i < nPlayers; i++) {
+			if (!arrRisolte[i] && pCarta->cfu > cfuMax) {
+				cfuMax = pCarta->cfu;
 			}
-			headGiocate = headGiocate->next;
-			i++;
+			pCarta = pCarta->next;
 		}
-		headGiocate = turno->carteGiocate;
+
+		pCarta = turno->carteGiocate;
 		pPlayer = playerList;
 
-		for (int k = 0; k < nPlayers; ++k) {
-			if (headGiocate->cfu == max && !isRisolta[k]) {
-				if (headGiocate->effect == ANNULLA) {
-					printf("Effetto ANNULLA");
-					k = nPlayers, j = nPlayers;
+		for (int i = 0; i < nPlayers; ++i) {
+			if (!arrRisolte[i] && pCarta->cfu == cfuMax) {
+				if (pCarta->effect != ANNULLA) {
+					arrRisolte[i] = risolviEffetti(playerList, pCarta, pPlayer, nPlayers);
+					enterClear();
 				} else {
-					isRisolta[k] = risolviEffetti(playerList, headGiocate, k);
+					printf("La carta %s di %s ha annullato tutti gli altri effetti delle carte\n",
+					       pCarta->name, pPlayer->username);
+					i = nPlayers;
+					j = nPlayers;
+					enterClear();
 				}
 			}
+			pCarta  = pCarta->next;
+			pPlayer = pPlayer->nextPlayer;
 		}
-
 	}
-
-	isRisolta = freeBoolArr(isRisolta);
 }
 
-bool risolviEffetti(Player *playerList, CartaCfu *cartaCfu, int i) {
-	Player *pPlayer = playerList;
+bool risolviEffetti(Player *playerList, CartaCfu *pCarta, Player *pPlayer, int nPlayers) {
+	printf("Risolvo effetto della carta %s di %s\n", pPlayer->username, pCarta->name);
 
-	for (int j = 0; j < i; ++j) {
-		pPlayer = pPlayer->nextPlayer;
-	}
-
-	switch (cartaCfu->effect) {
-		case SCARTAP:
-//			effettoSCARTAP();
-			break;
-		case RUBA:
-//			effettoRUBA();
-			break;
-		case SCAMBIADS:
-//			effettoSCAMBIADS();
-			break;
-		case SCARTAE:
-//			effettoSCARTAE();
-			break;
-		case SCARTAC:
-//			effettoSCARTAC();
-			break;
-		case SCAMBIAP:
-//			effettoSCAMBIAP();
-			break;
-		case DOPPIOE:
-//			effettoDOPPIOE();
-			break;
-		case SBIRCIA:
-//			effettoSBIRCIA();
-			break;
-		case SCAMBIAC:
-//			effettoSCAMBIAC();
-			break;
-		case ANNULLA:
-//			effettoANNULLA();
-			break;
-		default:
-			printf("");
-			break;
-	}
-	printf("Effetto risolto");
+//	switch (pCarta->effect) {
+//		case SCARTAP:
+////			effettoSCARTAP();
+//			break;
+//		case RUBA:
+////			effettoRUBA();
+//			break;
+//		case SCAMBIADS:
+////			effettoSCAMBIADS();
+//			break;
+//		case SCARTAE:
+////			effettoSCARTAE();
+//			break;
+//		case SCARTAC:
+////			effettoSCARTAC();
+//			break;
+//		case SCAMBIAP:
+////			effettoSCAMBIAP();
+//			break;
+//		case DOPPIOE:
+////			effettoDOPPIOE();
+//			break;
+//		case SBIRCIA:
+////			effettoSBIRCIA();
+//			break;
+//		case SCAMBIAC:
+////			effettoSCAMBIAC();
+//			break;
+//		default:
+//			;
+//		break;
+//	}
 	return true;
 }
-
 
 /**
  * subroutine per l'effetto SCARTAP: \n
@@ -137,7 +130,7 @@ void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, Turno *turno, int i
 	headMano = pPlayer->manoCarteCfu;
 
 	if (nonGiocabile != numCarte && flag != false) { // se c'è almeno una carta giocabile
-		choosenCard = giocaCarta(&headMano, mazzoScarti, NULL, SPAREGGIO);
+		choosenCard = chooseCarta(&headMano, mazzoScarti, NULL, SPAREGGIO);
 		choosenCard = estraiCartaCfu(&headMano, choosenCard);
 		turno->points[iPlayer] += choosenCard->cfu;  //assegno i punti della carta al punteggio del giocatore
 		printf("%s aggiungi %d CFU al tuo punteggio parziale!\n", pPlayer->username, choosenCard->cfu);

@@ -22,8 +22,9 @@ void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti);
 // ============ OUTPUT ========================================================
 void printSingleCartaCfu(CartaCfu *pCfu);
 
-bool printMano(CartaCfu *listaCarteCfu);
+void printMano(CartaCfu *listaCarteCfu);
 
 bool isIstantanea(CartaCfu *cartaCfu);
+bool tutteIstantaneeCheck(CartaCfu *cartaCfu);
 CartaCfu *findCartaCfu(CartaCfu **mazzoCfu, int index);
 #endif//PR1_PROJECT_MAZZOCFU_H

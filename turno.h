@@ -8,11 +8,16 @@
 // ============ TURNO - AZIONI GIOCATORI ===============================================================================
 int acquisisciAzione();
 
-CartaCfu *giocaCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano);
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano);
 
 int acquisisciCarta(int i);
 
-void giocaCartaTurno(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu);
+void giocaCarta(Turno    *turno,
+				Player   *pPlayer,
+				CartaCfu **mazzoScarti,
+				CartaCfu *mazzoCfu,
+				FILE     *fLog,
+				bool     spareggioFlag);
 
 CartaCfu *scegliCarta(CartaCfu **manoCarteCfu);
 
@@ -59,7 +64,4 @@ void end(CartaCfu      *mazzoCfu,
          Player        *playerList,
          CartaCfu      *mazzoScarti);
 
-void spareggio(Player *playerList, int nPlayers, CartaCfu *mazzoScarti, CartaCfu *mazzoCfu);
-
-void giocaCartaSpareggio();
 #endif //PR1_PROJECT_TURNO_H

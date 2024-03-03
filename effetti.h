@@ -9,15 +9,9 @@
 #include "turno.h"
 #include "memoria.h"
 
-typedef struct risolviEffetti {
-	Player *player;
-	CartaCfu *cartaCfu;
-	bool risolta;
-	struct risolviEffetti *next;
-} RisolviEffetti;
-
 void gestioneEffetti(Turno *turno, Player *playerList, int nPlayers, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
-bool risolviEffetti(Player *playerList, CartaCfu *cartaCfu, int i);
+
+bool risolviEffetti(Player *playerList, CartaCfu *pCarta, Player *pPlayer, int nPlayers);
 
 void effettoSCARTAP();
 

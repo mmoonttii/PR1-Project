@@ -105,6 +105,12 @@ CartaCfu *indexEstraiCartaCfu(CartaCfu **mazzoCfu, int index) {
 	return extracted;
 }
 
+/**
+ * Data il puntatore a una carta Cfu estrae tale carta se è nella lista
+ * @param mazzoCfu
+ * @param cartaCfu
+ * @return
+ */
 CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 	CartaCfu *head = *mazzoCfu,
 			 *prev = *mazzoCfu,
@@ -115,10 +121,11 @@ CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 	while (!leave) {
 		if (*mazzoCfu == cartaCfu) {
 			extracted = *mazzoCfu;
-			mazzoCfu  = &(*mazzoCfu)->next;
+			*mazzoCfu  = (*mazzoCfu)->next;
+			extracted->next = NULL;
 			leave = true;
 		} else if (prev->next == cartaCfu) {
-			extracted = prev->next;
+			extracted       = prev->next;
 			prev->next      = extracted->next;
 			extracted->next = NULL;
 			leave = true;
@@ -126,6 +133,10 @@ CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 			prev = head;
 			head = head->next;
 			leave = false;
+			if (head == NULL) {
+				printf("\nLa carta non è stata trovata nella lista");
+				leave = true;
+			}
 		}
 	}
 	return extracted;
@@ -226,7 +237,7 @@ void printSingleCartaCfu(CartaCfu *pCfu) {
  * printCarteCfu() è la subroutine che si occupa di stampare una lista di carte e restituisce quante ne ha stampate
  * @param listaCarteCfu è la lista di carte da stampare
  */
-bool printMano(CartaCfu *listaCarteCfu) {
+void printMano(CartaCfu *listaCarteCfu) {
 	CartaCfu *head = listaCarteCfu; // Testa della lista
 	bool tutteIstantanee = true;
 	int i = 0;
@@ -239,13 +250,11 @@ bool printMano(CartaCfu *listaCarteCfu) {
 
 		if (isIstantanea(head)) {
 			printf("| CARTA ISTANTANEA - non puoi giocarla in questa fase del turno\n");
-		} else {
-			tutteIstantanee = false;
 		}
 		head = head->next;
 		i++;
 	}
-	return tutteIstantanee;
+
 }
 
 bool isIstantanea(CartaCfu *cartaCfu) {
@@ -254,6 +263,18 @@ bool isIstantanea(CartaCfu *cartaCfu) {
 	return ris;
 }
 
+bool tutteIstantaneeCheck(CartaCfu *cartaCfu) {
+	CartaCfu *head = cartaCfu;
+	bool tutteIstantanee = true;
+
+	while (head != NULL) {
+		if (!isIstantanea(head)) {
+			tutteIstantanee = false;
+		}
+		head = head->next;
+	}
+	return tutteIstantanee;
+}
 CartaCfu *findCartaCfu(CartaCfu **mazzoCfu, int index) {
 	CartaCfu *head = *mazzoCfu,
 	         *prev  = *mazzoCfu;

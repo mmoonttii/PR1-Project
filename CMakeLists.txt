@@ -21,4 +21,6 @@ add_executable(PR1_Project
 		effetti.c
 		effetti.h
 		spareggi.c
-		spareggi.h)
+		spareggi.h
+		salvataggiLog.c
+		salvataggiLog.h)

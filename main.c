@@ -10,10 +10,12 @@
 #include "turno.h"
 #include "spareggi.h"
 #include "effetti.h"
+#include "salvataggiLog.h"
 
 #define FILE_PERSONAGGI "../files-input/personaggi.txt"
 #define FILE_CARTE_CFU "../files-input/carte.txt"
 #define FILE_CARTE_OSTACOLO "../files-input/ostacoli.txt"
+#define FILE_LOG "log.txt"
 
 int main() {
 	// ========== DICHIARAZIONI E INIT =================================================================================
@@ -23,7 +25,8 @@ int main() {
 	// Puntatori ai file
 	FILE *fPersonaggi = NULL, // path: FILE_PERSONAGGI
 		 *fCfu        = NULL, // path: FILE_CARTE_CFU
-		 *fOstacoli   = NULL; // path: FILE_CARTE_OSTACOLO
+		 *fOstacoli   = NULL, // path: FILE_CARTE_OSTACOLO
+		 *fLog        = NULL; // path: FILE_LOG
 
 	// Personaggi e giocatori
 	Character     charactersArr[N_PERSONAGGI] = {};    // Array personaggi
@@ -49,6 +52,7 @@ int main() {
 	fPersonaggi = openFile(FILE_PERSONAGGI, READ);
 	fCfu        = openFile(FILE_CARTE_CFU, READ);
 	fOstacoli   = openFile(FILE_CARTE_OSTACOLO, READ);
+	fLog        = openFile(FILE_LOG, WRITE);
 
 	// Creazione array charactersArr
 	parseCharacters(fPersonaggi, charactersArr);
@@ -83,7 +87,7 @@ int main() {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCartaTurno(&turno, pPlayer, &mazzoScarti, mazzoCfu);
+						giocaCarta(&turno, pPlayer, &mazzoScarti, mazzoCfu, fLog, !SPAREGGIO);
 						leave = true;
 						break;
 					case 2:
@@ -101,14 +105,12 @@ int main() {
 
 			if (pPlayer->nextPlayer != NULL){
 				pPlayer = pPlayer->nextPlayer;
-			} else {
-				turno.numTurno ++;
 			}
 			enterClear();
 		}
 
 		// ==== CALCOLO PUNTEGGI ==========
-		calcolaPunteggio(&turno, playerList, nPlayers, true);
+		calcolaPunteggio(&turno, playerList, nPlayers, !SPAREGGIO);
 		printPuntiParziali(&turno, playerList, nPlayers);
 
 		gestioneEffetti(&turno, playerList, nPlayers, &mazzoCfu, &mazzoScarti);
@@ -133,7 +135,7 @@ int main() {
 				pLoser = turno.losers;
 			} else {
 				printf("\nRisoluzione spareggi");
-				// pLoser = gestisciSpareggi();
+				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
 			ostacoloInCoda(&turno.cartaOstacolo, &pLoser->listaCarteOstacolo);
 		}
@@ -154,9 +156,11 @@ int main() {
 		turno.winners = NULL;
 		turno.losers = NULL;
 		turno.points = freeIntArr(turno.points);
+		turno.numTurno++;
 
 	}
 
+	fclose(fLog);
 	// Free mem
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
