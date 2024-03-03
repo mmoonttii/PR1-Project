@@ -10,7 +10,7 @@
 #include "turno.h"
 #include "spareggi.h"
 #include "effetti.h"
-#include "salvataggiLog.h"
+#include "saves.h"
 
 #define FILE_PERSONAGGI "../files-input/personaggi.txt"
 #define FILE_CARTE_CFU "../files-input/carte.txt"
@@ -87,7 +87,7 @@ int main() {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCartaTurno(&turno, pPlayer, &mazzoScarti, mazzoCfu, fLog, !SPAREGGIO);
+						giocaCarta(&turno, pPlayer, &mazzoScarti, &mazzoCfu, fLog, !SPAREGGIO);
 						leave = true;
 						break;
 					case 2:
@@ -95,6 +95,12 @@ int main() {
 						leave = false;
 						break;
 					case 0:
+						mazzoCfu      = freeCfu(mazzoCfu);
+						mazzoOstacoli = freeOstacoli(mazzoOstacoli);
+						playerList    = freeGiocatore(playerList);
+						mazzoScarti   = freeCfu(mazzoScarti);
+						fclose(fLog);
+						exit(EXIT_SUCCESS);
 						leave = true, endGame = true;
 						break;
 					default:

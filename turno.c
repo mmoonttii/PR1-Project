@@ -3,7 +3,7 @@
 #include "giocatori.h"
 #include "memoria.h"
 #include "mazzoCfu.h"
-#include "salvataggiLog.h"
+#include "saves.h"
 
 // ============ TURNO - FASE 1 =========================================================================================
 
@@ -31,11 +31,11 @@ int acquisisciAzione() {
 }
 
 /**
- * giocaCartaTurno() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
+ * giocaCarta() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
  * vuole giocare e aggiungere la carta alla lista delle carte giocate
  * @param manoCarteCfu é la lista delle carte in mano al giocatore
  */
-CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano) {
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu **mazzoCarteCfu, bool rimescolaMano) {
 	CartaCfu *headMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
 	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
@@ -53,7 +53,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
 			scartaCarte(manoCarteCfu, mazzoScarti);
-			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, &mazzoCarteCfu, mazzoScarti);
+			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, mazzoCarteCfu, mazzoScarti);
 		} else if (tutteIstantanee == true && rimescolaMano == false) {
 			printf("Non puoi giocare nessuna carta in questo momento");
 			giocabile = false;
@@ -77,7 +77,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 	return choosenCard;
 }
 
-void giocaCartaTurno(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu, FILE *fLog, bool
+void giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog, bool
 spareggioFlag) {
 	CartaCfu *choosenCard = NULL,
 			 **manoCarteCfu = NULL;

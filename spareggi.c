@@ -19,7 +19,9 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 
 	for (int i = 0; i < countLosers; ++i) {
 		headMano = playerHead->manoCarteCfu;
+		// infoPlayer
 		if (contaCarte(headMano) > 0 && !tutteIstantaneeCheck(headMano)) {
+			giocaCarta(&spareggio, playerHead, mazzoCfu, mazzoCfu, fLog, SPAREGGIO);
 		} else {
 			addPlayerInCoda(spareggio.losers, playerHead);
 		}
@@ -39,23 +41,19 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 
 	countLosers = contaLosers(&spareggio, playerList); // Conta i giocatori che hanno perso
 
+	// Check read brutti
 	if (countLosers == 1) {
-		pLoser = spareggio.losers;
+		playerHead = playerList;
+		while (spareggio.losers != NULL) {
+			if (strcmp(spareggio.losers->username, playerHead->username) == 0) {
+				pLoser = playerHead;
+			}
+			spareggio.losers = spareggio.losers->nextPlayer;
+		}
 	} else {
 		printf("\nRisoluzione spareggi");
 		pLoser = gestisciSpareggi(countLosers, &spareggio, mazzoScarti, mazzoCfu, fLog);
 	}
 
 	return pLoser;
-}
-
-void giocaCartaSpareggio(Turno *turno, CartaCfu **manoGiocatore) {
-	CartaCfu *choosenCard = NULL;
-
-	choosenCard = chooseCarta(manoGiocatore, NULL, NULL, SPAREGGIO);
-	if (choosenCard != NULL) {
-		choosenCard = estraiCartaCfu(manoGiocatore, choosenCard);
-	}
-	cartaCfuInCoda(&(turno->carteGiocate), choosenCard);
-
 }

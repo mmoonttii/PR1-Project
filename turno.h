@@ -8,16 +8,16 @@
 // ============ TURNO - AZIONI GIOCATORI ===============================================================================
 int acquisisciAzione();
 
-CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu *mazzoCarteCfu, bool rimescolaMano);
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu **mazzoCarteCfu, bool rimescolaMano);
 
 int acquisisciCarta(int i);
 
-void giocaCartaTurno(Turno    *turno,
-                     Player   *pPlayer,
-                     CartaCfu **mazzoScarti,
-                     CartaCfu *mazzoCfu,
-                     FILE     *fLog,
-                     bool     spareggioFlag);
+void giocaCarta(Turno    *turno,
+                Player   *pPlayer,
+                CartaCfu **mazzoScarti,
+                CartaCfu **mazzoCfu,
+                FILE     *fLog,
+                bool     spareggioFlag);
 
 CartaCfu *scegliCarta(CartaCfu **manoCarteCfu);
 
