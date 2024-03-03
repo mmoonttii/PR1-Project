@@ -87,7 +87,7 @@ int main() {
 				input = acquisisciAzione();
 				switch (input) {
 					case 1:
-						giocaCarta(&turno, pPlayer, &mazzoScarti, mazzoCfu, fLog, !SPAREGGIO);
+						giocaCartaTurno(&turno, pPlayer, &mazzoScarti, mazzoCfu, fLog, !SPAREGGIO);
 						leave = true;
 						break;
 					case 2:
@@ -132,7 +132,13 @@ int main() {
 			losersCount = contaLosers(&turno, playerList); // Conta i giocatori che hanno perso
 
 			if (losersCount == 1) {
-				pLoser = turno.losers;
+				pPlayer = playerList;
+				while (turno.losers != NULL) {
+					if (strcmp(turno.losers->username, pPlayer->username) == 0) {
+						pLoser = pPlayer;
+					}
+					turno.losers = turno.losers->nextPlayer;
+				}
 			} else {
 				printf("\nRisoluzione spareggi");
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
@@ -153,10 +159,12 @@ int main() {
 				pPlayer = pPlayer->nextPlayer;
 			}
 		}
-		turno.winners = NULL;
-		turno.losers = NULL;
+		turno.winners = freeGiocatore(turno.winners);
+		turno.losers = freeGiocatore(turno.losers);
 		turno.points = freeIntArr(turno.points);
 		turno.numTurno++;
+		turno.cartaOstacolo = NULL;
+		pLoser = NULL;
 
 	}
 

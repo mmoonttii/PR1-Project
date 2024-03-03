@@ -31,7 +31,7 @@ int acquisisciAzione() {
 }
 
 /**
- * giocaCarta() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
+ * giocaCartaTurno() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
  * vuole giocare e aggiungere la carta alla lista delle carte giocate
  * @param manoCarteCfu é la lista delle carte in mano al giocatore
  */
@@ -77,7 +77,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 	return choosenCard;
 }
 
-void giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu, FILE *fLog, bool
+void giocaCartaTurno(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu *mazzoCfu, FILE *fLog, bool
 spareggioFlag) {
 	CartaCfu *choosenCard = NULL,
 			 **manoCarteCfu = NULL;

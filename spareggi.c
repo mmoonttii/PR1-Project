@@ -7,7 +7,7 @@
 #include "turno.h"
 
 Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog) {
-	Turno spareggio;
+	Turno spareggio = {};
 	Player *playerList = NULL,
 		   *playerHead = NULL,
 		   *pLoser = NULL;
@@ -20,10 +20,11 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 	for (int i = 0; i < countLosers; ++i) {
 		headMano = playerHead->manoCarteCfu;
 		if (contaCarte(headMano) > 0 && !tutteIstantaneeCheck(headMano)) {
-			// Gioca Carta
 		} else {
-			pLoser = playerHead;
-			// pLoser append a lista losers
+			addPlayerInCoda(spareggio.losers, playerHead);
+		}
+		if (playerHead->nextPlayer != NULL) {
+			playerHead = playerHead->nextPlayer;
 		}
 	}
 
