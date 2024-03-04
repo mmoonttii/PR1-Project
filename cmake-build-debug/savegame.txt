@@ -1,0 +1,431 @@
++----------------------------------------------------------------------------+
+| _   _                                     _       _   _     _     _        |
+|| | | |   __ _   _ __    _ __    _   _    | |     (_) | |_  | |_  | |   ___ |
+|| |_| |  / _` | | '_ \  | '_ \  | | | |   | |     | | | __| | __| | |  / _ \|
+||  _  | | (_| | | |_) | | |_) | | |_| |   | |___  | | | |_  | |_  | | |  __/|
+||_| |_|  \__,_| | .__/  | .__/   \__, |   |_____| |_|  \__|  \__| |_|  \___||
+| ____    _      |_|     |_|_     |___/        _                             |
+|/ ___|  | |_   _   _    __| |   ___   _ __   | |_   ___                     |
+|\___ \  | __| | | | |  / _` |  / _ \ | '_ \  | __| / __|                    |
+| ___) | | |_  | |_| | | (_| | |  __/ | | | | | |_  \__ \                    |
+||____/   \__|  \__,_|  \__,_|  \___| |_| |_|  \__| |___/                    |
++----------------------------------------------------------------------------+
+
+ ============================================================ GIOCATORI - Num: 4 ============================================================
+
+Nome: Lillo
+CFU: 8
+Personaggio: Federicosauro
+---> Studio: 0
+---> Sopravvivenza: -1
+---> Sociale: 1
+---> Esame: 0
+Mano (5 carte): 
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+ | 3                               |  | 0                               |  | 4                               |  | 8                               |  | 4                               |
+ | Esse3                           |  | Copia dal collega               |  | Eduroam                         |  | Laboratorio T                   |  | Unicamente                      |
+ | NESSUNO                         |  | DIMINUISCI                      |  | SCARTAC                         |  | NESSUNO                         |  | NESSUNO                         |
+ |                               3 |  |                               0 |  |                               4 |  |                               8 |  |                               4 |
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+               [1]                                    [2]                                   [3]                                [4]                                    [5]               
+Ostacoli: 
+---> Nome: Molletta per il naso
+---> Descrizione: Vai in bagno durante la pausa di PR1 e trovi fila con il bagno che puzza moltissimo
+---> Tipologia: Sociale
+
+---> Nome: Intossicazione alimentare
+---> Descrizione: In mensa prendi le polpette e torni a casa con un colorito strano
+---> Tipologia: Sopravvivenza
+
+============================================================
+
+Nome: Greg
+CFU: 12
+Personaggio: Andreosauro
+---> Studio: 1
+---> Sopravvivenza: 0
+---> Sociale: -1
+---> Esame: 0
+Mano (5 carte): 
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+ | 5                               |  | 9                               |  | 6                               |  | 9                               |  | 9                               |
+ | CLion                           |  | InfoLife                        |  | Cappellino Natale               |  | BatCaverna                      |  | BatCaverna                      |
+ | SCAMBIAP                        |  | NESSUNO                         |  | NESSUNO                         |  | ANNULLA                         |  | ANNULLA                         |
+ |                               5 |  |                               9 |  |                               6 |  |                               9 |  |                               9 |
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+               [1]                                    [2]                                   [3]                                [4]                                    [5]               
+Ostacoli: 
+---> Nome: Rotta della caffeina
+---> Descrizione: La macchinetta del caffè è fuori servizio e devi affrontare la giornata senza caffeina
+---> Tipologia: Sopravvivenza
+
+============================================================
+
+Nome: Luca
+CFU: 6
+Personaggio: Ricosauro
+---> Studio: 0
+---> Sopravvivenza: 0
+---> Sociale: 0
+---> Esame: 1
+Mano (5 carte): 
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+ | 2                               |  | 4                               |  | 7                               |  | 3                               |  | 7                               |
+ | Cavo Ethernet                   |  | Unicamente                      |  | Slide Lab                       |  | MS Teams                        |  | Dispense Teoria                 |
+ | NESSUNO                         |  | NESSUNO                         |  | SBIRCIA                         |  | SCARTAE                         |  | NESSUNO                         |
+ |                               2 |  |                               4 |  |                               7 |  |                               3 |  |                               7 |
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+               [1]                                    [2]                                   [3]                                [4]                                    [5]               
+Ostacoli: 
+
+============================================================
+
+Nome: Paolo
+CFU: 4
+Personaggio: Lucasauro
+---> Studio: -1
+---> Sopravvivenza: 1
+---> Sociale: 0
+---> Esame: 0
+Mano (5 carte): 
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+ | 0                               |  | 7                               |  | 2                               |  | 0                               |  | 9                               |
+ | Monitor                         |  | Dispense Teoria                 |  | Cavo Ethernet                   |  | Copia dal collega               |  | InfoLife                        |
+ | SCARTAP                         |  | NESSUNO                         |  | NESSUNO                         |  | DIMINUISCI                      |  | NESSUNO                         |
+ |                               0 |  |                               7 |  |                               2 |  |                               0 |  |                               9 |
+ +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+  +---------------------------------+
+               [1]                                    [2]                                   [3]                                [4]                                    [5]               
+Ostacoli: 
+---> Nome: Batteria scarica
+---> Descrizione: Torni a casa e ti accorgi che ti sei dimenticato il caricabatterie in aula magna
+---> Tipologia: Sopravvivenza
+
+
+
+
+
+ ============================================================ MAZZO CFU - Carte: 44 ============================================================
+
+---> Nome: Tastiera
+---> Valore: 1
+---> Effetto: RUBA
+
+---> Nome: InfoLife
+---> Valore: 9
+---> Effetto: NESSUNO
+
+---> Nome: Mouse
+---> Valore: 1
+---> Effetto: NESSUNO
+
+---> Nome: Dispense Teoria
+---> Valore: 7
+---> Effetto: NESSUNO
+
+---> Nome: Esame di recupero
+---> Valore: 0
+---> Effetto: SALVA
+
+---> Nome: Maglione Natale
+---> Valore: 6
+---> Effetto: DOPPIOE
+
+---> Nome: Esse3
+---> Valore: 3
+---> Effetto: NESSUNO
+
+---> Nome: Monitor
+---> Valore: 0
+---> Effetto: SCARTAP
+
+---> Nome: Snitcha il collega
+---> Valore: 0
+---> Effetto: DIROTTA
+
+---> Nome: Maglione Natale
+---> Valore: 6
+---> Effetto: DOPPIOE
+
+---> Nome: Laboratorio T
+---> Valore: 8
+---> Effetto: NESSUNO
+
+---> Nome: Aula Magna Fisica
+---> Valore: 8
+---> Effetto: SCAMBIAC
+
+---> Nome: Cavo Ethernet
+---> Valore: 2
+---> Effetto: NESSUNO
+
+---> Nome: Unicamente
+---> Valore: 4
+---> Effetto: NESSUNO
+
+---> Nome: Cappellino Natale
+---> Valore: 6
+---> Effetto: NESSUNO
+
+---> Nome: Laboratorio T
+---> Valore: 8
+---> Effetto: NESSUNO
+
+---> Nome: Scambio di esame
+---> Valore: 0
+---> Effetto: INVERTI
+
+---> Nome: DevC++
+---> Valore: 5
+---> Effetto: NESSUNO
+
+---> Nome: Usa ChatGPT
+---> Valore: 0
+---> Effetto: AUMENTA
+
+---> Nome: Mouse
+---> Valore: 1
+---> Effetto: NESSUNO
+
+---> Nome: DevC++
+---> Valore: 5
+---> Effetto: NESSUNO
+
+---> Nome: DevC++
+---> Valore: 5
+---> Effetto: NESSUNO
+
+---> Nome: Cavo USB
+---> Valore: 2
+---> Effetto: SCAMBIADS
+
+---> Nome: InfoLife
+---> Valore: 9
+---> Effetto: NESSUNO
+
+---> Nome: Aula Magna Fisica
+---> Valore: 8
+---> Effetto: SCAMBIAC
+
+---> Nome: Monitor
+---> Valore: 0
+---> Effetto: SCARTAP
+
+---> Nome: Mouse
+---> Valore: 1
+---> Effetto: NESSUNO
+
+---> Nome: Copia dal collega
+---> Valore: 0
+---> Effetto: DIMINUISCI
+
+---> Nome: Unicamente
+---> Valore: 4
+---> Effetto: NESSUNO
+
+---> Nome: MS Teams
+---> Valore: 3
+---> Effetto: SCARTAE
+
+---> Nome: Copia dal collega
+---> Valore: 0
+---> Effetto: DIMINUISCI
+
+---> Nome: CLion
+---> Valore: 5
+---> Effetto: SCAMBIAP
+
+---> Nome: Copia dal collega
+---> Valore: 0
+---> Effetto: DIMINUISCI
+
+---> Nome: Cavo Ethernet
+---> Valore: 2
+---> Effetto: NESSUNO
+
+---> Nome: Usa ChatGPT
+---> Valore: 0
+---> Effetto: AUMENTA
+
+---> Nome: Usa ChatGPT
+---> Valore: 0
+---> Effetto: AUMENTA
+
+---> Nome: Eduroam
+---> Valore: 4
+---> Effetto: SCARTAC
+
+---> Nome: Usa ChatGPT
+---> Valore: 0
+---> Effetto: AUMENTA
+
+---> Nome: Esame di recupero
+---> Valore: 0
+---> Effetto: SALVA
+
+---> Nome: DevC++
+---> Valore: 5
+---> Effetto: NESSUNO
+
+---> Nome: Esse3
+---> Valore: 3
+---> Effetto: NESSUNO
+
+---> Nome: Esame di recupero
+---> Valore: 0
+---> Effetto: SALVA
+
+---> Nome: Esse3
+---> Valore: 3
+---> Effetto: NESSUNO
+
+---> Nome: Slide Lab
+---> Valore: 7
+---> Effetto: SBIRCIA
+
+
+
+
+
+ ============================================================ MAZZO SCARTI - Carte: 10 ============================================================
+
+---> Nome: Cappellino Natale
+---> Valore: 6
+---> Effetto: NESSUNO
+
+---> Nome: Scambio di esame
+---> Valore: 0
+---> Effetto: INVERTI
+
+---> Nome: Monitor
+---> Valore: 0
+---> Effetto: SCARTAP
+
+---> Nome: Usa ChatGPT
+---> Valore: 0
+---> Effetto: AUMENTA
+
+---> Nome: Dispense Teoria
+---> Valore: 7
+---> Effetto: NESSUNO
+
+---> Nome: Tastiera
+---> Valore: 1
+---> Effetto: RUBA
+
+---> Nome: Cavo USB
+---> Valore: 2
+---> Effetto: SCAMBIADS
+
+---> Nome: Cappellino Natale
+---> Valore: 6
+---> Effetto: NESSUNO
+
+---> Nome: Laboratorio T
+---> Valore: 8
+---> Effetto: NESSUNO
+
+---> Nome: Mouse
+---> Valore: 1
+---> Effetto: NESSUNO
+
+
+
+
+
+ ============================================================ MAZZO OSTACOLI - Carte: 24 ============================================================
+
+---> Nome: Festa in casa
+---> Descrizione: I tuoi coinquilini organizzano una festa in casa e non riesci a studiare per il parziale di PR1
+---> Tipologia: Sociale
+
+---> Nome: Nessuno mi vuole
+---> Descrizione: Compri il gioco di società Happy Little Dinosaurs ma nessuno vuole giocare con te
+---> Tipologia: Sociale
+
+---> Nome: Mauro infuriato
+---> Descrizione: Durante la pausa pranzo sposti i puff e Mauro ti urla contro
+---> Tipologia: Sopravvivenza
+
+---> Nome: Le priorità della vita
+---> Descrizione: Vorresti studiare per il parziale di PR1 ma esce Fortnite OG
+---> Tipologia: Sociale
+
+---> Nome: Doppio appuntamento
+---> Descrizione: Inviti il tuo collega a studiare, ma lui porta anche il suo gruppo di amici (ingegneri)
+---> Tipologia: Sociale
+
+---> Nome: Sbiccato copiare
+---> Descrizione: Federico passa tra i banchi e ti becca con Discord aperto
+---> Tipologia: Studio
+
+---> Nome: Sciopero del CTM
+---> Descrizione: Il CTM è in sciopero e non puoi tornare a casa
+---> Tipologia: Sopravvivenza
+
+---> Nome: Troppo veloce
+---> Descrizione: Ti distrai mezzo secondo per guardare TikTok e la Prof. Carrisi ha spiegato gli integrali tripli
+---> Tipologia: Studio
+
+---> Nome: PR1 Teoria
+---> Descrizione: Prof. Scateni scatena la sua furia e ti boccia al parziale di PR1
+---> Tipologia: Esame
+
+---> Nome: Una fila infinita
+---> Descrizione: Arrivi in mensa in via Trentino e c'è una fila chilometrica
+---> Tipologia: Sopravvivenza
+
+---> Nome: Perdi tutto
+---> Descrizione: Prof. Loddo chiede se i PC vanno e il tuo esplode perdendo il parziale
+---> Tipologia: Studio
+
+---> Nome: Tutti fermi
+---> Descrizione: Durante PR1 parte la musica di Pokemon Smeraldo, Luca si ferma e tutti si girano a guardarti
+---> Tipologia: Studio
+
+---> Nome: Printf scurrili
+---> Descrizione: Consegni il progetto di PR1 e scopri che hai lasciato un printf con una parolaccia
+---> Tipologia: Studio
+
+---> Nome: Metti il caschetto
+---> Descrizione: Stai seguendo la lezione e crolla un calcinaccio dal soffitto
+---> Tipologia: Sopravvivenza
+
+---> Nome: Debugging infinito
+---> Descrizione: Dopo ore di debugging, scopri che il problema era una parentesi mancante
+---> Tipologia: Studio
+
+---> Nome: Ateneika fallimentare
+---> Descrizione: Ti iscrivi al torneo di biliardino di Ateneika e arrivi ultimo (e neanche di poco)
+---> Tipologia: Sociale
+
+---> Nome: Analisi
+---> Descrizione: Sbagli e vai all'esame di Analisi di quelli di Matematica
+---> Tipologia: Esame
+
+---> Nome: Maledetto Lab T
+---> Descrizione: I PC del laboratorio non partono e il parziale inizia con 45 minuti di ritardo
+---> Tipologia: Studio
+
+---> Nome: PR1 Lab
+---> Descrizione: Il progetto di PR1 non compila e non riesci a consegnarlo
+---> Tipologia: Esame
+
+---> Nome: Macchinetta ladra
+---> Descrizione: La macchinetta del piano terra ti prende i soldi ma non ti dà nulla
+---> Tipologia: Sopravvivenza
+
+---> Nome: Fondamenti
+---> Descrizione: Questa volta l'intero esame è scritto in binario
+---> Tipologia: Esame
+
+---> Nome: Va tutto bene?
+---> Descrizione: Prof. Puglisi ti chiede se va tutto bene, ma non va tutto bene
+---> Tipologia: Studio
+
+---> Nome: Parcheggio not found
+---> Descrizione: Non trovi parcheggio e ti tocca mettere le macchina a Buon Cammino
+---> Tipologia: Sociale
+
+---> Nome: Ignorato come sempre
+---> Descrizione: Arrivi in biblioteca di ingegneria e i tuoi colleghi non ti hanno tenuto il posto
+---> Tipologia: Sociale

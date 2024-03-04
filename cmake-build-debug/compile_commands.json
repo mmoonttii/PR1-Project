@@ -1,0 +1,38 @@
+[
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/main.c.o -c /Users/monti/Projects/PR1-Project/main.c",
+  "file": "/Users/monti/Projects/PR1-Project/main.c",
+  "output": "CMakeFiles/PR1_Project.dir/main.c.o"
+},
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/general.c.o -c /Users/monti/Projects/PR1-Project/general.c",
+  "file": "/Users/monti/Projects/PR1-Project/general.c",
+  "output": "CMakeFiles/PR1_Project.dir/general.c.o"
+},
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/carteCfu.c.o -c /Users/monti/Projects/PR1-Project/carteCfu.c",
+  "file": "/Users/monti/Projects/PR1-Project/carteCfu.c",
+  "output": "CMakeFiles/PR1_Project.dir/carteCfu.c.o"
+},
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/carteOstacolo.c.o -c /Users/monti/Projects/PR1-Project/carteOstacolo.c",
+  "file": "/Users/monti/Projects/PR1-Project/carteOstacolo.c",
+  "output": "CMakeFiles/PR1_Project.dir/carteOstacolo.c.o"
+},
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/giocatori.c.o -c /Users/monti/Projects/PR1-Project/giocatori.c",
+  "file": "/Users/monti/Projects/PR1-Project/giocatori.c",
+  "output": "CMakeFiles/PR1_Project.dir/giocatori.c.o"
+},
+{
+  "directory": "/Users/monti/Projects/PR1-Project/cmake-build-debug",
+  "command": "/usr/bin/clang   -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/PR1_Project.dir/turno.c.o -c /Users/monti/Projects/PR1-Project/turno.c",
+  "file": "/Users/monti/Projects/PR1-Project/turno.c",
+  "output": "CMakeFiles/PR1_Project.dir/turno.c.o"
+}
+]
