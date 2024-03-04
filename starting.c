@@ -79,7 +79,10 @@ FILE *newGame(char *saveName, FILE *fSave,
 				mazzoCfu, mazzoScarti,
 				mazzoOstacoli);
 
-	saveOnFile();
+	saveOnFile(saveName, fSave,
+               charactersArr, nPlayers, playerList,
+               mazzoCfu, mazzoScarti,
+               mazzoOstacoli);
 	return fSave;
 }
 
@@ -124,10 +127,10 @@ FILE *loadGame(char *saveName, FILE *fSave,
 	printf("\nCaricamento salvataggio esistente in corso");
 	fSave = openFile(saveName, BIN_READ);
 
-	loadFromFile(fSave,
-				 charactersArr, nPlayers, playerList,
-				 mazzoCfu, mazzoScarti,
-				 mazzoOstacoli);
+    loadSaveFromFile(saveName, fSave,
+				     charactersArr, nPlayers, playerList,
+				     mazzoCfu, mazzoScarti,
+				     mazzoOstacoli);
 
 	return fSave;
 }

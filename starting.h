@@ -6,6 +6,7 @@
 #define PR1_PROJECT_STARTING_H
 
 #include "general.h"
+#include "saves.h"
 
 #define NEW_GAME 1
 #define LOAD_GAME 2

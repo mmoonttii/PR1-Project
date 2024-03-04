@@ -12,6 +12,11 @@ void saveOnFile(char *saveName, FILE *fSave,
                 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
                 CartaOstacolo **mazzoOstacoli);
 
+void loadSaveFromFile(char *saveName, FILE *fSave,
+                      Character charactersArr[], int *nPlayers, Player **playerList,
+                      CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+                      CartaOstacolo **mazzoOstacoli);
+
 void logPrintLn(FILE *fLog, int numTurno, char *user, char *carta);
 
 
