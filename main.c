@@ -11,11 +11,7 @@
 #include "spareggi.h"
 #include "effetti.h"
 #include "saves.h"
-
-#define FILE_PERSONAGGI "../files-input/personaggi.txt"
-#define FILE_CARTE_CFU "../files-input/carte.txt"
-#define FILE_CARTE_OSTACOLO "../files-input/ostacoli.txt"
-#define FILE_LOG "log.txt"
+#include "starting.h"
 
 int main() {
 	// ========== DICHIARAZIONI E INIT =================================================================================
@@ -23,10 +19,8 @@ int main() {
 	setvbuf(stdout, NULL, _IONBF, 0); // DEBUG stdout
 
 	// Puntatori ai file
-	FILE *fPersonaggi = NULL, // path: FILE_PERSONAGGI
-		 *fCfu        = NULL, // path: FILE_CARTE_CFU
-		 *fOstacoli   = NULL, // path: FILE_CARTE_OSTACOLO
-		 *fLog        = NULL; // path: FILE_LOG
+	FILE *fSave = NULL,
+		 *fLog = NULL;
 
 	// Personaggi e giocatori
 	Character     charactersArr[N_PERSONAGGI] = {};    // Array personaggi
@@ -46,30 +40,17 @@ int main() {
 		 endGame = false,                              // Condizione di termine partita
 		 spareggi;
 	Turno turno = {};                                  // Struttura turno
+	char saveName[STR_LEN + EXTENSION_LEN];
 
-	// ========== PREPARAZIONE =========================================================================================
-	// Apertura file
-	fPersonaggi = openFile(FILE_PERSONAGGI, READ);
-	fCfu        = openFile(FILE_CARTE_CFU, READ);
-	fOstacoli   = openFile(FILE_CARTE_OSTACOLO, READ);
-	fLog        = openFile(FILE_LOG, WRITE);
+	// ========== STARTING =============================================================================================
+	fSave = NULL;
+	fLog  = openFile(FILE_LOG, WRITE);
 
-	// Creazione array charactersArr
-	parseCharacters(fPersonaggi, charactersArr);
-
-	// Lettura carte e creazione mazzo mischiato
-	mazzoCfu      = creaMazzoCfu(fCfu);
-	mazzoCfu      = mescolaMazzo(&mazzoCfu);
-	mazzoOstacoli = creaMazzoOstacoli(fOstacoli);
-
-	// Chiusura file
-	fclose(fPersonaggi);
-	fclose(fOstacoli);
-	fclose(fCfu);
-
-	// Giocatori
-	nPlayers   = acquisisciNumGiocatori();
-	playerList = initGiocatori(nPlayers, &mazzoCfu, charactersArr, mazzoScarti);
+	printf("\nBenvenuto su Happy Little Students\n");
+	fSave = startGame(saveName, fSave,
+					  charactersArr, &nPlayers, &playerList,
+					  &mazzoCfu, &mazzoScarti,
+					  &mazzoOstacoli);
 
 	// ========== TURNI ================================================================================================
 	turno.numTurno = 1;
@@ -100,6 +81,7 @@ int main() {
 						playerList    = freeGiocatore(playerList);
 						mazzoScarti   = freeCfu(mazzoScarti);
 						fclose(fLog);
+						fclose(fSave);
 						exit(EXIT_SUCCESS);
 						leave = true, endGame = true;
 						break;
@@ -175,6 +157,7 @@ int main() {
 	}
 
 	fclose(fLog);
+	fclose(fSave);
 	// Free mem
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);

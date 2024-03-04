@@ -23,6 +23,7 @@ int randRange(int min, int max) {
  */
 FILE *openFile(char filePath[], char mode[]) {
 	FILE *fp = NULL;
+
 	fp = fopen(filePath, mode);
 	if (fp == NULL) exit(ERR_OPEN_FILE);
 	return fp;

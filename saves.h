@@ -7,6 +7,11 @@
 
 #include "general.h"
 
+void saveOnFile(char *saveName, FILE *fSave,
+                Character charactersArr[], int *nPlayers, Player **playerList,
+                CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+                CartaOstacolo **mazzoOstacoli);
+
 void logPrintLn(FILE *fLog, int numTurno, char *user, char *carta);
 
 

@@ -23,4 +23,6 @@ add_executable(PR1_Project
 		spareggi.c
 		spareggi.h
 		saves.c
-		saves.h)
+		saves.h
+		starting.c
+		starting.h)

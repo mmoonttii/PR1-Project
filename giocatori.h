@@ -23,7 +23,7 @@ void printGiocatore(Player *pPlayer);
 Player *initGiocatori(int       nGiocatori,
                       CartaCfu  **mazzoCfu,
                       Character personaggi[],
-                      CartaCfu  *mazzoScarti);
+                      CartaCfu  **mazzoScarti);
 
 Player *addPlayerInCoda(Player *playerList,
                         Player *playerToAdd);
