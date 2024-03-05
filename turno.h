@@ -52,7 +52,7 @@ void assegnaPunti(Turno  *turno,
 int contaLosers(Turno  *turno,
                 Player *playerList);
 
-void ostacoloInCoda(CartaOstacolo **pOstacolo,
+void ostacoloInCoda(CartaOstacolo *pOstacolo,
                     CartaOstacolo **listaOstacoli);
 
 void puntiCarteOstacolo(Player *playerList);

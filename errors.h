@@ -17,12 +17,18 @@
 // Errore menu
 #define ERR_MENU 301
 
-// Errori lettura file         [4xx]
-#define ERR_READ_SAVE_NPLAYERS  401
-#define ERR_READ_SAVE_PLAYER    402
-#define ERR_READ_SAVE_CFU       403
-#define ERR_READ_SAVE_NOSTACOLI 404
-#define ERR_READ_SAVE_OSTACOLI  405
+// Errori lettura file                [4xx]
+#define ERR_READ_SAVE_N_PLAYERS        401
+#define ERR_READ_SAVE_PLAYER           402
+#define ERR_READ_SAVE_MANO_CFU         403
+#define ERR_READ_SAVE_N_OSTACOLI       404
+#define ERR_READ_SAVE_OSTACOLI         405
+#define ERR_READ_SAVE_N_MAZZO_CFU      406
+#define ERR_READ_SAVE_MAZZO_CFU        407
+#define ERR_READ_SAVE_N_MAZZO_SCARTI   408
+#define ERR_READ_SAVE_MAZZO_SCARTI     409
+#define ERR_READ_SAVE_N_MAZZO_OSTACOLI 410
+#define ERR_READ_SAVE_MAZZO_OSTACOLI   411
 
 #endif //PR1_PROJECT_ERRORS_H
 

@@ -11,7 +11,7 @@
 // ============ LIST MANAGEMENT ===============================================/**
 CartaOstacolo *creaMazzoOstacoli(FILE *fp);
 CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli);
-void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo **listaOstacoli);
+void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli);
 // ============ OUTPUT ========================================================
 void printOstacoli(CartaOstacolo *listaOstacoli);
 

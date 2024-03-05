@@ -76,13 +76,7 @@ int main() {
 						leave = false;
 						break;
 					case 0:
-						mazzoCfu      = freeCfu(mazzoCfu);
-						mazzoOstacoli = freeOstacoli(mazzoOstacoli);
-						playerList    = freeGiocatore(playerList);
-						mazzoScarti   = freeCfu(mazzoScarti);
-						fclose(fLog);
-						fclose(fSave);
-						exit(EXIT_SUCCESS);
+						goto CLOSE;
 						leave = true, endGame = true;
 						break;
 					default:
@@ -131,7 +125,7 @@ int main() {
 				printf("\nRisoluzione spareggi");
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
-			ostacoloInCoda(&turno.cartaOstacolo, &pLoser->listaCarteOstacolo);
+			ostacoloInCoda(turno.cartaOstacolo, &pLoser->listaCarteOstacolo);
 		}
 
 		// ==== FINE DEL TURNO ==========
@@ -155,6 +149,8 @@ int main() {
 		pLoser = NULL;
 
 	}
+
+CLOSE:
 
 	fclose(fLog);
 	fclose(fSave);

@@ -98,18 +98,17 @@ CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
  * @param pOstacolo è un doppio puntatore a lla carta ostacolo da assegnare
  * @param listaOstacoli è un doppio puntatore alla lista al quale aggiungere la carta ostacolo
  */
- // TODO PERCHE CAZZO NON FUNGEEE
-void ostacoloInCoda(CartaOstacolo **pOstacolo, CartaOstacolo **listaOstacoli){
+void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli){
 	CartaOstacolo *headOstacoli = *listaOstacoli;
 	if (*listaOstacoli == NULL) {
-		*listaOstacoli = *pOstacolo;
+		*listaOstacoli = pOstacolo;
 	} else {
 		while (headOstacoli->next != NULL) {
 			headOstacoli = headOstacoli->next;
 		}
-		headOstacoli->next = *pOstacolo;
+		headOstacoli->next = pOstacolo;
 	}
-	(*pOstacolo)->next = NULL;
+	pOstacolo->next = NULL;
 }
 // ============ OUTPUT ========================================================
 /**
