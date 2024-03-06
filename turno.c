@@ -202,7 +202,6 @@ void winnersLosers(Turno *turno, Player *playersList, int nPlayers) {
 	Player *pPlayer = playersList;
 	// minMax calcola il punteggio massimo ottenuto dai giocatori, e quindi il punteggio per vincere e il punteggio
 	// minimo ottenuto, quindi il punteggio per perdere
-	minMax(turno->points, nPlayers, &turno->cfuToLose, &turno->cfuToWin);
 
 	if (turno->cfuToWin != turno->cfuToLose) {
 		for (int i = 0; i < nPlayers; ++i) {

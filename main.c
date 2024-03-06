@@ -99,7 +99,9 @@ int main() {
 		calcolaPunteggio(&turno, playerList, nPlayers, !SPAREGGIO);
 		printPuntiParziali(&turno, playerList, nPlayers);
 
-		gestioneEffetti(&turno, playerList, nPlayers, &mazzoCfu, &mazzoScarti);
+		minMax(turno.points, nPlayers, &turno.cfuToLose, &turno.cfuToWin);
+
+		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno);
 
 		winnersLosers(&turno, playerList, nPlayers);
 		printLosers(turno.losers);
@@ -111,7 +113,7 @@ int main() {
 		if (turno.winners == NULL && turno.losers == NULL) {
 			printf("\nTutti i giocatori sono a parimerito, la carta ostacolo di questo turno verrà messa alla fine del "
 				   "mazzo\n");
-			ostacoloInCoda(&turno.cartaOstacolo, &mazzoOstacoli);
+			ostacoloInCoda(turno.cartaOstacolo, &mazzoOstacoli);
 		} else {
 			assegnaPunti(&turno, playerList, nPlayers);   // Assegnazione punti ai vincitori
 
