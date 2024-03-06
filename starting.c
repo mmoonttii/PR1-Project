@@ -80,9 +80,9 @@ FILE *newGame(char *saveName, FILE *fSave,
 				mazzoOstacoli);
 
 	saveOnFile(saveName, fSave,
-               charactersArr, nPlayers, playerList,
-               mazzoCfu, mazzoScarti,
-               mazzoOstacoli);
+               charactersArr, nPlayers, *playerList,
+               *mazzoCfu, *mazzoScarti,
+               *mazzoOstacoli);
 	return fSave;
 }
 

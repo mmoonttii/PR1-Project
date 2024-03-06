@@ -15,4 +15,6 @@ void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli);
 // ============ OUTPUT ========================================================
 void printOstacoli(CartaOstacolo *listaOstacoli);
 
+int contaOstacoli(CartaOstacolo *listaOstacoli);
+
 #endif //PR1_PROJECT_CARTEOSTACOLO_H

@@ -56,6 +56,10 @@ int main() {
 	turno.numTurno = 1;
 
 	while (endGame != true){
+		saveOnFile(saveName, fSave,
+				   charactersArr, &nPlayers, playerList,
+				   mazzoCfu, mazzoScarti,
+				   mazzoOstacoli);
 		pPlayer = playerList;
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);

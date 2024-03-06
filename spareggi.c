@@ -20,7 +20,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 	for (int i = 0; i < countLosers; ++i) {
 		headMano = playerHead->manoCarteCfu;
 		// infoPlayer
-		if (contaCarte(headMano) > 0 && !tutteIstantaneeCheck(headMano)) {
+		if (contaCarteCfu(headMano) > 0 && !tutteIstantaneeCheck(headMano)) {
 			giocaCarta(&spareggio, playerHead, mazzoCfu, mazzoCfu, fLog, SPAREGGIO);
 		} else {
 			addPlayerInCoda(spareggio.losers, playerHead);

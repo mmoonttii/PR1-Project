@@ -63,7 +63,7 @@ CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare) {
 	int count = 0,
 	    randCarta;
 
-	count = contaCarte(*mazzoDaMischiare);
+	count = contaCarteCfu(*mazzoDaMischiare);
 
 	while (*mazzoDaMischiare != NULL) {
 		randCarta = randRange(0, count - 1); // Genero una posizione di una carta random
@@ -74,10 +74,10 @@ CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare) {
 	return mazzoMescolato;
 }
 
-int contaCarte(CartaCfu *mazzoCarte) {
+int contaCarteCfu(CartaCfu *mazzoCfu) {
 	int count = 0;
-	while (mazzoCarte != NULL){
-		mazzoCarte = mazzoCarte->next;
+	while (mazzoCfu != NULL){
+		mazzoCfu = mazzoCfu->next;
 		count++;
 	}
 	return count;
@@ -164,7 +164,7 @@ void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti) {
 	CartaCfu *cartaCfu = NULL;
 	int counter = 0;
-	counter = contaCarte(mano);
+	counter = contaCarteCfu(mano);
 
 	// Fin quando la mano è composta da 5 carte o meno
 	while (counter < CARTE_PER_MANO){

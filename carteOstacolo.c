@@ -98,6 +98,7 @@ CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
  * @param pOstacolo è un doppio puntatore a lla carta ostacolo da assegnare
  * @param listaOstacoli è un doppio puntatore alla lista al quale aggiungere la carta ostacolo
  */
+// Continuo a non capire cosa cazzo non vada
 void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli){
 	CartaOstacolo *headOstacoli = *listaOstacoli;
 	if (*listaOstacoli == NULL) {
@@ -129,5 +130,16 @@ void printOstacoli(CartaOstacolo *listaOstacoli){
 		head = head->next;
 		count++;
 	}
+}
+
+int contaOstacoli(CartaOstacolo *listaOstacoli) {
+	CartaOstacolo *headOstacoli = listaOstacoli;
+	int count = 0;
+
+	while (headOstacoli != NULL) {
+		count++;
+		headOstacoli = headOstacoli->next;
+	}
+	return count;
 }
 

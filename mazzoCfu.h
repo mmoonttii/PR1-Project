@@ -12,7 +12,7 @@
 CartaCfu *creaMazzoCfu(FILE *fp);
 CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare);
 
-int contaCarte(CartaCfu *mazzoCarte);
+int contaCarteCfu(CartaCfu *mazzoCfu);
 CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu);
 void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu);
 CartaCfu *indexEstraiCartaCfu(CartaCfu **mazzoCfu, int index);
