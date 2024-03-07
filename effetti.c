@@ -23,9 +23,8 @@
 //	DIROTTA 	/**< Dai la carta che stai per prendere ad un altro giocatore a tua scelta */
 //} Effect;
 
-void gestioneEffetti(int nPlayers, Player *playerList,
-					 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
-					 Turno *turno) {
+void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, Turno *turno,
+                     bool *checkDOPPIOE) {
 	bool *arrRisolte = NULL;
 	int cfuMax = INT_MIN;
 	Player *pPlayer = NULL;
@@ -49,9 +48,10 @@ void gestioneEffetti(int nPlayers, Player *playerList,
 		for (int i = 0; i < nPlayers; ++i) {
 			if (!arrRisolte[i] && pCarta->cfu == cfuMax) {
 				if (pCarta->effect != ANNULLA) {
-					arrRisolte[i] = risolviEffetti(i, pPlayer, nPlayers, playerList, pCarta, mazzoCfu, mazzoScarti,
+					arrRisolte[i] = risolviEffetti(i, pPlayer, nPlayers, playerList,
+												   pCarta, mazzoCfu, mazzoScarti,
 					                               turno,
-					                               arrRisolte);
+												   arrRisolte, checkDOPPIOE);
 					enterClear();
 				} else {
 					printf("La carta %s di %s ha annullato tutti gli altri effetti delle carte\n",
@@ -67,12 +67,10 @@ void gestioneEffetti(int nPlayers, Player *playerList,
 	}
 }
 
-bool
-risolviEffetti(int iPlayer, Player *pPlayer,
-			   int nPlayers, Player *playerList,
-			   CartaCfu *pCarta, CartaCfu **mazzoCfu,
-               CartaCfu **mazzoScarti,
-			   Turno *turno, bool arrRisolte[]) {
+bool risolviEffetti(int iPlayer, Player *pPlayer, int nPlayers, Player *playerList,
+					CartaCfu *pCarta, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+					Turno *turno,
+					bool arrRisolte[], bool *checkDOPPIOE) {
 	printf("Risolvo effetto della carta %s di %s\n", pPlayer->username, pCarta->name);
 
 	switch (pCarta->effect) {
@@ -95,7 +93,7 @@ risolviEffetti(int iPlayer, Player *pPlayer,
 			effettoSCAMBIAP(turno, nPlayers, playerList);
 			break;
 		case DOPPIOE:
-			effettoDOPPIOE();
+			effettoDOPPIOE(checkDOPPIOE)
 			break;
 		case SBIRCIA:
 			effettoSBIRCIA(mazzoCfu, pPlayer, mazzoScarti);
@@ -564,11 +562,15 @@ void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList) {
 }
 // ====================================================================================================================
 
-void effettoDOPPIOE() {}
+void effettoDOPPIOE(bool *checkDOPPIOE) {
+	*checkDOPPIOE = true;
+	printf("\n ATTENZIONE!\n"
+		   "Da ora in poi gli effetti AUMENTA e DIMINUISCI modificheranno il punteggio di 4 punti\n");
+}
 
 // ====================================================================================================================
 
-// !!! TODO CONTROLLA QUESTE SUBROUTINE!!!
+// TODO !!! CONTROLLA QUESTE SUBROUTINE!!!
 
 void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti) {
 	CartaCfu *carteSbirciate = NULL, //lista delle carte guardate
@@ -747,4 +749,4 @@ void effettoSCAMBIAC(CartaCfu **carteGiocate, Player *playerList, bool arrRisolt
 	}
 }
 
-// TODO CONTROLLA QUESTE SUBROUTINE¡¡¡
+// TODO ¡¡¡CONTROLLA QUESTE SUBROUTINE¡¡¡

@@ -24,4 +24,8 @@ int *freeIntArr(int *arr);
 
 bool *allocaArrBool(int n);
 bool *freeBoolArr(bool *arr);
+
+void freeAll(CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
+			 CartaOstacolo *mazzoOstacoli,
+			 Player *playerList);
 #endif//PR1_PROJECT_MEMORIA_H

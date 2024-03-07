@@ -19,39 +19,46 @@ int main() {
 	srand(time(NULL)); // Inizializzazione seed random
 	setvbuf(stdout, NULL, _IONBF, 0); // DEBUG stdout
 
-	// Puntatori ai file
-	FILE *fSave = NULL,
-		 *fLog = NULL;
+	// Puntatori a file
+	FILE *fSave = NULL, // File di salvataggio
+		 *fLog  = NULL; // File di log
 
 	// Personaggi e giocatori
-	Character     charactersArr[N_PERSONAGGI] = {};    // Array personaggi
-	Player        *playerList                 = NULL,  // Lista giocatori
+	Character     charactersArr[N_PERSONAGGI] = {};    // Array dei personaggi
+	Player        *playerList                 = NULL,  // Lista dei giocatori
 				  *pPlayer                    = NULL,  // Puntatore al Player attuale
 				  *pLoser                     = NULL;  // Puntatore al Player perdente
+
 	// Carte
 	CartaCfu      *mazzoCfu                   = NULL,  // Lista mazzo pesca Carte Cfu
 				  *mazzoScarti                = NULL;  // Lista mazzo scarti Carte Cfu
 	CartaOstacolo *mazzoOstacoli              = NULL;  // Lista mazzo Carte Ostacolo
 
+	// Contatori
 	int nPlayers = 0,                                  // Numero giocatori partecipanti
-		input,
-		losersCount;                                         // Input menu
+		input,                                         // Input menu
+		losersCount;                                   // Contatore giocatori perdenti
 
-	bool leave   = false,                              // Condizione di uscita dal menu
-		 endGame = false,                              // Condizione di termine partita
-		 spareggi;
+	// Flag di controllo
+	bool leave        = false,                         // Condizione di uscita dal menu
+		 endGame      = false,                         // Condizione di termine partita
+		 spareggi,                                     // Condizione di risoluzione spareggi
+		 checkDOPPIOE = false;                         // Condizione di applicazione effetto DOPPIOE
+
 	Turno turno = {};                                  // Struttura turno
-	char saveName[STR_LEN + EXTENSION_LEN];
+
+	char saveName[STR_LEN + EXTENSION_LEN + 1];            // Nome del salvataggio
 
 	// ========== STARTING =============================================================================================
-	fSave = NULL;
 	fLog  = openFile(FILE_LOG, WRITE);
 
 	printf("\nBenvenuto su Happy Little Students\n");
-	fSave = startGame(saveName, fSave,
-					  charactersArr, &nPlayers, &playerList,
-					  &mazzoCfu, &mazzoScarti,
-					  &mazzoOstacoli);
+
+	fSave = startGame(saveName,
+	                  charactersArr,
+					  &nPlayers, &playerList,
+	                  &mazzoCfu, &mazzoScarti,
+	                  &mazzoOstacoli);
 
 	// ========== TURNI ================================================================================================
 	turno.numTurno = 1;
@@ -81,7 +88,6 @@ int main() {
 						leave = false;
 						break;
 					case 0:
-						goto CLOSE;
 						leave = true, endGame = true;
 						break;
 					default:
@@ -102,9 +108,9 @@ int main() {
 
 		minMax(turno.points, nPlayers, &turno.cfuToLose, &turno.cfuToWin);
 
-		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno);
+		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno, &checkDOPPIOE);
 
-		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno);
+		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno, checkDOPPIOE);
 
 		winnersLosers(&turno, playerList, nPlayers);
 		printLosers(turno.losers);
@@ -158,8 +164,6 @@ int main() {
 		pLoser = NULL;
 
 	}
-
-CLOSE:
 
 	fclose(fLog);
 	fclose(fSave);

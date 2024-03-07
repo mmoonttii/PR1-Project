@@ -25,9 +25,9 @@
 #define BIN_READ        "rb"
 #define BIN_WRITE       "wb"
 #define EXTENSION_LEN   4
-#define FILE_PERSONAGGI "../files-input/personaggi.txt"
-#define FILE_CARTE_CFU  "../files-input/carte.txt"
-#define FILE_OSTACOLI   "../files-input/ostacoli.txt"
+#define FILE_PERSONAGGI "personaggi.txt"
+#define FILE_CARTE_CFU  "carte.txt"
+#define FILE_OSTACOLI   "ostacoli.txt"
 #define FILE_LOG        "log.txt"
 
 // =========== CARTE CFU ===============================================================================================

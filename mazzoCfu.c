@@ -6,10 +6,10 @@
 #include "memoria.h"
 
 /**
- * creaMazzoCfu() è la subroutine che legge il file delle carte CFU e crea un mazzo mischiato delle carte
+ * creaMazzoCfu() è la subroutine per la lettura del file di carte e la creazione di una lista di Carte
  *
- * @param fp è il file da leggere [carte.txt]
- * @return un puntatore alla testa del mazzo
+ * @param fp FILE *: file da leggere [carte.txt]
+ * @return CartaCfu *: puntatore alla testa del mazzo
  */
 CartaCfu *creaMazzoCfu(FILE *fp) {
 	int occurences = 0, // Numero di carte dello stesso tipo
@@ -32,27 +32,28 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 			// Per ogni carte di tipo x
 			while (occurences > 0) {
 				newCard = allocaCartaCfu(); // Alloca nuova carta e salva in var
-				*newCard = cartaCfu; // Inizializza spazio allocato con dati letti
+				*newCard = cartaCfu;        // Inizializza spazio allocato con dati letti
 
 				cartaCfuInCoda(&mazzo, newCard);
 
-				occurences--; // Il numero di carte dello stesso tipo ora lette è diminuito
-				carte++; // Il numero delle carte totali nel mazzo è aumentato
+				occurences--;   // Il numero di carte dello stesso tipo ora lette è diminuito
+				carte++;        // Il numero delle carte totali nel mazzo è aumentato
 			}
 		} else {
 			// In caso di lettura fallita
 			printf("\n--printf scurrile rimosso--\n");
 		}
-	} while (read == 4);
+	} while (read == 4); // Se la lettura fallisce vuol dire che è terminato il file
+
 	printf("\nCarte lette %d\n", carte);
 
 	return mazzo;
 }
 
 /**
- * mescolaMazzo() è la subroutine che dato una lista di Carte CFU la restituisce in un ordine diverso
- * @param mazzoDaMischiare è il mazzo da mescolare
- * @return puntatore a mazzo mischiato
+ * mescolaMazzo() è la subroutine che presa una lista di CarteCfu, la restituisce in un ordine randomizzato
+ * @param mazzoDaMischiare CartaCfu **: doppio puntatore a testa di mazzo da mescolare
+ * @return CartaCfu *: puntatore a testa del mazzo mischiato
  */
 CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare) {
 	CartaCfu *mazzoMescolato = NULL,
@@ -68,10 +69,16 @@ CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare) {
 	while (*mazzoDaMischiare != NULL) {
 		randCarta = randRange(0, count - 1); // Genero una posizione di una carta random
 		cartaEstratta = indexEstraiCartaCfu(mazzoDaMischiare, randCarta); // Estraggo tale carta random
-		cartaCfuInCoda(&mazzoMescolato, cartaEstratta); // Aggiungo la carta in coda al mazzo
+		mazzoMescolato = cartaCfuInTesta(mazzoMescolato, cartaEstratta); // Aggiungo la carta al mazzo
 		count--;
 	}
 	return mazzoMescolato;
+}
+
+CartaCfu *cartaCfuInTesta(CartaCfu *mazzoCfu, CartaCfu *cartaCfu) {
+	cartaCfu->next = mazzoCfu;
+	mazzoCfu = cartaCfu;
+	return mazzoCfu;
 }
 
 int contaCarteCfu(CartaCfu *mazzoCfu) {
@@ -142,16 +149,21 @@ CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 	return extracted;
 }
 
+/**
+ * cartaCfuInCoda() è la subroutine per aggiungere un nodo di tipo CartaCfu alla fine di una lista dello stesso tipo
+ * @param mazzoCfu CartaCfu **: è un doppio puntatore alla testa della lista a cui si vuole aggiungere la carta
+ * @param cartaCfu CartaCfu *: è un puntatore alla carta da aggiungere
+ */
 void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
-	CartaCfu *head = *mazzoCfu;
+	CartaCfu *curr = *mazzoCfu; // curr è il puntatore all'elemento corrente della lista
 
-	if (*mazzoCfu == NULL) {
-		*mazzoCfu = cartaCfu;
-	} else {
-		while (head->next != NULL){
-			head = head->next;
+	if (*mazzoCfu == NULL) {    // Se la lista è vuota
+		*mazzoCfu = cartaCfu;   // La carta occupa la posizione di testa
+	} else {                    // Altrimenti, se sono già presenti nodi
+		while (curr->next != NULL){ // Itero fino a quando non trovo un elemento il quale next è vuoto
+			curr = curr->next;
 		}
-		head->next = cartaCfu;
+		curr->next = cartaCfu;  // A questo punto posso aggiungere la carta in coda
 	}
 }
 

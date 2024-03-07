@@ -13,15 +13,12 @@
 #define MAX_SCARTABILI 3
 #define CARTE_SBIRCIABILI 2
 
-void gestioneEffetti(int nPlayers, Player *playerList,
-					 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
-					 Turno *turno);
+void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, Turno *turno,
+                     bool *checkDOPPIOE);
 
-bool risolviEffetti(int iPlayer, Player *pPlayer,
-			   int nPlayers, Player *playerList,
-			   CartaCfu *pCarta, CartaCfu **mazzoCfu,
-               CartaCfu **mazzoScarti,
-			   Turno *turno, bool arrRisolte[]);
+bool
+risolviEffetti(int iPlayer, Player *pPlayer, int nPlayers, Player *playerList, CartaCfu *pCarta, CartaCfu **mazzoCfu,
+               CartaCfu **mazzoScarti, Turno *turno, bool arrRisolte[], bool *checkDOPPIOE);
 
 // ===== EFFETTI DELLE CARTE ====================
 void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, Turno *turno, int iPlayer);
@@ -44,7 +41,7 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti);
 void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList);
 
 // ====================================================================================================================
-void effettoDOPPIOE();
+void effettoDOPPIOE(bool *checkDOPPIOE);
 
 // ====================================================================================================================
 void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti);

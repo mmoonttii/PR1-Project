@@ -8,7 +8,7 @@
 #include "saves.h"
 
 
-void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno) {
+void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno, bool checkDOPPIOE) {
 	int choice = 0;
 	Player *playerHead = NULL;
 	CartaCfu *headCarte  = NULL,
@@ -17,9 +17,11 @@ void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turn
 	playerHead = playerList;
 
 	while (!stop) {
+		playerHead = playerList;
 		printf("\nChi vuole giocare una carta istantanea?\n");
-		for (int i = 0; i < nPlayers; ++i) {
+		for (int i = 1; i <= nPlayers; ++i) {
 			printf("[%d] %s\n", i, playerHead->username);
+			playerHead = playerHead->nextPlayer;
 		}
 		printf("[0] Nessuno vuole giocare carte istantanee\n");
 
@@ -27,11 +29,12 @@ void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turn
 			printf(">>> ");
 			scanf("%d", &choice);
 
-			if (choice < 0 || choice > nPlayers) {
+			if (choice < 0 || choice >= nPlayers) {
 				printf("Input non valido, riprovare\n");
 			}
-		} while (choice < 0 || choice > nPlayers);
+		} while (choice < 0 || choice >= nPlayers);
 
+		playerHead = playerList;
 		if (choice == 0) {
 			stop = true;
 		} else {
@@ -42,7 +45,7 @@ void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turn
 			headCarte = playerHead->manoCarteCfu;
 			playedCard = giocaInstantPunteggio(playerHead, fLog, turno->numTurno);
 
-			risolviInstantPunteggio(playedCard, nPlayers, playerList, turno);
+			risolviInstantPunteggio(playedCard, nPlayers, playerList, turno, checkDOPPIOE);
 		}
 	}
 }
@@ -61,6 +64,7 @@ CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno) {
 		}
 		printf("[%d] ", i);
 		printSingleCartaCfu(headCarte);
+		i++;
 		headCarte = headCarte->next;
 	}
 
@@ -96,14 +100,14 @@ bool isIstantaneaPunteggio(CartaCfu *cartaCfu) {
 	return ret;
 }
 
-void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerList, Turno *turno) {
+void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE) {
 	switch (cartaCfu->effect) {
 		case AUMENTA:
-			effettoAUMENTA(nPlayers, playerList, turno);
+			effettoAUMENTA(nPlayers, playerList, turno, checkDOPPIOE);
 			minMax(turno->points, nPlayers, &(turno->cfuToLose), &(turno->cfuToWin));
 			break;
 		case DIMINUISCI:
-			effettoDIMINUISCI(nPlayers, playerList, turno);
+			effettoDIMINUISCI(nPlayers, playerList, turno, checkDOPPIOE);
 			minMax(turno->points, nPlayers, &(turno->cfuToLose), &(turno->cfuToWin));
 			break;
 		case INVERTI:
@@ -115,8 +119,9 @@ void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerLis
 	}
 }
 
-void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno) {
-	int choice = 0;
+void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE) {
+	int choice = 0,
+		mult;
 	Player *playerHead = NULL;
 
 	playerHead = playerList;
@@ -134,10 +139,14 @@ void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno) {
 		}
 	} while (choice < 0 || choice > nPlayers - 1);
 
-	turno->points[choice] += 2;
+	mult = checkDOPPIOE ? ON : OFF;
+
+	turno->points[choice] += ADDING * mult;
 }
-void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno) {
-	int choice = 0;
+
+void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE) {
+	int choice = 0,
+		mult;
 	Player *playerHead = NULL;
 
 	playerHead = playerList;
@@ -155,7 +164,9 @@ void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno) {
 		}
 	} while (choice < 0 || choice > nPlayers - 1);
 
-	turno->points[choice] -= 2;
+	mult = checkDOPPIOE ? ON : OFF;
+
+	turno->points[choice] -= ADDING * mult;
 }
 void effettoINVERTI(int nPlayers, Turno *turno) {
 	for (int i = 0; i < nPlayers; ++i) {

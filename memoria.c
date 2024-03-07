@@ -7,9 +7,8 @@
 #include "turno.h"
 // ============ CARTE CFU =============================================
  /**
- * allocaCartaCfu() è la subroutine che si occupa di allocare in memoria lo spazio necessario a contenere una carta
- *
- * @return un puntatore alla locazione della nuova carta
+ * allocaCartaCfu() è la subroutine che si occupa di allocare nell'heap lo spazio necessario a contenere una carta
+ * @return CartaCfu *: puntatore alla locazione per una nuova carta
  */
 CartaCfu *allocaCartaCfu() {
 	CartaCfu *newCard = NULL;
@@ -130,4 +129,11 @@ bool *freeBoolArr(bool *arr) {
 	free(arr);
 	arr = NULL;
 	return arr;
+}
+
+void freeAll(CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Player *playerList) {
+	mazzoCfu      = freeCfu(mazzoCfu);
+	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
+	playerList    = freeGiocatore(playerList);
+	mazzoScarti   = freeCfu(mazzoScarti);
 }

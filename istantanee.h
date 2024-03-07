@@ -6,13 +6,17 @@
 #define PR1_PROJECT_ISTANTANEE_H
 #include "general.h"
 
-void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno);
+#define ADDING 2
+#define ON 2
+#define OFF 1
+
+void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno, bool checkDOPPIOE);
 CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno);
 bool isIstantaneaPunteggio(CartaCfu *cartaCfu);
-void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerList, Turno *turno);
+void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
 
-void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno);
-void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno);
+void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
+void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
 void effettoINVERTI(int nPlayers, Turno *turno);
 
 void gestioneInstantPerdita(int numTurno, Player *pPlayer, Player *playerList, CartaCfu *pCartaCfu,

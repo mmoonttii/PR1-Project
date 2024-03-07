@@ -77,8 +77,9 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 	return choosenCard;
 }
 
-void giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog, bool
-spareggioFlag) {
+void giocaCarta(Turno *turno, Player *pPlayer,
+				CartaCfu **mazzoScarti, CartaCfu **mazzoCfu,
+				FILE *fLog, bool spareggioFlag) {
 	CartaCfu *choosenCard = NULL,
 			 **manoCarteCfu = NULL;
 

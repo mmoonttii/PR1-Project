@@ -11,6 +11,7 @@
 
 CartaCfu *creaMazzoCfu(FILE *fp);
 CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare);
+CartaCfu *cartaCfuInTesta(CartaCfu *mazzoCfu, CartaCfu *cartaCfu);
 
 int contaCarteCfu(CartaCfu *mazzoCfu);
 CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu);
