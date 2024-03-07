@@ -17,8 +17,7 @@ void gestioneEffetti(int nPlayers, Player *playerList,
 					 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
 					 Turno *turno);
 
-bool
-risolviEffetti(int iPlayer, Player *pPlayer,
+bool risolviEffetti(int iPlayer, Player *pPlayer,
 			   int nPlayers, Player *playerList,
 			   CartaCfu *pCarta, CartaCfu **mazzoCfu,
                CartaCfu **mazzoScarti,

@@ -25,4 +25,6 @@ add_executable(PR1_Project
 		saves.c
 		saves.h
 		starting.c
-		starting.h)
+		starting.h
+		istantanee.c
+		istantanee.h)

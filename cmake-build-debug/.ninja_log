@@ -1,10 +1,10 @@
 # ninja log v5
 40	73	1709637051063376917	CMakeFiles/PR1_Project.dir/spareggi.c.o	77c8cfecabd5293b
 1	350	1709635832964318241	CMakeFiles/PR1_Project.dir/general.c.o	17f86718a4905aee
-1	48	1709637051037667243	CMakeFiles/PR1_Project.dir/turno.c.o	cdb61b0bfed3d7bc
 2	42	1709637051031594459	CMakeFiles/PR1_Project.dir/effetti.c.o	72e8c91f314dcea3
-0	5	0	clean	ad90e366ad70d77b
-0	47	1709736938999853391	build.ninja	73b6efb5833cdb1b
+1	48	1709637051037667243	CMakeFiles/PR1_Project.dir/turno.c.o	cdb61b0bfed3d7bc
+0	7	0	clean	ad90e366ad70d77b
+0	47	1709797757296411925	build.ninja	73b6efb5833cdb1b
 1	26	1709637538954894902	CMakeFiles/PR1_Project.dir/carteOstacolo.c.o	43202fb7abcd128
 26	53	1709637538981528294	PR1_Project	db48a2ef1c6d54ae
 350	380	1709635832997154240	CMakeFiles/PR1_Project.dir/mazzoCfu.c.o	2bc6e47f05e303a
@@ -13,4 +13,3 @@
 1	48	1709637051040032114	CMakeFiles/PR1_Project.dir/giocatori.c.o	482ac2b143a2c415
 46	75	1709637051066723121	CMakeFiles/PR1_Project.dir/starting.c.o	4ae0927ee5307e14
 1	26	1709637538955375569	CMakeFiles/PR1_Project.dir/saves.c.o	7559bb7a0a252cbd
-0	7	0	clean	ad90e366ad70d77b

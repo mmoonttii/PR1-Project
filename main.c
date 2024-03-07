@@ -12,6 +12,7 @@
 #include "effetti.h"
 #include "saves.h"
 #include "starting.h"
+#include "istantanee.h"
 
 int main() {
 	// ========== DICHIARAZIONI E INIT =================================================================================
@@ -102,6 +103,8 @@ int main() {
 		minMax(turno.points, nPlayers, &turno.cfuToLose, &turno.cfuToWin);
 
 		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno);
+
+		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno);
 
 		winnersLosers(&turno, playerList, nPlayers);
 		printLosers(turno.losers);
