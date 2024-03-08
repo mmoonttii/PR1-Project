@@ -10,24 +10,26 @@
 
 // ============ PERSONAGGI =====================================================
 /**
- * parseCharacters() è la funzione che legge il file dei personaggi e conserva le informazioni di ogni personaggio in
+ * parseCharacters() è la subroutine che legge il file dei personaggi e conserva le informazioni di ogni personaggio in
  * un'array di sturtture personaggio
  *
  * Una struttura characters nel campo bonusMalus abbiamo un array dove vengono salvati gli eventuali bonus e malus di
  * ogni giocatore per ogni tipologia di ostacolo
  *
- * @param fp è il file da leggere [personaggi.txt]
- * @param characters è l'indirizzo dell'array di strutture personaggio
+ * @param fPersonaggi FILE *: puntatore al file da leggere [personaggi.txt]
+ * @param characters Character[]: array delle strutture personaggio
 */
-void parseCharacters(FILE *fp, Character characters[]) {
+void parseCharacters(FILE *fPersonaggi, Character characters[]) {
 	// Per ogni personaggio
 	for (int i = 0; i < N_PERSONAGGI; i++){
 		// Per ogni ostacolo
 		for (int j = 0; j < N_OSTACOLI; j++){
-			fscanf(fp, "%d ", &characters[i].bonusMalus[j]);
+			// Leggo i bonus/malus
+			fscanf(fPersonaggi, "%d ", &characters[i].bonusMalus[j]);
 		}
-		fscanf(fp, "%[^\n]31s", characters[i].name);
-		fscanf(fp, "\n");
+		// LEggo il nome del personaggio
+		fscanf(fPersonaggi, "%[^\n]31s", characters[i].name);
+		fscanf(fPersonaggi, "\n");
 	}
 }
 
@@ -56,14 +58,14 @@ void printCharacter(Character *pCharacter){
 /**
  * acquisisciNumGiocatore() è la funzione che acquisisce il numero dei partecipanti alla partita
  * La funzione si occupa di controllare che l'input sia valido e invita a ritentare in caso di input non valido
- * @return il numero di giocatori alla partita
+ * @return int: numero di giocatori alla partita
  */
 int acquisisciNumGiocatori() {
 	int nGiocatori;
-
+	printf("Quanti giocatori parteciperanno oggi? [2-4]\n");
 	do {
-		printf("Quanti giocatori parteciperanno oggi? [2-4] ");
-		scanf(" %d", &nGiocatori);
+		printf(">>> ");
+		scanf("%d", &nGiocatori);
 
 		if (nGiocatori < 2 || nGiocatori > 4){
 			printf("Il numero di giocatori deve essere compreso tra 2 e 4:\n"
@@ -109,20 +111,24 @@ void printGiocatori(Player *listaGiocatori, bool stampaCarte) {
 }
 
 // ============ LIST MANAGEMENT ===============================================
+Player *addPlayerInTesta(Player *playersList, Player *newPlayer) {
 
+}
 /**
  * initGiocatori() è la funzione che, dati il numero dei giocatori e il mazzo di carte Cfu, restituisce una lista di
  * giocatori, occupandosi di inizializzarla, assegnando un username, personaggio e una mano di cinque carte iniziali
- * @param nGiocatori è il numero di giocatori che partecipano alla partita
- * @param mazzoCfu è un puntatore alla testa della lista che rappresenta il mazzo delle carte Cfu, passata alla
- * funzione per permettere l'assegnamento della mano iniziale di carte
- * @param personaggi è l'array delle strutture dei personaggi
- * @return la funzione restituisce listaGiocatori, una lista di strutture di tipo giocatore
+ * @param nGiocatori int: numero di giocatori che partecipano
+ * @param mazzoCfu CartaCfu **: doppio puntatore al mazzo delle carte Cfu, passata per permettere l'assegnamento della
+ * 									mano iniziale di carte
+ * @param mazzoScarti CartaCfu **: doppio puntatore al mazzo degli scarti, passato per permettere il rimescolamento,
+ * 									in caso finiscano le carte nel mazzo di pesca
+ * @param personaggi Character[]: array delle strutture  personaggi
+ * @return Player *: lista dei giocatori partecipanti alla partita
  */
 Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu **mazzoScarti)  {
-	Player    *listaGiocatori = NULL,
-	          *head           = NULL,
-	          aux;
+	Player    *listaGiocatori = NULL, // Testa della lista dei giocatori
+	          *curr           = NULL, // Puntatore all'elemento corrente della lista
+	          aux;                    // Struttura ausiliaria per la creazione del personaggio
 	int       k; // Indice per l'accesso all'array di personaggi
 	Character emptyCharacter  = {}; // Struttura personaggio ausiliaria vuota
 
@@ -136,11 +142,11 @@ Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[
 
 		// Inizializza la struttura
 		aux.cfu           = 0; // Punteggio di partenza
-		aux.manoCarteCfu  = NULL;
 		aux.manoCarteCfu  = distribuisciCarte(aux.manoCarteCfu, mazzoCfu, mazzoScarti); // Mano iniziale
 		aux.listaCarteOstacolo = NULL;
 		aux.nextPlayer         = NULL;
 
+		// Generazione personaggio da assegnare
 		do {
 			// Genero una posizione casuale dall'array dei personaggi
 			k = randRange(0, N_PERSONAGGI - 1);
@@ -156,11 +162,11 @@ Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[
 		if (listaGiocatori == NULL) {
 			listaGiocatori = allocaGiocatore();
 			*listaGiocatori = aux;
-			head = listaGiocatori;
+			curr = listaGiocatori;
 		} else {
-			head->nextPlayer = allocaGiocatore();
-			*head->nextPlayer = aux;
-			head = head->nextPlayer;
+			curr->nextPlayer = allocaGiocatore();
+			*curr->nextPlayer = aux;
+			curr = curr->nextPlayer;
 		}
 
 	}

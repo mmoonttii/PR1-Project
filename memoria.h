@@ -18,7 +18,7 @@ CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli);
 
 // ========== GIOCATORI ========================================================
 Player *allocaGiocatore();
-Player *freeGiocatore(Player *listaGiocatore);
+Player *freeGiocatore(Player *playerList);
 
 int *freeIntArr(int *arr);
 

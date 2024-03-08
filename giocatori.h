@@ -9,7 +9,7 @@
 #include "errors.h"
 
 // ============ PERSONAGGI =====================================================
-void parseCharacters(FILE      *fp,
+void parseCharacters(FILE      *fPersonaggi,
                      Character personaggi[]);
 void printBonusMalus(int arr[N_OSTACOLI]);
 
@@ -20,6 +20,7 @@ void printGiocatori(Player *listaGiocatori,
 
 void printGiocatore(Player *pPlayer);
 // ============ LIST MANAGEMENT ===============================================
+Player *addPlayerInTesta(Player *playersList, Player *newPlayer);
 Player *initGiocatori(int       nGiocatori,
                       CartaCfu  **mazzoCfu,
                       Character personaggi[],

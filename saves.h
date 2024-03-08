@@ -7,10 +7,16 @@
 
 #include "general.h"
 
+#define SAVES_UNIT 1
+
 void saveOnFile(char *saveName, FILE *fSave,
-                Character charactersArr[], int *nPlayers, Player *playerList,
+                Character charactersArr[], int *nPlayers, Player *playersList,
                 CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
                 CartaOstacolo *mazzoOstacoli);
+
+void writePlayersList(FILE *fSave, int n, Player *playersList);
+void writeCfuList(FILE *fSave, int n, CartaCfu *cfuList);
+void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList);
 
 void loadSaveFromFile(char *saveName, FILE *fSave,
                       Character charactersArr[], int *nPlayers, Player **playerList,

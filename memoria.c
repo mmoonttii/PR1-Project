@@ -72,30 +72,39 @@ CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
 
 // ========== GIOCATORI ========================================================
 /**
- * allocaGiocatore è la funzione che si occupa di allocare in memoria lo spazio necessario per un giocatore
- * @return un puntatore alla locazione del giocatore appena allocato
+ * allocaGiocatore() è la funzione che si occupa di allocare sull'heap lo spazio per un giocatore
+ * @return Player *: puntatore allo spazio appena allocato
  */
 Player *allocaGiocatore() {
 	Player *player = NULL;
+	// Allocazione
 	player = (Player *)malloc(sizeof(Player));
-	if (player == NULL) {
+	if (player == NULL) { // Se l'allocazione è fallita: libero la memoria già allocata ed esco dal programma con errore
 		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOC_PLAYER);
 	}
 	return player;
 }
-Player *freeGiocatore(Player *listagiocatori){
-	Player *pAux = NULL;
 
-	while (listagiocatori != NULL) {
-		pAux = listagiocatori;
-		listagiocatori = listagiocatori->nextPlayer;
+/**
+ * freeGiocatore() è la funzione per liberare lo spazio allocato per ogni Player
+ * @param playerList Player *: puntatore alla lista da liberare
+ * @return Player *: NULL
+ */
+Player *freeGiocatore(Player *playerList) {
+	Player *pAux = NULL; // Puntatore ausiliario di scorrimento lista
+
+	while (playerList != NULL) {
+		// Salvo l'elemento successivo, per liberare la memoria dell'attuale nodo
+		pAux       = playerList;
+		playerList = playerList->nextPlayer;
 		if (pAux != NULL){
 			free(pAux);
 		}
 	}
-	listagiocatori = NULL;
-	return listagiocatori;
+	// Mi assicuro che il puntatore sia NULL
+	playerList   = NULL;
+	return playerList;
 }
 
 int *freeIntArr(int *arr) {

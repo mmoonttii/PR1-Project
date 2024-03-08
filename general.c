@@ -3,10 +3,10 @@
 
 // ============ UTILITIES =================================================
 /**
- * randRange() è la funzione che, restiuisce un numero pseudorandom intero compreso tra due interi
- * @param min valore inferiore del range
- * @param max valore superiore del range
- * @return intero pseudorandom generato
+ * randRange() è la subroutine che restiuisce un numero pseudorandom intero compreso tra due interi
+ * @param min int: valore inferiore del range
+ * @param max int: valore superiore del range
+ * @return int: valore pseudorandom generato
  */
 int randRange(int min, int max) {
 	int random;

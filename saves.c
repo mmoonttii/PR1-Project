@@ -7,92 +7,126 @@
 #include "mazzoCfu.h"
 #include "carteOstacolo.h"
 
+/**
+ * saveOnFile() è la subroutine per salvare lo stato attuale della partita in un file binario
+ * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
+ * @param fSave FILE *: puntatore al file di salvataggio
+ * @param charactersArr Characters[4]: array delle strutture personaggio
+ * @param nPlayers int: numero di giocatori nella partita
+ * @param playersList Player **: doppio puntatore alla testa della lista di giocatori in partita
+ * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu
+ * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
+ * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
+ */
 void saveOnFile(char *saveName, FILE *fSave,
-                Character charactersArr[], int *nPlayers, Player *playerList,
+                Character charactersArr[], int *nPlayers, Player *playersList,
                 CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
-                CartaOstacolo *mazzoOstacoli){
+                CartaOstacolo *mazzoOstacoli) {
 
-	int nOstacoli = 0,
-		nCfu      = 0;
-	Player *headPlayers = NULL;
-	CartaOstacolo *headOstacoli = NULL;
-	CartaCfu *headCfu = NULL;
+	int nOstacoli               = 0,    // Numero di carte ostacolo da scrivere
+		nCfu                    = 0;    // Numero di carte cfu da scrivere
 
-	rewind(fSave);
+	rewind(fSave); // Mi assicuro di essere all'inizio del file di salvataggio
 	printf("Salvataggio su %s in corso...", saveName);
 
-	headPlayers = playerList;
-
 	// Scrittura numero Giocatori
-	fwrite(nPlayers, sizeof(int), 1, fSave);
+	fwrite(nPlayers, sizeof(int), SAVES_UNIT, fSave);
 	// Scrittura Giocatori
-	for (int i = 0; i < *nPlayers; ++i) {
-		fwrite(headPlayers, sizeof(Player), 1, fSave);
-
-		// Scrittura carte Cfu Mano
-		headCfu = headPlayers->manoCarteCfu;
-		for (int j = 0; j < CARTE_PER_MANO; ++j) {
-			fwrite(headCfu, sizeof(CartaCfu), 1, fSave);
-			if (headCfu->next != NULL) {
-				headCfu = headCfu->next;
-			}
-		}
-
-		// Scrittura numero carte Ostacolo
-		headOstacoli = headPlayers->listaCarteOstacolo;
-		nOstacoli = contaOstacoli(headOstacoli);
-		fwrite(&nOstacoli, sizeof(int), 1, fSave);
-
-		// Scrittura carte Ostacolo
-		for (int j = 0; j < nOstacoli; ++j) {
-			fwrite(headOstacoli, sizeof(CartaOstacolo), 1, fSave);
-			if (headOstacoli->next != NULL) {
-				headOstacoli = headOstacoli->next;
-			}
-		}
-		headPlayers = headPlayers->nextPlayer;
-	}
-
-	// Scrittura numero carte Cfu mazzo
-	headCfu = mazzoCfu;
-	nCfu = contaCarteCfu(headCfu);
-	fwrite(&nCfu, sizeof(int), 1, fSave);
+	writePlayersList(fSave, *nPlayers, playersList);
 
 	// Scrittura carte Cfu mazzo
-	for (int i = 0; i < nCfu; i++) {
-		fwrite(headCfu, sizeof(CartaCfu), 1, fSave);
-		if (headCfu->next != NULL) {
-			headCfu = headCfu->next;
-		}
-	}
-
-	// Scrittura numero carte Cfu scarti
-	headCfu = mazzoScarti;
-	nCfu = contaCarteCfu(headCfu);
-	fwrite(&nCfu, sizeof(int), 1, fSave);
+	nCfu    = contaCarteCfu(mazzoCfu);
+	fwrite(&nCfu, sizeof(int), SAVES_UNIT, fSave);
+	writeCfuList(fSave, nCfu, mazzoCfu);
 
 	// Scrittura carte Cfu scarti
-	for (int i = 0; i < nCfu; i++) {
-		fwrite(headCfu, sizeof(CartaCfu), 1, fSave);
-		if (headCfu->next != NULL) {
-			headCfu = headCfu->next;
-		}
-	}
-
-	// Scrittura numero carte Ostacolo mazzo
-	headOstacoli = mazzoOstacoli;
-	nOstacoli = contaOstacoli(headOstacoli);
-	fwrite(&nOstacoli, sizeof(int), 1, fSave);
+	nCfu    = contaCarteCfu(mazzoScarti);
+	fwrite(&nCfu, sizeof(int), SAVES_UNIT, fSave);
+	writeCfuList(fSave, nCfu, mazzoScarti);
 
 	// Scrittura carte Ostacolo mazzo
-	for (int j = 0; j < nOstacoli; ++j) {
-		fwrite(headOstacoli, sizeof(CartaOstacolo), 1, fSave);
-		if (headOstacoli->next != NULL) {
-			headOstacoli = headOstacoli->next;
-		}
-	}
+	nOstacoli    = contaOstacoli(mazzoOstacoli);
+	fwrite(&nOstacoli, sizeof(int), SAVES_UNIT, fSave);
+	writeOstacoliList(fSave, nOstacoli, mazzoOstacoli);
+
+	if (DBG) printf("\nDBG: save complete");
 }
 
+/**
+ * writePlayersList() è la subroutine per scrivere i nodi di una lista di Player lunga n
+ * @param fSave FILE *: puntatore al file di salvataggio dove scrivere
+ * @param n int: numero di giocatori da scrivere
+ * @param playersList Player *: puntatore alla testa della lista da scrivere
+ */
+void writePlayersList(FILE *fSave, int n, Player *playersList) {
+	Player *currPlayer = playersList;
+	int nOstacoli = -1;
+
+	for (int i = 0; i < n; ++i) {
+		fwrite(currPlayer, sizeof(Player), SAVES_UNIT, fSave);
+
+		// Scrittura carte Cfu Mano
+		writeCfuList(fSave, CARTE_PER_MANO, currPlayer->manoCarteCfu);
+
+		// Scrittura numero carte Ostacolo
+		nOstacoli = contaOstacoli(currPlayer->listaCarteOstacolo);
+		fwrite(&nOstacoli, sizeof(int), SAVES_UNIT, fSave);
+
+		// Scrittura carte Ostacolo
+		writeOstacoliList(fSave, nOstacoli, currPlayer->listaCarteOstacolo);
+
+		if (DBG) printf("\nDBG: saved %s player", currPlayer->username);
+		// Scorrimento giocatori
+		currPlayer  = currPlayer->nextPlayer;
+	}
+	if (DBG) printf("\nDBG: saved %d players", n);
+}
+
+/**
+ * writeCfuList() è la subroutine per scrivere i nodi di una lista di CarteCfu lunga n
+ * @param fSave FILE *: puntatore al file di salvataggio dove scrivere
+ * @param n int: numero di carte da scrivere
+ * @param cfuList CartaCfu *: puntatore alla testa della lista da scrivere
+ */
+void writeCfuList(FILE *fSave, int n, CartaCfu *cfuList) {
+	CartaCfu *curr = cfuList;
+	for (int j = 0; j < n; ++j) {
+		fwrite(curr, sizeof(CartaCfu), SAVES_UNIT, fSave);
+		if (curr->next != NULL) {
+			curr = curr->next;
+		}
+	}
+	if (DBG) printf("\nDBG: saved %d carteCfu", n);
+}
+
+/**
+ * writeOstacoliList() è la subroutine per scrivere i nodi di una lista di CarteOstacoli lunga n
+ * @param fSave FILE *: puntatore al file di salvataggio dove scrivere
+ * @param n int: numero di carte da scrivere
+ * @param ostacoliList CartaOstacoli *: puntatore alla testa della lista da scrivere
+ */
+void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList) {
+	CartaOstacolo *curr = ostacoliList;
+	for (int j = 0; j < n; ++j) {
+		fwrite(curr, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
+		if (curr->next != NULL) {
+			curr = curr->next;
+		}
+	}
+	if (DBG) printf("\nDBG: saved %d carteOstacolo", n);
+}
+
+/**
+ * loadSaveFromFile() è la subroutine che legge il file di salvataggio e ne carica i contenuti
+ * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
+ * @param fSave FILE *: puntatore al file di salvataggio
+ * @param charactersArr Characters[4]: array delle strutture personaggio
+ * @param nPlayers int: numero di giocatori nella partita
+ * @param playerList Player **: doppio puntatore alla testa della lista di giocatori in partita
+ * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu
+ * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
+ * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
+ */
 void loadSaveFromFile(char *saveName, FILE *fSave,
                       Character charactersArr[], int *nPlayers, Player **playerList,
                       CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
@@ -122,7 +156,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 	printf("\nLettura da %s in corso...", saveName);
 
 	// Lettura numero Players
-	check = fread(nPlayers, sizeof(int), 1, fSave);
+	check = fread(nPlayers, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_PLAYERS);
 	}
@@ -130,7 +164,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 	// Lettura Players
 	for (int i = 0; i < *nPlayers; ++i) {
 		check = 0;
-		check = fread(&playerAux, sizeof(Player), 1, fSave);
+		check = fread(&playerAux, sizeof(Player), SAVES_UNIT, fSave);
 		if (check == 0) {
 			exit(ERR_READ_SAVE_PLAYER);
 		}
@@ -150,7 +184,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 		headCarteMano = playerHead->manoCarteCfu;
 		for (int j = 0; j < CARTE_PER_MANO; ++j) {
 			check = 0;
-			check = fread(&carteAux, sizeof(CartaCfu), 1, fSave);
+			check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
 			if (check == 0) {
 				exit(ERR_READ_SAVE_MANO_CFU);
 			}
@@ -164,13 +198,13 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 		playerHead->listaCarteOstacolo = NULL;
 		headManoOstacoli = playerHead->listaCarteOstacolo;
 		check            = 0;
-		check            = fread(&nManoOstacoli, sizeof(int), 1, fSave);
+		check            = fread(&nManoOstacoli, sizeof(int), SAVES_UNIT, fSave);
 		if (check == 0) {
 			exit(ERR_READ_SAVE_N_OSTACOLI);
 		}
 		for (int j = 0; j < nManoOstacoli; ++j) {
 			check = 0;
-			check = fread(&ostacoloAux, sizeof(CartaOstacolo), 1, fSave);
+			check = fread(&ostacoloAux, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
 			if (check == 0) {
 				exit(ERR_READ_SAVE_OSTACOLI);
 			}
@@ -183,7 +217,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 
 	// Lettura numero carte Cfu mazzo
 	check = 0;
-	check = fread(&nCfuMazzo, sizeof(int), 1, fSave);
+	check = fread(&nCfuMazzo, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_CFU);
 	}
@@ -191,7 +225,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 	// Lettura carte Cfu
 	for (int i = 0; i < nCfuMazzo; ++i) {
 		check = 0;
-		check = fread(&carteAux, sizeof(CartaCfu), 1, fSave);
+		check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
 		if (check == 0) {
 			exit(ERR_READ_SAVE_MAZZO_CFU);
 		}
@@ -203,7 +237,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 
 	// Lettura numero carte Cfu scarti
 	check = 0;
-	check = fread(&nCfuScarti, sizeof(int), 1, fSave);
+	check = fread(&nCfuScarti, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_SCARTI);
 	}
@@ -211,7 +245,7 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 	// Lettura carte Cfu scrti
 	for (int i = 0; i < nCfuScarti; ++i) {
 		check = 0;
-		check = fread(&carteAux, sizeof(CartaCfu), 1, fSave);
+		check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
 		if (check == 0) {
 			exit(ERR_READ_SAVE_MAZZO_SCARTI);
 		}
@@ -224,14 +258,14 @@ void loadSaveFromFile(char *saveName, FILE *fSave,
 
 	// Lettura numero carte Ostacolo mazzo
 	check = 0;
-	check = fread(&nMazzoOstacoli, sizeof(int), 1, fSave);
+	check = fread(&nMazzoOstacoli, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_OSTACOLI);
 	}
 	// Lettura carte Ostacolo mazzo
 	for (int j = 0; j < nManoOstacoli; ++j) {
 		check = 0;
-		check = fread(&ostacoloAux, sizeof(CartaOstacolo), 1, fSave);
+		check = fread(&ostacoloAux, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
 		if (check == 0) {
 			exit(ERR_READ_SAVE_MAZZO_OSTACOLI);
 		}

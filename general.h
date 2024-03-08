@@ -29,6 +29,7 @@
 #define FILE_CARTE_CFU  "carte.txt"
 #define FILE_OSTACOLI   "ostacoli.txt"
 #define FILE_LOG        "log.txt"
+#define DBG             true
 
 // =========== CARTE CFU ===============================================================================================
 

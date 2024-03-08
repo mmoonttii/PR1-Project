@@ -8,10 +8,10 @@
 /**
  * creaMazzoCfu() è la subroutine per la lettura del file di carte e la creazione di una lista di Carte
  *
- * @param fp FILE *: file da leggere [carte.txt]
+ * @param fCfu FILE *: file da leggere [carte.txt]
  * @return CartaCfu *: puntatore alla testa del mazzo
  */
-CartaCfu *creaMazzoCfu(FILE *fp) {
+CartaCfu *creaMazzoCfu(FILE *fCfu) {
 	int occurences = 0, // Numero di carte dello stesso tipo
 	    carte      = 0, // Numero di carte nel mazzo
 	    read       = 0; // Numero di letture avvenute con successo
@@ -22,8 +22,8 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 	do {
 		// Lettura riga dal file, se read == 4 lettura success
 		read = 0;
-		read = fscanf(fp, "%d %d %d %[^\n]31s", &occurences, &cartaCfu.effect, &cartaCfu.cfu, cartaCfu.name);
-		fscanf(fp, "\n");
+		read = fscanf(fCfu, "%d %d %d %[^\n]31s", &occurences, &cartaCfu.effect, &cartaCfu.cfu, cartaCfu.name);
+		fscanf(fCfu, "\n");
 
 		cartaCfu.next = NULL;
 
@@ -34,7 +34,7 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 				newCard = allocaCartaCfu(); // Alloca nuova carta e salva in var
 				*newCard = cartaCfu;        // Inizializza spazio allocato con dati letti
 
-				cartaCfuInCoda(&mazzo, newCard);
+				mazzo = cartaCfuInTesta(mazzo, newCard); // Aggiungo la carta al mazzo
 
 				occurences--;   // Il numero di carte dello stesso tipo ora lette è diminuito
 				carte++;        // Il numero delle carte totali nel mazzo è aumentato
@@ -43,7 +43,7 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
 			// In caso di lettura fallita
 			printf("\n--printf scurrile rimosso--\n");
 		}
-	} while (read == 4); // Se la lettura fallisce vuol dire che è terminato il file
+	} while (read == 4); // Se la lettura fallisce vuol dire che è terminato il file e posso uscire dal ciclo
 
 	printf("\nCarte lette %d\n", carte);
 
@@ -56,57 +56,75 @@ CartaCfu *creaMazzoCfu(FILE *fp) {
  * @return CartaCfu *: puntatore a testa del mazzo mischiato
  */
 CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare) {
-	CartaCfu *mazzoMescolato = NULL,
-	         *headMescolato  = NULL,
-	         *headMischiare  = *mazzoDaMischiare,
-	         *cartaEstratta  = NULL,
-	         *prev           = NULL;
-	int count = 0,
-	    randCarta;
+	CartaCfu *mazzoMescolato = NULL,    // mazzoMescolato punta alla testa del mazzo già mescolato
+	         *cartaEstratta  = NULL;    // cartaEstrtatta punta alla carta estratta randomicamente dal mazzo
+
+	int count = 0,  // Conta quante carte sono nel mazzo da mischiare
+	    randCarta;  // Posizione randomica della carta da estrarre
 
 	count = contaCarteCfu(*mazzoDaMischiare);
 
 	while (*mazzoDaMischiare != NULL) {
 		randCarta = randRange(0, count - 1); // Genero una posizione di una carta random
-		cartaEstratta = indexEstraiCartaCfu(mazzoDaMischiare, randCarta); // Estraggo tale carta random
+		cartaEstratta = indexEstraiCartaCfu(mazzoDaMischiare, randCarta);  // Estraggo tale carta random
 		mazzoMescolato = cartaCfuInTesta(mazzoMescolato, cartaEstratta); // Aggiungo la carta al mazzo
 		count--;
 	}
 	return mazzoMescolato;
 }
 
+/**
+ * cartaCfuInTesta() è la subroutine che, data una lista di carte, ne aggiunge una nuova nella testa
+ * @param mazzoCfu CartaCfu *: punta alla testa del mazzo a cui devo aggiungere la carta
+ * @param cartaCfu CartaCfu *: punta alla carta che si vuole aggiungere in testa
+ * @return CartaCfu *: punta alla nuova testa della lista
+ */
 CartaCfu *cartaCfuInTesta(CartaCfu *mazzoCfu, CartaCfu *cartaCfu) {
-	cartaCfu->next = mazzoCfu;
-	mazzoCfu = cartaCfu;
+	cartaCfu->next = mazzoCfu; // Alla carta segue il mazzo già esistente
+	mazzoCfu = cartaCfu;       // Salvo la nuova testa nella variabile mazzoCfu
 	return mazzoCfu;
 }
 
+/**
+ * contaCarteCfu() è la subroutine che conta da quanti nodi è composta una lista di CarteCfu
+ * @param mazzoCfu CartaCfu *: punta alla testa della lista da contare
+ * @return int: numero di nodi nella lista
+ */
 int contaCarteCfu(CartaCfu *mazzoCfu) {
 	int count = 0;
+	// Scorro la lista fino a quando non è terminata
 	while (mazzoCfu != NULL){
 		mazzoCfu = mazzoCfu->next;
-		count++;
+		count++; // Aggiorno il contatore dei nodi nella lista
 	}
 	return count;
 }
 
+/**
+ * indexEstraiCartaCfu() è la subroutine che poppa la index-esima carta Cfu dal mazzo
+ * @param mazzoCfu CartaCfu **: doppiopuntatore al mazzo da cui estrarre la carta
+ * @param index int: indice della carta da estrarre
+ * @return CartaCfu *: puntatore alla carta che è stata poppata
+ */
 CartaCfu *indexEstraiCartaCfu(CartaCfu **mazzoCfu, int index) {
-	CartaCfu *head = *mazzoCfu,
-	         *prev = *mazzoCfu,
-	         *extracted = NULL;
+	CartaCfu *curr = *mazzoCfu, // curr punta all'elemento corrente della lista
+	         *prev = *mazzoCfu, // prev punta all'elemento precedente della lista
+	         *extracted = NULL; // extracted punta alla carta estratta dalla lista
 
-	if (index == 0) {
-		extracted = *mazzoCfu;
-		*mazzoCfu = extracted->next;
-		extracted->next = NULL;
+	if (index == 0) {   // Se l'elemento della lista è in testa
+		extracted = *mazzoCfu;  // salvo l'elemento di testa
+		*mazzoCfu = extracted->next; // il mazzo prende la carta successiva
+		extracted->next = NULL; // isolo la carta che ho estratto
+
 	} else {
+		// Scorro la lista di index volte, salvando ogni volta l'elemento precedente
 		for (int i = 0; i < index; ++i) {
-			prev = head;
-			head = head->next;
+			prev = curr;
+			curr = curr->next;
 		}
-		extracted = head;
-		prev->next = head->next;
-		extracted->next = NULL;
+		extracted = curr;   // l'elemento corrente va salvato in estratto
+		prev->next = curr->next; // Salto l'elemento curr nella lista
+		extracted->next = NULL;  // isolo il nodo estratto
 	}
 
 	return extracted;
@@ -168,15 +186,18 @@ void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 }
 
 /**
- * distribuisciCarte è la subroutine che si occupa di distribuire carte ai giocatori fin quando questi non hanno
+ * distribuisciCarte() è la subroutine che si occupa di distribuire carte ai giocatori fin quando questi non hanno
  * 5 carte in mano
- * @param mazzoCfu è un puntatore al puntatore alla prima carta del mazzo
- * @return un puntatore alla prima carta del mazzo
+ * @param mano CartaCfu *: puntatore alla mano del giocatore, al quale si vogliono aggiungere carte
+ * @param mazzoCfu CartaCfu **: doppio puntatore al mazzo di pesca
+ * @param mazzoScarti CartaCfu **: doppio puntatore al mazzo degli scarti, passato per eventuale rimescolamento
+ * @return CartaCfu *: puntatore alla prima carta della mano
  */
 CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti) {
-	CartaCfu *cartaCfu = NULL;
+	CartaCfu *cartaCfu = NULL; // Carta da assegnare
 	int counter = 0;
-	counter = contaCarteCfu(mano);
+
+	counter = contaCarteCfu(mano); // Conto le carte inizialmente in mano
 
 	// Fin quando la mano è composta da 5 carte o meno
 	while (counter < CARTE_PER_MANO){
@@ -185,8 +206,8 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 			*mazzoCfu = mescolaMazzo(mazzoScarti);
 		}
 
-		cartaCfu = indexEstraiCartaCfu(mazzoCfu, 0); // Estraggo dal mazzo la prima carta
-		cartaCfuInCoda(&mano, cartaCfu);    // E la inserisco in coda alla mano
+		cartaCfu = indexEstraiCartaCfu(mazzoCfu, 0);    // Estraggo dal mazzo la prima carta
+		mano = cartaCfuInTesta(mano, cartaCfu);     // E la inserisco in coda alla mano
 		counter++; // Incremento il contatore delle carte in mano
 	}
 	return mano;

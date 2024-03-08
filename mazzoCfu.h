@@ -9,7 +9,7 @@
 #include "errors.h"
 #include "general.h"
 
-CartaCfu *creaMazzoCfu(FILE *fp);
+CartaCfu *creaMazzoCfu(FILE *fCfu);
 CartaCfu *mescolaMazzo(CartaCfu **mazzoDaMischiare);
 CartaCfu *cartaCfuInTesta(CartaCfu *mazzoCfu, CartaCfu *cartaCfu);
 

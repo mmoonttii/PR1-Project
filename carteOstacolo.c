@@ -11,83 +11,116 @@
 // ============ LIST MANAGEMENT ===============================================/**
 
 /**
- * creaMazzoOstacoli() è la subroutine che legge il file delle carte Ostacolo e crea un mazzo mischiato delle carte
+ * creaMazzoOstacoli() è la subroutine che legge il file delle carte Ostacolo e crea una lista delle carte
  *
- * @param fp è il file da leggere [ostacoli.txt]
- * @return un puntatore alla testa del mazzo
+ * @param fOstacoli FILE *: è file da leggere [ostacoli.txt]
+ * @return CartaOstacolo *: puntatore alla testa del mazzo
  */
-CartaOstacolo *creaMazzoOstacoli(FILE *fp) {
-	int      nOstacoliTipo,
-	         carte = 0,
-	         pos;
-	Ostacolo tipo = 1;
-	CartaOstacolo cartaOstacolo,
-			*mazzo = NULL,
-			*newCard = NULL,
-			*head = NULL,
-			*auxP = NULL;
+CartaOstacolo *creaMazzoOstacoli(FILE *fOstacoli) {
+	int nOstacoliTipo,  // numero di carte per ogni tipo
+	    carte = 0;      // numero di carte nel mazzo
 
-	for (int i = 0; i < N_OSTACOLI; ++i) {
-		fscanf(fp, "%d\n", &nOstacoliTipo);
+	Ostacolo tipo = 1;  // tipologia dell'ostacolo
 
-		for (int j = 0; j < nOstacoliTipo; ++j) {
+	CartaOstacolo cartaOstacolo,    // Struttura ausiliaria dove salvare la carta letta
+				  *mazzo = NULL,    // Puntatore al mazzo creato
+				  *newCard = NULL;  // puntatore per l'allocazione di una nuova carta
 
-			fscanf(fp, "%31[^\n]s", cartaOstacolo.name);
-			fscanf(fp, "\n");
-			fscanf(fp, "%127[^\n]s", cartaOstacolo.desc);
-			fscanf(fp, "\n");
-			cartaOstacolo.type = tipo;
+	for (int i = 0; i < N_OSTACOLI; ++i) {  // Per ogni tipologia di ostacolo
+		fscanf(fOstacoli, "%d\n", &nOstacoliTipo);  // Leggo quante carte ci sono di quel tipo
 
-			newCard = allocaCartaOstacolo();
-			*newCard = cartaOstacolo;
+		for (int j = 0; j < nOstacoliTipo; ++j) {   // Per ogni carta di ogni tipo
 
-			if (mazzo == NULL){
-				mazzo = newCard;
-				mazzo->next = NULL;
-			} else {
-				// pos è la posizione nel quale inserire una nuova carta, dove
-				// 0 è la posizione immediatamente successiva alla prima carta del mazzo
-				// -1 è la posizione come nuova prima carta del mazzo
-				pos = randRange(-1, carte - 1);
+			fscanf(fOstacoli, "%31[^\n]s", cartaOstacolo.name); // LEggo nome
+			fscanf(fOstacoli, "\n");
+			fscanf(fOstacoli, "%127[^\n]s", cartaOstacolo.desc); // Leggo descrizione
+			fscanf(fOstacoli, "\n");
+			cartaOstacolo.type = tipo;  // Salvo il tipo
 
-				// Posizionamento carta all'inizio del mazzo
-				if (pos == -1) {
-					auxP = mazzo;
-					mazzo = newCard;
-					mazzo->next = auxP;
-				} else {
-					for (int k = 0; head != NULL && k < pos; ++k) {
-						head = head->next;
-					}
-					if (head != NULL) {
-						auxP = head->next; // Salvo il puntatore alla carta che risulterà la successiva a quella letta
-						head->next = newCard; // La nuova carta viene inserita in posizione successiva a head
-						newCard->next = auxP; // Il resto della lista viene messo successivamente alla nuova carta
-					} else {
-						head = newCard;
-						head->next = NULL;
-					}
-				}
-			}
-			head = mazzo;
-			carte++;
+			newCard = allocaCartaOstacolo(); // Alloco la nuova carta
+			*newCard = cartaOstacolo;       // Riempio lo spazio allocato con la carta letta
+
+			mazzo = ostacoloInTesta(mazzo, newCard); // Aggiungo la carta al mazzo
+			carte++; // Aggiotno il numero di carte
 		}
-		tipo++;
+		tipo++; // Finite di leggere le carte di un tipo, passo al tipo successivo
 	}
 	return mazzo;
 }
 
 /**
- * pescaCartaOstcolo() è la subroutine che data in input una lista di carte ostacolo ne estrae la prima e la
+ * ostacoloInTesta() è la subroutine che, data una lista di carte, ne aggiunge una nuova alla testa
+ * @param mazzoOstacoli CartaOstacolo *: punta alla testa del mazzo a cui devo aggiungere la carta
+ * @param cartaOstacolo CartaOstacolo *: punta alla carta che si vuole aggiungere in testa
+ * @return CartaOstacolo *: punta alla nuova testa della lista
+ */
+CartaOstacolo *ostacoloInTesta(CartaOstacolo *mazzoOstacoli, CartaOstacolo *cartaOstacolo) {
+	cartaOstacolo->next = mazzoOstacoli;
+	mazzoOstacoli = cartaOstacolo;
+	return mazzoOstacoli;
+}
+
+/**
+ * mescolaMazzoOstacoli() è la subroutine che presa una lista di CarteOstacolo, la restituisce in un ordine randomizzato
+ * @param mazzoDaMischiare CartaOstacolo **: doppio puntatore a testa del mazzo da mescolare
+ * @return CartaOstacolo *: puntatore a testa del mazzo mischiato
+ */
+CartaOstacolo *mescolaMazzoOstacoli(CartaOstacolo **mazzoDaMischiare) {
+	CartaOstacolo *mazzoMescolato = NULL,    // mazzoMescolato punta alla testa del mazzo già mescolato
+	              *cartaEstratta  = NULL;    // cartaEstrtatta punta alla carta estratta randomicamente dal mazzo
+
+	int count = 0,  // Conta quante carte sono nel mazzo da mischiare
+	    randCarta;  // Posizione randomica della carta da estrarre
+
+	count = contaOstacoli(*mazzoDaMischiare);
+
+	while (*mazzoDaMischiare != NULL) {
+		randCarta = randRange(0, count - 1); // Genero una posizione di una carta random
+		cartaEstratta = indexEstraiCartaOstacolo(mazzoDaMischiare, randCarta);  // Estraggo tale carta random
+		mazzoMescolato = ostacoloInTesta(mazzoMescolato, cartaEstratta); // Aggiungo la carta al mazzo
+		count--;
+	}
+	return mazzoMescolato;
+}
+
+/**
+ * indexEstraiCartaOstacolo() è la subroutine che poppa la index-esima carta Ostacolo dal mazzo
+ * @param mazzoOstacoli CartaOstacolo **: doppio puntatore al mazzo da cui estrarre
+ * @param index int: indice della carta da estrarre
+ * @return CartaCfu *: puntatore alla carta poppata
+ */
+CartaOstacolo *indexEstraiCartaOstacolo(CartaOstacolo **mazzoOstacoli, int index) {
+	CartaOstacolo *curr = *mazzoOstacoli, // curr punta all'elemento corrente della lista
+				  *prev = *mazzoOstacoli, // prev punta all'elemento precedente della lista
+	              *extracted = NULL; // extracted punta alla carta estratta dalla lista
+
+	if (index == 0) {   // Se l'elemento della lista è in testa
+		extracted = pescaCartaOstacolo(mazzoOstacoli); // Corrisponde a pescare la prima carta dal mazzo
+	} else {
+		// Scorro la lista di index volte, salvando ogni volta l'elemento precedente
+		for (int i = 0; i < index; ++i) {
+			prev = curr;
+			curr = curr->next;
+		}
+		extracted = curr;   // l'elemento corrente va salvato in estratto
+		prev->next = curr->next; // Salto l'elemento curr nella lista
+		extracted->next = NULL;  // isolo il nodo estratto
+	}
+
+	return extracted;
+}
+
+/**
+ * pescaCartaOstcolo() è la subroutine che data una lista di carte ostacolo ne estrae la prima e la
  * restituisce, aggiornando la lista con la nuova testa
- * @param mazzoOstacoli è un puntatore al puntatore alla testa della lista da cui pescare
- * @return il primo elemento del mazzo
+ * @param mazzoOstacoli CartaOstacolo **: è un doppio puntatore alla testa della lista da cui pescare
+ * @return CartaOstacolo *: puntatore alla carta pescata
  */
 CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
 	CartaOstacolo *carta = NULL;
-	carta = *mazzoOstacoli;
-	*mazzoOstacoli = (*mazzoOstacoli)->next;
-	carta->next = NULL;
+	carta = *mazzoOstacoli; // La carta da pescare è la prima del mazzo
+	*mazzoOstacoli = (*mazzoOstacoli)->next;    // La nuova prima del mazzo, sarà la successiva
+	carta->next = NULL; // Isolo la carta pescata
 	return carta;
 }
 

@@ -1,6 +1,8 @@
 // Nome: Lorenzo Montalto (l.montalto@studenti.unica.it)
 // Matricola: 60/61/66424
-// Tipologia progetto:
+// Tipologia progetto: medio
+
+/// TODO RICORDATI DI TOGLIERE DBG
 
 #include "carteOstacolo.h"
 #include "general.h"
@@ -54,13 +56,15 @@ int main() {
 
 	printf("\nBenvenuto su Happy Little Students\n");
 
-	fSave = startGame(saveName,
-	                  charactersArr,
-					  &nPlayers, &playerList,
-	                  &mazzoCfu, &mazzoScarti,
-	                  &mazzoOstacoli);
+	startGame(saveName,
+			  charactersArr,
+			  &nPlayers, &playerList,
+	          &mazzoCfu, &mazzoScarti,
+	          &mazzoOstacoli);
 
 	// ========== TURNI ================================================================================================
+	fSave = openFile(saveName, BIN_WRITE);
+
 	turno.numTurno = 1;
 
 	while (endGame != true){
