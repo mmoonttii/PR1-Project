@@ -9,20 +9,20 @@
 
 #define SAVES_UNIT 1
 
-void saveOnFile(char *saveName, FILE *fSave,
-                Character charactersArr[], int *nPlayers, Player *playersList,
-                CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
-                CartaOstacolo *mazzoOstacoli);
+void
+saveOnFile(char *saveName, FILE *fSave, int *nPlayers, Player *playersList, CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
+           CartaOstacolo *mazzoOstacoli);
 
 void writePlayersList(FILE *fSave, int n, Player *playersList);
 void writeCfuList(FILE *fSave, int n, CartaCfu *cfuList);
 void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList);
 
-void loadSaveFromFile(char *saveName, FILE *fSave,
-                      Character charactersArr[], int *nPlayers, Player **playerList,
-                      CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
-                      CartaOstacolo **mazzoOstacoli);
+void loadSaveFromFile(char *saveName, FILE *fSave, int *nPlayers, Player **playerList, CartaCfu **mazzoCfu,
+                      CartaCfu **mazzoScarti, CartaOstacolo **mazzoOstacoli);
 
+Player *readPlayersList(FILE *fSave, int nPlayers);
+CartaCfu *readCfuList(FILE *fSave, int n);
+CartaOstacolo *readOstacoliList(FILE *fSave, int n);
 void logPrintLn(FILE *fLog, int numTurno, char *user, char *carta);
 
 

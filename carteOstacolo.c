@@ -146,22 +146,22 @@ void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli){
 }
 // ============ OUTPUT ========================================================
 /**
- * printOstacoli è la subroutine che si occupa di stampare una lista di ostacoli
- * @param listaOstacoli è la lista da stampare
+ * printOstacoli() è la subroutine che si occupa di stampare una lista di ostacoli
+ * @param listaOstacoli CartaOstacolo *: lista degli ostacoli da stampare
  */
 void printOstacoli(CartaOstacolo *listaOstacoli){
-	CartaOstacolo *head = listaOstacoli;
+	CartaOstacolo *curr = listaOstacoli;
 	char *types[] = {"null", "Studio", "Sopravvivenza", "Sociale", "Esame"};
-	int count = 0;
 
-	while (head != NULL){
+	// Ciclo sulla lista
+	while (curr != NULL){
+		// Stampo le informazioni di ogni carta
 		printf("\nNome: %s\n"
 		       "|\tDescrizione: %s\n"
 		       "|\tTipo: %s\n",
-		       head->name, head->desc, types[head->type]);
-
-		head = head->next;
-		count++;
+		       curr->name, curr->desc, types[curr->type]);
+		// Passa alla prossima carta
+		curr = curr->next;
 	}
 }
 

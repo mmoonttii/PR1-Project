@@ -15,7 +15,8 @@
 #define ERR_FAIL_ALLOC_BOOLS    206
 
 // Errore menu
-#define ERR_MENU 301
+#define ERR_MENU      301
+#define ERR_PLAY_CARD 302
 
 // Errori lettura file                [4xx]
 #define ERR_READ_SAVE_N_PLAYERS        401

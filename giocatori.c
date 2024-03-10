@@ -111,9 +111,18 @@ void printGiocatori(Player *listaGiocatori, bool stampaCarte) {
 }
 
 // ============ LIST MANAGEMENT ===============================================
+/**
+ * addPlayerInTesta() è la subroutine che data una lista di player ne aggiunge un'altro in testa
+ * @param playersList Player *: puntatore alla lista di player
+ * @param newPlayer Player *: puntatore al Player da aggiungere
+ * @return Plyr *: lista con la nuova testa
+ */
 Player *addPlayerInTesta(Player *playersList, Player *newPlayer) {
-
+	newPlayer->nextPlayer = playersList; // Al player attuale accodo la lista di player gia presenti
+	playersList = newPlayer; // Salvo la nuova testa
+	return playersList;
 }
+
 /**
  * initGiocatori() è la funzione che, dati il numero dei giocatori e il mazzo di carte Cfu, restituisce una lista di
  * giocatori, occupandosi di inizializzarla, assegnando un username, personaggio e una mano di cinque carte iniziali
@@ -125,26 +134,29 @@ Player *addPlayerInTesta(Player *playersList, Player *newPlayer) {
  * @param personaggi Character[]: array delle strutture  personaggi
  * @return Player *: lista dei giocatori partecipanti alla partita
  */
-Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[], CartaCfu **mazzoScarti)  {
-	Player    *listaGiocatori = NULL, // Testa della lista dei giocatori
-	          *curr           = NULL, // Puntatore all'elemento corrente della lista
-	          aux;                    // Struttura ausiliaria per la creazione del personaggio
-	int       k; // Indice per l'accesso all'array di personaggi
+Player *initGiocatori(int nGiocatori, Character personaggi[],
+					  CartaCfu **mazzoCfu, CartaCfu **mazzoScarti) {
+	Player *playersList = NULL, // Testa della lista dei giocatori
+	       *newPlayer   = NULL; // Nuovo personaggio in allocazione
+
+	int k; // Indice per l'accesso all'array di personaggi
+
 	Character emptyCharacter  = {}; // Struttura personaggio ausiliaria vuota
 
 	printf("\n=== PARTECIPANTI ===\n");
 	// Per ogni giocatore
 	for (int i = 0; i < nGiocatori; ++i) {
+		newPlayer = allocaGiocatore();
 		// Richiedi username
 		printf("\nGIOCATORE %d\n", i);
 		printf("Inserire username: ");
-		scanf(" %[^\n]31s", aux.username);
+		scanf(" %[^\n]31s", newPlayer->username);
 
-		// Inizializza la struttura
-		aux.cfu           = 0; // Punteggio di partenza
-		aux.manoCarteCfu  = distribuisciCarte(aux.manoCarteCfu, mazzoCfu, mazzoScarti); // Mano iniziale
-		aux.listaCarteOstacolo = NULL;
-		aux.nextPlayer         = NULL;
+		// Inizializza la struttura con 0 cfu, mano di carte, carte ostacolo e prossimo gicatore a null
+		newPlayer->cfu                = 0; // Punteggio di partenza
+		newPlayer->manoCarteCfu       = distribuisciCarte(newPlayer->manoCarteCfu, mazzoCfu, mazzoScarti); // Mano iniziale
+		newPlayer->listaCarteOstacolo = NULL;
+		newPlayer->nextPlayer         = NULL;
 
 		// Generazione personaggio da assegnare
 		do {
@@ -154,23 +166,14 @@ Player *initGiocatori(int nGiocatori, CartaCfu **mazzoCfu, Character personaggi[
 			// genero un'altro, fino a quando non saranno diverso
 		} while (strcmp(personaggi[k].name, emptyCharacter.name) == 0);
 
-		aux.character = personaggi[k]; // Assegno il personaggio dall'array
+		newPlayer->character = personaggi[k]; // Assegno il personaggio dall'array
 		personaggi[k] = emptyCharacter; // Sostiuisco il posto nell'array con il personaggio vuoto
 
-
-		// Creazione lista dei giocatori
-		if (listaGiocatori == NULL) {
-			listaGiocatori = allocaGiocatore();
-			*listaGiocatori = aux;
-			curr = listaGiocatori;
-		} else {
-			curr->nextPlayer = allocaGiocatore();
-			*curr->nextPlayer = aux;
-			curr = curr->nextPlayer;
-		}
+		// Aggiungo l'elemento appena inizializzato alla lista dei giocatori
+		playersList = addPlayerInTesta(playersList, newPlayer);
 
 	}
-	return listaGiocatori;
+	return playersList;
 }
 
 /**

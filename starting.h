@@ -24,6 +24,6 @@ void initNewGame(Character charactersArr[], int *nPlayers,Player **playerList,
                  CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
 				 CartaOstacolo **mazzoOstacoli);
 
-void loadGame(char *saveName, Character charactersArr[], int *nPlayers, Player **playerList, CartaCfu **mazzoCfu,
-              CartaCfu **mazzoScarti, CartaOstacolo **mazzoOstacoli);
+void loadGame(char *saveName, int *nPlayers, Player **playerList, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+              CartaOstacolo **mazzoOstacoli);
 #endif //PR1_PROJECT_STARTING_H

@@ -5,78 +5,107 @@
 #include "mazzoCfu.h"
 #include "saves.h"
 
-// ============ TURNO - FASE 1 =========================================================================================
+// ============ TURNO - GIOCA CARTA ====================================================================================
 
 /**
- * Acquisisci azione che si occupa di ricevere l'input del giocatore che corrisponde a un azione da compiere
- * all'inzio del turno
- * @return
+ * acquisisciAzione() è la subroutine per scegliere quale azione compiere all'inzio del turno
+ * @return int: input del giocatore
  */
 int acquisisciAzione() {
 	int input;
 	printf("\nAzioni:\n"
-	       "\t[1] Gioca una carta Cfu\n"
-	       "\t[2] Controlla lo stato di altri giocatori (Cfu e carte ostacolo\n"
-	       "\t[0] Esci dalla partita\n"
-	       ">>> ");
+	       "\t[%d] Gioca una carta Cfu\n"
+	       "\t[%d] Controlla lo stato di altri giocatori (Cfu e carte ostacolo\n"
+	       "\t[%d] Esci dalla partita\n",
+		   GIOCA_CARTA, INFO_GIOCATORI, LEAVE_GAME);
 	do {
+		printf(">>> ");
 		scanf("%d", &input);
 
-		if (input > 2 || input < 0) {
-			printf("Input non valido, riprovare\n"
-			       ">>> ");
+		// Controllo la coerenza dell'input
+		if (input > INFO_GIOCATORI || input < LEAVE_GAME) {
+			printf("Input non valido, riprovare\n");
 		}
-	} while (input > 2 || input < 0);
+	} while (input < LEAVE_GAME || input > INFO_GIOCATORI);
 	return input;
 }
 
 /**
- * giocaCarta() è la subroutine che si occupa di gestire l'acquisizione da parte di un giocatore della carta che
- * vuole giocare e aggiungere la carta alla lista delle carte giocate
- * @param manoCarteCfu é la lista delle carte in mano al giocatore
+ * giocaCarta() gestisce l'acquisizione da parte di un giocatore della carta che vuole giocare e aggiungere la carta
+ * alla lista delle carte giocate
+ * @param manoCarteCfu CartaCfu **: doppio puntatore alla mano di carte del player
+ * @param mazzoScarti CartaCfu **: doppio puntatore al mazzo di scarto
+ * @param mazzoCarteCfu CartaCfu **: doppio puntatore al mazzo di pesca
+ * @param rimescolaMano bool: è una flag che indica se è concesso il rimescolamento della mano in caso non si abbiano
+ * carte punto
+ * @return CartaCfu *: la carta scelta
  */
 CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu **mazzoCarteCfu, bool rimescolaMano) {
-	CartaCfu *headMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
+	CartaCfu *currMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
 	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
 	int      choice       = 0;                  // Indice della carta scelta dal player
 	bool instant,                               // Flag carta istantanea per chiedere una carta diversa
 	     tutteIstantanee  = true,               // Flag mano tutta di carte istantanee per rimescolare la mano
-		 giocabile        = true;
+		 giocabile        = true;               // Flag possibilità di scegliere carta
 
 	do {
+		// Controllo che il giocatore possa giocare carte
 		tutteIstantanee = tutteIstantaneeCheck(*manoCarteCfu);
-		if (!tutteIstantanee) {
+
+		// Se ha almeno una carta giocabile posso stampare la sua mano
+		if (tutteIstantanee == false) {
 			printMano(*manoCarteCfu);
 		}
+
+		// Se tutte le carte in mano sono istantanee e il rimescolamento della mano è concesso
 		if (tutteIstantanee == true && rimescolaMano == true){
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
+			// Posso scartare le carte e prendere una nuova mano
 			scartaCarte(manoCarteCfu, mazzoScarti);
 			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, mazzoCarteCfu, mazzoScarti);
+
+		// Se si hanno solo carte istantanee in mano e non è concesso il rimescolamento, giocabile è false
 		} else if (tutteIstantanee == true && rimescolaMano == false) {
 			printf("Non puoi giocare nessuna carta in questo momento");
 			giocabile = false;
 		}
+		// ripeto il ciclo fino a quando il giocatore ha solo carte istantanee o non può rimescolare la mano
 	} while (tutteIstantanee == true && rimescolaMano == true);
 
+	// Se il giocatore può giocare delle carte
 	if (giocabile) {
 		do {
+			// Acquisisco quale carta vuole giocare
 			choice = acquisisciCarta(CARTE_PER_MANO);
+			// Trovo la carta nella mano
 			choosenCard = findCartaCfu(manoCarteCfu, choice);
 
-			// Check istantanea
+			// Controllo se è istantanea, se non è istantanea posso restituirla, altrimenti chiedo nuovamente al
+			// giocatore
 			instant = isIstantanea(choosenCard) ? true : false;
 			if (instant) {
 				printf("\nLa carta scelta è una carta istantanea, scegline un'altra carta\n");
 			}
 		} while (instant);
 	} else {
+		// Se il giocatore non può giocare carte e il giocatore non può giocare carte restituisco NUKK
 		choosenCard = NULL;
 	}
+
 	return choosenCard;
 }
 
+/**
+ * giocaCarte() è la subroutine che si occupa di gestire l'azione giocaCarta del giocatore
+ * @param turno Turno *: puntatore alla subroutine del turni
+ * @param pPlayer Player *: puntatore al player corrente
+ * @param mazzoScarti CartaCfu **: doppio puntatore al mazzo degli scarti
+ * @param mazzoCfu CartaCfu **: doppio puntatore al mazzo di pesca
+ * @param fLog FILE *: puntatore al file di Log
+ * @param spareggioFlag bool: flag di controllo per considerazione caratteristiche personaggi
+ */
 void giocaCarta(Turno *turno, Player *pPlayer,
 				CartaCfu **mazzoScarti, CartaCfu **mazzoCfu,
 				FILE *fLog, bool spareggioFlag) {
@@ -85,14 +114,28 @@ void giocaCarta(Turno *turno, Player *pPlayer,
 
 	manoCarteCfu = &(pPlayer->manoCarteCfu);
 
+	// con chooseCarta() ottengo la carta che il giocatore intende giocare
 	choosenCard = chooseCarta(manoCarteCfu, mazzoScarti, mazzoCfu, spareggioFlag);
+
+	// Se la carta scelta è valida
 	if (choosenCard != NULL) {
+		// Posso estrarla e aggiungerla alla lista di carte gioacrte
 		choosenCard = estraiCartaCfu(manoCarteCfu, choosenCard);
+		// Stampo su log
 		logPrintLn(fLog, turno->numTurno, pPlayer->username, choosenCard->name);
+
+		// Aggiungo la carta IN CODA alla lista di carte giocate in questo turno
 		cartaCfuInCoda(&(turno->carteGiocate), choosenCard);
-	}
+	} else {
+		exit(ERR_PLAY_CARD);
+	};
 }
 
+/**
+ * Acquisisci carta è la subroutione() che acquisisce dall''utente un intero compreso tra 0 e i
+ * @param i int: intero massimo di scelta
+ * @return intero scelto
+ */
 int acquisisciCarta(int i) {
 	int choice;
 
@@ -100,13 +143,16 @@ int acquisisciCarta(int i) {
 		printf("[0 - %d]>>> ", i - 1);
 		scanf("%d", &choice);
 
-		if (choice < 0 || choice > i) {
+		// Se la scelta dell'utente non è compresa tra 0 e i, chiedo di reimmettere l'input
+		if (choice < 0 || choice > i - 1) {
 			printf("\n\t%d non è una scelta valida, riprova", choice);
 		}
 	} while (choice < 0 || choice > i);
 
 	return choice;
 }
+
+// ============ TURNO - INFO GIOCATORE =================================================================================
 
 /**
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno

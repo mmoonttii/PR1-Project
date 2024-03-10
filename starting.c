@@ -48,10 +48,9 @@ void startGame(char *saveName,
 			break;
 
 		case LOAD_GAME:
-			loadGame(saveName,
-					 charactersArr, nPlayers, playerList,
-					 mazzoCfu, mazzoScarti,
-					 mazzoOstacoli);
+			loadGame(saveName, nPlayers, playerList,
+			         mazzoCfu, mazzoScarti,
+			         mazzoOstacoli);
 			break;
 		case LEAVE:
 			printf("\nStai lasciato il gioco");
@@ -127,10 +126,9 @@ void newGame(char *saveName, Character charactersArr[], int *nPlayers, Player **
 				mazzoOstacoli);
 
 	// Salvataggio sul file
-	saveOnFile(saveName, fSave,
-               charactersArr, nPlayers, *playerList,
-               *mazzoCfu, *mazzoScarti,
-               *mazzoOstacoli);
+	saveOnFile(saveName, fSave, nPlayers, *playerList,
+	           *mazzoCfu, *mazzoScarti,
+	           *mazzoOstacoli);
 
 	fclose(fSave);
 }
@@ -175,7 +173,7 @@ void initNewGame(Character charactersArr[], int *nPlayers, Player **playerList,
 
 	// Giocatori
 	*nPlayers   = acquisisciNumGiocatori();
-	*playerList = initGiocatori(*nPlayers, mazzoCfu, charactersArr, mazzoScarti);
+	*playerList = initGiocatori(*nPlayers, charactersArr, mazzoCfu, mazzoScarti);
 }
 
 /**
@@ -184,16 +182,18 @@ void initNewGame(Character charactersArr[], int *nPlayers, Player **playerList,
  * 	- carica i mazzi di carte\n
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
  * @param fSave FILE *: puntatore al file da cui bisogna caricare
- * @param charactersArr Characters[4]: array delle strutture personaggio
  * @param nPlayers int *: puntatore al numero di giocatori nella partita
  * @param playerList Player **: doppio puntatore alla testa della lista di giocatori in partita
  * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu
  * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
-void loadGame(char *saveName, Character charactersArr[], int *nPlayers, Player **playerList, CartaCfu **mazzoCfu,
-              CartaCfu **mazzoScarti, CartaOstacolo **mazzoOstacoli) {
+void loadGame(char *saveName, int *nPlayers,
+			  Player **playerList,
+			  CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+              CartaOstacolo **mazzoOstacoli) {
 	FILE *fSave = NULL;
+	// Input nome salvataggio
 	printf("\nInserisci il nome del salvataggio che vuoi caricare\n"
 		   "(Non includere estensione .sav): ");
 	scanf(" %[^\n]31s", saveName);
@@ -202,10 +202,11 @@ void loadGame(char *saveName, Character charactersArr[], int *nPlayers, Player *
 	printf("\nCaricamento salvataggio esistente in corso");
 	fSave = openFile(saveName, BIN_READ);
 
-    loadSaveFromFile(saveName, fSave,
-				     charactersArr, nPlayers, playerList,
-				     mazzoCfu, mazzoScarti,
-				     mazzoOstacoli);
+	// Caricamento salvataggio
+	loadSaveFromFile(saveName, fSave, nPlayers, playerList,
+	                 mazzoCfu, mazzoScarti,
+	                 mazzoOstacoli);
 
+	// Chiusura file di salvataggio aperto in lettura
 	fclose(fSave);
 }

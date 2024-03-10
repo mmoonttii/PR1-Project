@@ -21,10 +21,7 @@ void printGiocatori(Player *listaGiocatori,
 void printGiocatore(Player *pPlayer);
 // ============ LIST MANAGEMENT ===============================================
 Player *addPlayerInTesta(Player *playersList, Player *newPlayer);
-Player *initGiocatori(int       nGiocatori,
-                      CartaCfu  **mazzoCfu,
-                      Character personaggi[],
-                      CartaCfu  **mazzoScarti);
+Player *initGiocatori(int nGiocatori, Character personaggi[], CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
 
 Player *addPlayerInCoda(Player *playerList,
                         Player *playerToAdd);

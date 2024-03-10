@@ -19,6 +19,9 @@
 #define READ            "r"    // Parametro di lettura files
 #define WRITE           "w"    // Parametro di scrittura files
 #define CARTE_PER_MANO  5      // Numero di carte che un giocatore deve avere
+#define GIOCA_CARTA     1      // Scelta menu: gioca carta
+#define INFO_GIOCATORI  2      // Scelta menu: info giocatori
+#define LEAVE_GAME      0      // Scelta menu: lascia gioco
 #define CFU_WINNER      60     // Numero di CFU per vincere la partita
 #define SPAREGGIO       false  // Flag per indicare se gestire il turno come spareggio o come turno regolare
 #define SAVES_EXTENSION ".sav"

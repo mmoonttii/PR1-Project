@@ -132,34 +132,38 @@ CartaCfu *indexEstraiCartaCfu(CartaCfu **mazzoCfu, int index) {
 
 /**
  * Data il puntatore a una carta Cfu estrae tale carta se è nella lista
- * @param mazzoCfu
- * @param cartaCfu
- * @return
+ * @param mazzoCfu CartaCfu **: doppio puntatore alla lista da cui estrarre la carta
+ * @param cartaCfu CartaCfu *: puntatore adalla crata da estrarre
+ * @return CartaCfu *: carta estratta
  */
 CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
-	CartaCfu *head = *mazzoCfu,
-			 *prev = *mazzoCfu,
+	CartaCfu *curr      = *mazzoCfu,
+			 *prev      = *mazzoCfu,
 			 *extracted = NULL;
 
 	bool leave = false;
 
 	while (!leave) {
+		// Se la testa del mazzo è la carta richiesta, posso estrarla
 		if (*mazzoCfu == cartaCfu) {
 			extracted = *mazzoCfu;
 			*mazzoCfu  = (*mazzoCfu)->next;
 			extracted->next = NULL;
 			leave = true;
+		// Se prev.next è la carta richiesta posso estrarla
 		} else if (prev->next == cartaCfu) {
 			extracted       = prev->next;
 			prev->next      = extracted->next;
 			extracted->next = NULL;
 			leave = true;
+		// Altrimenti passo alla prossima carta
 		} else {
-			prev = head;
-			head = head->next;
+			prev  = curr;
+			curr  = curr->next;
 			leave = false;
-			if (head == NULL) {
+			if (curr == NULL) {
 				printf("\nLa carta non è stata trovata nella lista");
+				extracted = NULL;
 				leave = true;
 			}
 		}
@@ -178,7 +182,7 @@ void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 	if (*mazzoCfu == NULL) {    // Se la lista è vuota
 		*mazzoCfu = cartaCfu;   // La carta occupa la posizione di testa
 	} else {                    // Altrimenti, se sono già presenti nodi
-		while (curr->next != NULL){ // Itero fino a quando non trovo un elemento il quale next è vuoto
+		while (curr->next != NULL){ // Itero fino a quando non trovo un elemento il quale next è nullo
 			curr = curr->next;
 		}
 		curr->next = cartaCfu;  // A questo punto posso aggiungere la carta in coda
@@ -214,27 +218,25 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 }
 
 /**
- * scartaCarte() è la subroutine che scarta una lista di carte, senza liberare la memoria
- * che rappresenta
- * @param daScartare
- * @param mazzoScarti
+ * scartaCarte() è la subroutine che sposta una lista di carte in un'altra
+ * @param daScartare CartaCfu **: doppio puntatore alla lsita di carte da scartare
+ * @param mazzoScarti CartaCfu **: doippio puntatore alla lista a cui aggiungere le carte
  */
 void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti) {
-	CartaCfu *head = *mazzoScarti;
+	CartaCfu *curr = *daScartare;
 
-	// Se il mazzo degli scarti è vuoto
-	if (head == NULL){
-		// Il mazzzo degli scarti prende la lista di carte da scartare
-		*mazzoScarti = *daScartare;
-	} else {
-		// Altrimenti, scorro fino alla fine del mazzo
-		while (head->next != NULL) {
-			head = head->next;
-		}
-		// E aggiungo in coda la lista di carte
-		head->next = *daScartare;
+	// Ciclo fino all'ultima carta da scartare
+	while (curr->next != NULL) {
+		curr = curr->next;
 	}
-	// Mi assicuro che la lista di carte scartate sia NULL
+
+	// Accodo alla carta il mazzo degli scarti
+	curr->next = *mazzoScarti;
+
+	// Mazzoscarti prende la prima carta della nuova lista
+	*mazzoScarti = *daScartare;
+
+	// Mi assicuro che la vecchia lista punti a NULL
 	*daScartare = NULL;
 }
 
@@ -290,24 +292,40 @@ void printMano(CartaCfu *listaCarteCfu) {
 
 }
 
+/**
+ * isIstantanea() controlla se la carta in questione è istantanea
+ * @param cartaCfu CartaCfu *: è la carta da controllare
+ * @return bool: true se la carta è istantanea, false altrimenti
+ */
 bool isIstantanea(CartaCfu *cartaCfu) {
 	bool ris;
-	ris = (cartaCfu->cfu == 0 && cartaCfu->effect != SCARTAP) ? true : false;
+	// Se l'effetto della carta è compreso tra AUMENTA e DIROTTA allora la carta è istantanea
+	ris = (cartaCfu->cfu >=AUMENTA && cartaCfu->effect <= DIROTTA) ? true : false;
 	return ris;
 }
 
+/**
+ * tutteIstantaneeCheck() controlla se tutte le carte della lista passata sono istantanee oppure no
+ * @param cartaCfu CartaCfu *: è la lista da controllare
+ * @return bool: true se tutte le carte sono istantanee, false se almeno una non è istantanea
+ */
 bool tutteIstantaneeCheck(CartaCfu *cartaCfu) {
-	CartaCfu *head = cartaCfu;
-	bool tutteIstantanee = true;
+	CartaCfu *curr = cartaCfu;  // Puntatore a elemento corrente della lista
+	bool tutteIstantanee = true; // Valore di ritorno
 
-	while (head != NULL) {
-		if (!isIstantanea(head)) {
+	// Ciclando la lista
+	while (curr != NULL) {
+		// Se una carta non è istantanea
+		if (!isIstantanea(curr)) {
+			// Allora posso settare il valore di ritorno a false
 			tutteIstantanee = false;
 		}
-		head = head->next;
+		// Passo alla prossima carta
+		curr = curr->next;
 	}
 	return tutteIstantanee;
 }
+
 CartaCfu *findCartaCfu(CartaCfu **mazzoCfu, int index) {
 	CartaCfu *head = *mazzoCfu,
 	         *prev  = *mazzoCfu;

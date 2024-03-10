@@ -6,22 +6,23 @@
 #include "memoria.h"
 #include "mazzoCfu.h"
 #include "carteOstacolo.h"
+#include "giocatori.h"
 
 /**
  * saveOnFile() è la subroutine per salvare lo stato attuale della partita in un file binario
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
  * @param fSave FILE *: puntatore al file di salvataggio
- * @param charactersArr Characters[4]: array delle strutture personaggio
  * @param nPlayers int: numero di giocatori nella partita
  * @param playersList Player **: doppio puntatore alla testa della lista di giocatori in partita
  * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu
  * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
-void saveOnFile(char *saveName, FILE *fSave,
-                Character charactersArr[], int *nPlayers, Player *playersList,
-                CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
-                CartaOstacolo *mazzoOstacoli) {
+void
+saveOnFile(char *saveName, FILE *fSave,
+		   int *nPlayers, Player *playersList,
+		   CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
+           CartaOstacolo *mazzoOstacoli) {
 
 	int nOstacoli               = 0,    // Numero di carte ostacolo da scrivere
 		nCfu                    = 0;    // Numero di carte cfu da scrivere
@@ -29,9 +30,8 @@ void saveOnFile(char *saveName, FILE *fSave,
 	rewind(fSave); // Mi assicuro di essere all'inizio del file di salvataggio
 	printf("Salvataggio su %s in corso...", saveName);
 
-	// Scrittura numero Giocatori
-	fwrite(nPlayers, sizeof(int), SAVES_UNIT, fSave);
 	// Scrittura Giocatori
+	fwrite(nPlayers, sizeof(int), SAVES_UNIT, fSave);
 	writePlayersList(fSave, *nPlayers, playersList);
 
 	// Scrittura carte Cfu mazzo
@@ -120,7 +120,6 @@ void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList) {
  * loadSaveFromFile() è la subroutine che legge il file di salvataggio e ne carica i contenuti
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
  * @param fSave FILE *: puntatore al file di salvataggio
- * @param charactersArr Characters[4]: array delle strutture personaggio
  * @param nPlayers int: numero di giocatori nella partita
  * @param playerList Player **: doppio puntatore alla testa della lista di giocatori in partita
  * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu
@@ -128,155 +127,159 @@ void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList) {
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
 void loadSaveFromFile(char *saveName, FILE *fSave,
-                      Character charactersArr[], int *nPlayers, Player **playerList,
-                      CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
-                      CartaOstacolo **mazzoOstacoli) {
+					  int *nPlayers, Player **playerList,
+					  CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+					  CartaOstacolo **mazzoOstacoli) {
 
 	int check          = 0,
-	    nManoOstacoli  = 0,
 	    nCfuMazzo      = 0,
 	    nCfuScarti     = 0,
 	    nMazzoOstacoli = 0;
 
-
-	Player playerAux,
-	       *playerHead = *playerList;
-
-	CartaCfu carteAux,
-	         *pNewCarta      = NULL,
-	         *headCarteMano  = NULL,
-	         *headCarteMazzo = NULL;
-
-	CartaOstacolo ostacoloAux,
-				  *pNewOstacolo      = NULL,
-	              *headManoOstacoli  = NULL,
-	              *headMazzoOstacoli = NULL;
-
 	rewind(fSave);
 	printf("\nLettura da %s in corso...", saveName);
 
-	// Lettura numero Players
+	// Lettura Players
 	check = fread(nPlayers, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_PLAYERS);
 	}
+	*playerList = readPlayersList(fSave, *nPlayers);
 
-	// Lettura Players
-	for (int i = 0; i < *nPlayers; ++i) {
-		check = 0;
-		check = fread(&playerAux, sizeof(Player), SAVES_UNIT, fSave);
-		if (check == 0) {
-			exit(ERR_READ_SAVE_PLAYER);
-		}
-		// Creazione lista dei giocatori
-		if (*playerList == NULL) {
-			playerHead = allocaGiocatore();
-			*playerHead = playerAux;
-			*playerList = playerHead;
-		} else {
-			playerHead->nextPlayer = allocaGiocatore();
-			*playerHead->nextPlayer = playerAux;
-			playerHead = playerHead->nextPlayer;
-		}
 
-		// Lettura mano Cfu
-		playerHead->manoCarteCfu = NULL;
-		headCarteMano = playerHead->manoCarteCfu;
-		for (int j = 0; j < CARTE_PER_MANO; ++j) {
-			check = 0;
-			check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
-			if (check == 0) {
-				exit(ERR_READ_SAVE_MANO_CFU);
-			}
-			pNewCarta = allocaCartaCfu();
-			*pNewCarta = carteAux;
-			pNewCarta->next = NULL;
-			cartaCfuInCoda(&playerHead->manoCarteCfu, pNewCarta);
-		}
-
-		// Lettura carte Ostacolo
-		playerHead->listaCarteOstacolo = NULL;
-		headManoOstacoli = playerHead->listaCarteOstacolo;
-		check            = 0;
-		check            = fread(&nManoOstacoli, sizeof(int), SAVES_UNIT, fSave);
-		if (check == 0) {
-			exit(ERR_READ_SAVE_N_OSTACOLI);
-		}
-		for (int j = 0; j < nManoOstacoli; ++j) {
-			check = 0;
-			check = fread(&ostacoloAux, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
-			if (check == 0) {
-				exit(ERR_READ_SAVE_OSTACOLI);
-			}
-			pNewOstacolo = allocaCartaOstacolo();
-			*pNewOstacolo = ostacoloAux;
-			pNewOstacolo->next = NULL;
-			ostacoloInCoda(pNewOstacolo, &(playerHead->listaCarteOstacolo));
-		}
-	}
-
-	// Lettura numero carte Cfu mazzo
+	// Lettura carte Cfu mazzo
 	check = 0;
 	check = fread(&nCfuMazzo, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_CFU);
 	}
+	*mazzoCfu = readCfuList(fSave, nCfuMazzo);
 
-	// Lettura carte Cfu
-	for (int i = 0; i < nCfuMazzo; ++i) {
-		check = 0;
-		check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
-		if (check == 0) {
-			exit(ERR_READ_SAVE_MAZZO_CFU);
-		}
-		pNewCarta = allocaCartaCfu(); // Alloca nuova carta e salva in var
-		*pNewCarta = carteAux; // Inizializza spazio allocato con dati letti
-		pNewCarta->next = NULL;
-		cartaCfuInCoda(mazzoCfu, pNewCarta);
-	}
-
-	// Lettura numero carte Cfu scarti
+	// Lettura carte Cfu scarti
 	check = 0;
 	check = fread(&nCfuScarti, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_SCARTI);
 	}
+	*mazzoScarti = readCfuList(fSave, nCfuScarti);
 
-	// Lettura carte Cfu scrti
-	for (int i = 0; i < nCfuScarti; ++i) {
-		check = 0;
-		check = fread(&carteAux, sizeof(CartaCfu), SAVES_UNIT, fSave);
-		if (check == 0) {
-			exit(ERR_READ_SAVE_MAZZO_SCARTI);
-		}
-
-		pNewCarta = allocaCartaCfu(); // Alloca nuova carta e salva in var
-		*pNewCarta = carteAux; // Inizializza spazio allocato con dati letti
-		pNewCarta->next = NULL;
-		cartaCfuInCoda(mazzoScarti, pNewCarta);
-	}
-
-	// Lettura numero carte Ostacolo mazzo
+	// Lettura carte Ostacolo mazzo
 	check = 0;
 	check = fread(&nMazzoOstacoli, sizeof(int), SAVES_UNIT, fSave);
 	if (check == 0) {
 		exit(ERR_READ_SAVE_N_MAZZO_OSTACOLI);
 	}
-	// Lettura carte Ostacolo mazzo
-	for (int j = 0; j < nManoOstacoli; ++j) {
-		check = 0;
-		check = fread(&ostacoloAux, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
-		if (check == 0) {
-			exit(ERR_READ_SAVE_MAZZO_OSTACOLI);
-		}
-		pNewOstacolo = allocaCartaOstacolo();
-		*pNewOstacolo = ostacoloAux;
-		pNewOstacolo->next = NULL;
-		ostacoloInCoda(pNewOstacolo, mazzoOstacoli);
-	}
+	*mazzoOstacoli = readOstacoliList(fSave, nMazzoOstacoli);
 
 }
 
+/**
+ * readPlayersList() è la subroutine che legge dal file di salvataggio la lista dei giocatori, comprese le carte cfu
+ * e ostacolo di ciascuno
+ * @param fSave FILE *: puntatore al file di salvataggio
+ * @param nPlayers int: numero di player da leggere
+ * @param playersList Player *: puntatore a lla lista dei giocatori
+ * @return Player *: puntatore alla lista dei giocatori riempita
+ */
+Player *readPlayersList(FILE *fSave, int nPlayers) {
+	int check         = 0,  // Check di lettura con successo
+		nManoOstacoli = 0;  // Carte ostacoli in mano al giocatore
+	Player *newPlayer   = NULL, // Puntatore a un nuovo giocatore
+		   *playersList = NULL; // Puntatore alla lista dei giocatori
+
+	// Ciclo sul numero dei giocatori
+	for (int i = 0; i < nPlayers; ++i) {
+		newPlayer = allocaGiocatore();
+		// Leggo un giocatore sulla variabile appena allocata
+		check = 0;
+		check = fread(newPlayer, sizeof(Player), SAVES_UNIT, fSave);
+		if (check == 0) {
+			exit(ERR_READ_SAVE_PLAYER);
+		}
+
+		// LEggo le carte della mano del giocatore
+		newPlayer->manoCarteCfu = readCfuList(fSave, CARTE_PER_MANO);
+
+		// Leggo il numero di carte ostacolo che ha il giocatore
+		check = 0;
+		check = fread(&nManoOstacoli, sizeof(int), SAVES_UNIT, fSave);
+		if (check == 0) {
+			exit(ERR_READ_SAVE_N_OSTACOLI);
+		}
+
+		// Leggo le carte ostacolo del giocatore
+		newPlayer->listaCarteOstacolo = readOstacoliList(fSave, nManoOstacoli);
+		// Aggiungo il giocatore alla lista
+		playersList = addPlayerInTesta(playersList, newPlayer);
+
+		if (DBG) printf("\nDBG: read %s player", newPlayer->username);
+	}
+
+	if (DBG) printf("\nDBG: read %d players", nPlayers);
+	return playersList;
+}
+
+/**
+ * readCfuList() è la subroutine che legge dal file di salvataggio una lista di carteCfu
+ * @param fSave FILE *: puntatore al file di salvataggio
+ * @param n int: numero di carte da leggere
+ * @return CartaCfu *: puntatore a lista di Carte Cfu
+ */
+CartaCfu *readCfuList(FILE *fSave, int n) {
+	int check = 0; // Controllo lettura con successo
+	CartaCfu *newCarta = NULL, // Puntatore alla carta da leggere
+			 *cfuList  = NULL; // Lista di carte
+
+	// Ciclo sul numero di carte
+	for (int j = 0; j < n; ++j) {
+		newCarta = allocaCartaCfu();
+		// Leggo la carta nel puntatore appena allocata
+		check = 0;
+		check = fread(newCarta, sizeof(CartaCfu), SAVES_UNIT, fSave);
+		if (check == 0) {
+			exit(ERR_READ_SAVE_MANO_CFU);
+		}
+		// Aggiungo la carta alla lista da restituire
+		cfuList = cartaCfuInTesta(cfuList, newCarta);
+	}
+	if (DBG) printf("\nDBG: read %d cfuCards", n);
+	return cfuList;
+}
+
+/**
+ * readOstacoliList() è la subroutine per leggere una lista di ostacoli dal file di salvataggio
+ * @param fSave FIEL *: puntatore al file di salvataggio dal qiale leggere
+ * @param n int: numero di carte da leggere
+ * @return CartaOstacolo *: puntatore alla lista di carte lette
+ */
+CartaOstacolo *readOstacoliList(FILE *fSave, int n) {
+	int check = 0; // Controlo lettura con successo
+	CartaOstacolo *newOstacolo  = NULL, // Puntatore alla carta da leggere
+				  *ostacoliList = NULL; // Lista di carte
+
+	// Ciclo sil numero di carte
+	for (int j = 0; j < n; ++j) {
+		newOstacolo = allocaCartaOstacolo();
+		check = 0;
+		// Leggo la carta nel puntatore appena allocato
+		check = fread(newOstacolo, sizeof(CartaOstacolo), SAVES_UNIT, fSave);
+		if (check == 0) {
+			exit(ERR_READ_SAVE_OSTACOLI);
+		}
+		// Aggiungo la carta alla lista da restituire
+		ostacoliList = ostacoloInTesta(newOstacolo, ostacoliList);
+	}
+	if (DBG) printf("\nDBG: read %d carteOstacolo", n);
+	return ostacoliList;
+}
+
+/**
+ * logPrintLn() è la subroutine per scrivere sul file di Log
+ * @param fLog FILE *: puntatore al file su cui scrivere
+ * @param numTurno int: numero del turno
+ * @param user string [31 + 1]: nome utente del giocatore + '\0'
+ * @param carta string [31 + 1]: nome della carta
+ */
 void logPrintLn(FILE *fLog, int numTurno, char *user, char *carta) {
 	fprintf(fLog, "TURNO %d: %s gioca %s\n", numTurno, user, carta);
 }

@@ -26,36 +26,37 @@ int main() {
 		 *fLog  = NULL; // File di log
 
 	// Personaggi e giocatori
-	Character     charactersArr[N_PERSONAGGI] = {};    // Array dei personaggi
-	Player        *playerList                 = NULL,  // Lista dei giocatori
-				  *pPlayer                    = NULL,  // Puntatore al Player attuale
-				  *pLoser                     = NULL;  // Puntatore al Player perdente
+	Character     charactersArr[N_PERSONAGGI] = {};   // Array dei personaggi
+	Player        *playerList                 = NULL, // Lista dei giocatori
+				  *pPlayer                    = NULL, // Puntatore al Player attuale
+				  *pLoser                     = NULL; // Puntatore al Player perdente
 
 	// Carte
-	CartaCfu      *mazzoCfu                   = NULL,  // Lista mazzo pesca Carte Cfu
-				  *mazzoScarti                = NULL;  // Lista mazzo scarti Carte Cfu
-	CartaOstacolo *mazzoOstacoli              = NULL;  // Lista mazzo Carte Ostacolo
+	CartaCfu      *mazzoCfu      = NULL, // Lista mazzo pesca Carte Cfu
+				  *mazzoScarti   = NULL; // Lista mazzo scarti Carte Cfu
+	CartaOstacolo *mazzoOstacoli = NULL; // Lista mazzo Carte Ostacolo
 
 	// Contatori
-	int nPlayers = 0,                                  // Numero giocatori partecipanti
-		input,                                         // Input menu
-		losersCount;                                   // Contatore giocatori perdenti
+	int nPlayers = 0, // Numero giocatori partecipanti
+		input,        // Input menu
+		losersCount;  // Contatore giocatori perdenti
 
 	// Flag di controllo
-	bool leave        = false,                         // Condizione di uscita dal menu
-		 endGame      = false,                         // Condizione di termine partita
-		 spareggi,                                     // Condizione di risoluzione spareggi
-		 checkDOPPIOE = false;                         // Condizione di applicazione effetto DOPPIOE
+	bool leave        = false, // Condizione di uscita dal menu
+		 endGame      = false, // Condizione di termine partita
+		 spareggi,             // Condizione di risoluzione spareggi
+		 checkDOPPIOE = false; // Condizione di applicazione effetto DOPPIOE
 
-	Turno turno = {};                                  // Struttura turno
+	Turno turno = {}; // Struttura turno
 
-	char saveName[STR_LEN + EXTENSION_LEN + 1];            // Nome del salvataggio
+	char saveName[STR_LEN + EXTENSION_LEN + 1]; // Nome del salvataggio
 
 	// ========== STARTING =============================================================================================
 	fLog  = openFile(FILE_LOG, WRITE);
 
 	printf("\nBenvenuto su Happy Little Students\n");
 
+	// inizio frl gioco, caricamento partita o inizializzazione mazzi e giocatori
 	startGame(saveName,
 			  charactersArr,
 			  &nPlayers, &playerList,
@@ -63,35 +64,40 @@ int main() {
 	          &mazzoOstacoli);
 
 	// ========== TURNI ================================================================================================
-	fSave = openFile(saveName, BIN_WRITE);
+	turno.numTurno = 1; // Inizializzazione del numero di turno
 
-	turno.numTurno = 1;
+	while (endGame != true) {
+		// Salvataggio partita
+		fSave = openFile(saveName, BIN_WRITE);
+		saveOnFile(saveName, fSave, &nPlayers, playerList,
+		           mazzoCfu, mazzoScarti,
+		           mazzoOstacoli);
+		fclose(fSave);
 
-	while (endGame != true){
-		saveOnFile(saveName, fSave,
-				   charactersArr, &nPlayers, playerList,
-				   mazzoCfu, mazzoScarti,
-				   mazzoOstacoli);
 		pPlayer = playerList;
 		printf("\n========== TURNO %d ==========\n", turno.numTurno);
+
+		// Pesca e stampa della carta del turno
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);
 		printOstacoli(turno.cartaOstacolo);
 
 		// ==== SVOLGIMENTO TURNO ==========
 		for (int i = 0; i < nPlayers && endGame != true; ++i) {
 			printGiocatore(pPlayer);   // Stampa statistiche giocatore senza mano delle carte
+
+			// Menu delle azioni player
 			do {
 				input = acquisisciAzione();
 				switch (input) {
-					case 1:
+					case GIOCA_CARTA:
 						giocaCarta(&turno, pPlayer, &mazzoScarti, &mazzoCfu, fLog, !SPAREGGIO);
 						leave = true;
 						break;
-					case 2:
+					case INFO_GIOCATORI:
 						infoGiocatori(playerList, pPlayer, nPlayers);
 						leave = false;
 						break;
-					case 0:
+					case LEAVE_GAME:
 						leave = true, endGame = true;
 						break;
 					default:
