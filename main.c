@@ -82,7 +82,7 @@ int main() {
 		printOstacoli(turno.cartaOstacolo);
 
 		// ==== SVOLGIMENTO TURNO ==========
-		for (int i = 0; i < nPlayers && endGame != true; ++i) {
+		for (int i = 0; i < nPlayers; ++i) {
 			printGiocatore(pPlayer);   // Stampa statistiche giocatore senza mano delle carte
 
 			// Menu delle azioni player
@@ -98,7 +98,9 @@ int main() {
 						leave = false;
 						break;
 					case LEAVE_GAME:
-						leave = true, endGame = true;
+						fclose(fLog);
+						fclose(fSave);
+						end(playerList, mazzoCfu, mazzoScarti, mazzoOstacoli, &turno);
 						break;
 					default:
 						printf("\nErrore menu\n");
@@ -114,7 +116,7 @@ int main() {
 
 		// ==== CALCOLO PUNTEGGI ==========
 		calcolaPunteggio(&turno, playerList, nPlayers, !SPAREGGIO);
-		printPuntiParziali(&turno, playerList, nPlayers);
+		printPunti(&turno, playerList, nPlayers);
 
 		minMax(turno.points, nPlayers, &turno.cfuToLose, &turno.cfuToWin);
 
@@ -154,9 +156,9 @@ int main() {
 		}
 
 		// ==== FINE DEL TURNO ==========
-		scartaCarte(&turno.carteGiocate, &mazzoScarti);
+		mazzoScarti = scartaCarte(&turno.carteGiocate, mazzoScarti);
 		puntiCarteOstacolo(playerList);
-		endGame = playerCheck(&playerList, &mazzoOstacoli, &mazzoScarti, &nPlayers);
+		endGame = playerCheck(&nPlayers, &playerList, &mazzoOstacoli, &mazzoScarti);
 
 		if (!endGame) {
 			printf("\nDistribuendo le nuove carte...\n");

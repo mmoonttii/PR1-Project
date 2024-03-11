@@ -25,18 +25,21 @@ FILE *openFile(char filePath[], char mode[]) {
 	FILE *fp = NULL;
 
 	fp = fopen(filePath, mode);
+	// Controllo se l'apertura del file è avvenuta con successo
 	if (fp == NULL) exit(ERR_OPEN_FILE);
 	return fp;
 }
 
 /**
- * enterClear() è la subroutine che aspetta dell'input da parte di un giocatore e pulisce lo schermo
+ * enterClear() aspetta fino a due input da parte dell'utente e pulisce lo schermo
  */
 void enterClear() {
 	printf("Premi INVIO per continuare...");
+	// Mi assicuro di pulire il buffer da input preesistenti e aspetto almeno un whitespace dall'utente
 	getchar();
 	getchar();
 
+	// Pulire lo schermo avviene con chiamate di sistema che sono diverse per ogni sistmea opertavip
 	#ifdef _WIN64 // codice per win
 		system("cls");
 	#elif __APPLE__ // codice per macOs
@@ -47,20 +50,25 @@ void enterClear() {
 }
 
 /**
- * minMax() è una subroutine che, dato un array di interi, ne restituisce il valore minimo e il valore massimo
- * @param arr è un puntatore all'array da elaborare
- * @param size è il numero di elementi nell'array
- * @param min è un puntatore alla locazione di memoria dove verrà salvato il valore minimo
- * @param max è un punttore alla locazione di memoria dove verrà salvato il valore massimo
+ * minMax() dato un array di interi, ne restituisce il valore minimo e il valore massimo
+ * @param arr int[]: punta all'array da elaborare
+ * @param size int: num di elementi nell'array
+ * @param min int *: puntatore alla locazione di memoria dove verrà salvato il valore minimo
+ * @param max int *: punttore alla locazione di memoria dove verrà salvato il valore massimo
  */
 void minMax(int arr[], int size, int *min, int *max) {
+	// Inizializzo minimo e massimo ai limiti di sistems
 	*min = INT_MAX,
 	*max = INT_MIN;
 
+	// Ciclo sull'array
 	for (int i = 0; i < size; ++i) {
+		// Se l'elemento dell'array è minore di quello salvato in min, lo aggiorno
 		if (arr[i] < *min) {
 			*min = arr[i];
 		}
+
+		// Se l'elemento dell'array è minore di quello salvato in min, lo aggiorno
 		if (arr[i] > *max) {
 			*max = arr[i];
 		}

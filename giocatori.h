@@ -15,24 +15,20 @@ void printBonusMalus(int arr[N_OSTACOLI]);
 
 // ============ IO ============================================================
 int acquisisciNumGiocatori();
-void printGiocatori(Player *listaGiocatori,
-                    bool   stampaCarte);
+void printGiocatori(Player *listaGiocatori);
 
 void printGiocatore(Player *pPlayer);
 // ============ LIST MANAGEMENT ===============================================
 Player *addPlayerInTesta(Player *playersList, Player *newPlayer);
 Player *initGiocatori(int nGiocatori, Character personaggi[], CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
 
-Player *addPlayerInCoda(Player *playerList,
-                        Player *playerToAdd);
+Player *addCopyOfPlayerInCoda(Player *playerList,
+                              Player *playerToAdd);
 
 // ============ ANDAMENTO PARTITA =============================================
 bool hasLost(Player *pPlayer);
 bool hasWon(Player *pPlayer);
 
-bool playerCheck(Player        **playersList,
-				 CartaOstacolo **mazzoOstacoli,
-				 CartaCfu      **mazzoScarti,
-				 int           *nPlayers);
+bool playerCheck(int *nPlayers, Player **playersList, CartaOstacolo **mazzoOstacoli, CartaCfu **mazzoScarti);
 
 #endif //PR1_PROJECT_GIOCATORI_H

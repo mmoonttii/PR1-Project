@@ -5,6 +5,7 @@
 #include "mazzoCfu.h"
 #include "memoria.h"
 
+// ========== LIST MANAGEMENT ==========================================================================================
 /**
  * creaMazzoCfu() è la subroutine per la lettura del file di carte e la creazione di una lista di Carte
  *
@@ -86,18 +87,20 @@ CartaCfu *cartaCfuInTesta(CartaCfu *mazzoCfu, CartaCfu *cartaCfu) {
 }
 
 /**
- * contaCarteCfu() è la subroutine che conta da quanti nodi è composta una lista di CarteCfu
- * @param mazzoCfu CartaCfu *: punta alla testa della lista da contare
- * @return int: numero di nodi nella lista
+ * findCartaCfu() trova la i-esima carta nel mazzo e la restituisce, senza rimuoverla dal mazzo
+ * @param mazzoCfu CartaCfu *: punta al mazzo dove cercare la i-esima carat
+ * @param index int: indice della carta da restituire
+ * @return CartaCfu *: puntatore alla carta Cfu nell'i-esima posizione
  */
-int contaCarteCfu(CartaCfu *mazzoCfu) {
-	int count = 0;
-	// Scorro la lista fino a quando non è terminata
-	while (mazzoCfu != NULL){
-		mazzoCfu = mazzoCfu->next;
-		count++; // Aggiorno il contatore dei nodi nella lista
+CartaCfu *findCartaCfu(CartaCfu *mazzoCfu, int index) {
+	CartaCfu *curr = mazzoCfu;
+
+	// Se la carta scelta non è la prima, quindi choice != 0
+	for (int i = 0; i < index; i++) {
+		// Scorro fino alla prossima carta
+		curr = curr->next;
 	}
-	return count;
+	return curr;
 }
 
 /**
@@ -220,9 +223,10 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 /**
  * scartaCarte() è la subroutine che sposta una lista di carte in un'altra
  * @param daScartare CartaCfu **: doppio puntatore alla lsita di carte da scartare
- * @param mazzoScarti CartaCfu **: doippio puntatore alla lista a cui aggiungere le carte
+ * @param mazzoScarti CartaCfu *: puntatore alla lista a cui aggiungere le carte
+ * @return CartaCfu *: lista di carte con aggiunta delle carte scartate
  */
-void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti) {
+CartaCfu *scartaCarte(CartaCfu **daScartare, CartaCfu *mazzoScarti) {
 	CartaCfu *curr = *daScartare;
 
 	// Ciclo fino all'ultima carta da scartare
@@ -231,18 +235,19 @@ void scartaCarte(CartaCfu **daScartare, CartaCfu **mazzoScarti) {
 	}
 
 	// Accodo alla carta il mazzo degli scarti
-	curr->next = *mazzoScarti;
+	curr->next = mazzoScarti;
 
 	// Mazzoscarti prende la prima carta della nuova lista
-	*mazzoScarti = *daScartare;
+	mazzoScarti = *daScartare;
 
 	// Mi assicuro che la vecchia lista punti a NULL
 	*daScartare = NULL;
 }
 
+// ========== OUTPUT ===================================================================================================
 /**
- * printSigleCartaCfu() è la subroutine che stampa una singola carta Cfu
- * @param pCfu è la carta Cfu da stampare
+ * printSigleCartaCfu() stampa una singola carta Cfu
+ * @param pCfu CartaCfu *: carta Cfu da stampare
  */
 void printSingleCartaCfu(CartaCfu *pCfu) {
 	char *effetti[] = {"Carta senza effetto",
@@ -269,27 +274,42 @@ void printSingleCartaCfu(CartaCfu *pCfu) {
 }
 
 /**
- * printCarteCfu() è la subroutine che si occupa di stampare una lista di carte e restituisce quante ne ha stampate
- * @param listaCarteCfu è la lista di carte da stampare
+ * printCarteCfu() si occupa di stampare una lista di carte
+ * @param listaCarteCfu CartaCfu *: lista di carte da stampare
  */
 void printMano(CartaCfu *listaCarteCfu) {
-	CartaCfu *head = listaCarteCfu; // Testa della lista
+	CartaCfu *curr       = listaCarteCfu;
 	bool tutteIstantanee = true;
-	int i = 0;
+	int i                = 0;
 
 	printf("\n==== CARTE CFU ====\n");
 	// Finchè la condizione di stop è rispettata
-	while (head != NULL){
+	while (curr != NULL){
 		printf("[%d] ", i);
-		printSingleCartaCfu(head);
+		printSingleCartaCfu(curr);
 
-		if (isIstantanea(head)) {
+		if (isIstantanea(curr)) {
 			printf("| CARTA ISTANTANEA - non puoi giocarla in questa fase del turno\n");
 		}
-		head = head->next;
+		curr = curr->next;
 		i++;
 	}
+}
 
+// ========== VARIE ====================================================================================================
+/**
+ * contaCarteCfu() è la subroutine che conta da quanti nodi è composta una lista di CarteCfu
+ * @param mazzoCfu CartaCfu *: punta alla testa della lista da contare
+ * @return int: numero di nodi nella lista
+ */
+int contaCarteCfu(CartaCfu *mazzoCfu) {
+	int count = 0;
+	// Scorro la lista fino a quando non è terminata
+	while (mazzoCfu != NULL){
+		mazzoCfu = mazzoCfu->next;
+		count++; // Aggiorno il contatore dei nodi nella lista
+	}
+	return count;
 }
 
 /**
@@ -324,17 +344,4 @@ bool tutteIstantaneeCheck(CartaCfu *cartaCfu) {
 		curr = curr->next;
 	}
 	return tutteIstantanee;
-}
-
-CartaCfu *findCartaCfu(CartaCfu **mazzoCfu, int index) {
-	CartaCfu *head = *mazzoCfu,
-	         *prev  = *mazzoCfu;
-
-	// Se la carta scelta non è la prima, quindi choice != 0
-	for (int i = 0; i < index; i++) {
-		// Scorro fino alla prossima carta, salvando la posizione della carta precedente
-		prev = head;
-		head = head->next;
-	}
-	return head;
 }

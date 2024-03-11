@@ -13,14 +13,14 @@
 void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno, bool checkDOPPIOE);
 CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno);
 bool isIstantaneaPunteggio(CartaCfu *cartaCfu);
-void risolviInstantPunteggio(CartaCfu *cartaCfu, int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
+void risolviInstantPunteggio(int nPlayers, Player *playerList, CartaCfu *cartaCfu, Turno *turno, bool checkDOPPIOE);
 
 void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
 void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE);
 void effettoINVERTI(int nPlayers, Turno *turno);
 
-void gestioneInstantPerdita(int numTurno, Player *pPlayer, Player *playerList, CartaCfu *pCartaCfu,
-                            CartaOstacolo **mazzoOstacoli, CartaOstacolo **pCartaOstacolo, FILE *fLog);
+void gestioneInstantPerdita(int numTurno, Player *pPlayer, Player *playerList, CartaOstacolo **mazzoOstacoli,
+                            CartaOstacolo **pCartaOstacolo, FILE *fLog);
 CartaCfu *giocaInstantPerdita(int numTurno, Player *pPlayer, FILE *fLog);
 bool isIstantaneaPerdita(CartaCfu *cartaCfu);
 void risolviInstantPerdita(Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **mazzoOstacoli,

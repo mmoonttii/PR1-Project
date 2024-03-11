@@ -23,7 +23,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 		if (contaCarteCfu(headMano) > 0 && !tutteIstantaneeCheck(headMano)) {
 			giocaCarta(&spareggio, playerHead, mazzoCfu, mazzoCfu, fLog, SPAREGGIO);
 		} else {
-			addPlayerInCoda(spareggio.losers, playerHead);
+			addCopyOfPlayerInCoda(spareggio.losers, playerHead);
 		}
 		if (playerHead->nextPlayer != NULL) {
 			playerHead = playerHead->nextPlayer;
@@ -32,7 +32,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 
 	// ==== CALCOLO PUNTEGGI ==========
 	calcolaPunteggio(&spareggio, playerList, countLosers, SPAREGGIO);
-	printPuntiParziali(&spareggio, playerList, countLosers);
+	printPunti(&spareggio, playerList, countLosers);
 
 	winnersLosers(&spareggio, playerList, countLosers);
 	printLosers(spareggio.losers);

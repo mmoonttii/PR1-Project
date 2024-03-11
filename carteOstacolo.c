@@ -5,14 +5,9 @@
 #include "carteOstacolo.h"
 #include "memoria.h"
 
-
-// ============ MEMORY MANAGEMENT =============================================
-
 // ============ LIST MANAGEMENT ===============================================/**
-
 /**
- * creaMazzoOstacoli() è la subroutine che legge il file delle carte Ostacolo e crea una lista delle carte
- *
+ * creaMazzoOstacoli() legge il file delle carte Ostacolo e crea una lista delle carte
  * @param fOstacoli FILE *: è file da leggere [ostacoli.txt]
  * @return CartaOstacolo *: puntatore alla testa del mazzo
  */
@@ -49,12 +44,13 @@ CartaOstacolo *creaMazzoOstacoli(FILE *fOstacoli) {
 }
 
 /**
- * ostacoloInTesta() è la subroutine che, data una lista di carte, ne aggiunge una nuova alla testa
+ * ostacoloInTesta() data una lista di carte, ne aggiunge una nuova alla testa
  * @param mazzoOstacoli CartaOstacolo *: punta alla testa del mazzo a cui devo aggiungere la carta
  * @param cartaOstacolo CartaOstacolo *: punta alla carta che si vuole aggiungere in testa
  * @return CartaOstacolo *: punta alla nuova testa della lista
  */
 CartaOstacolo *ostacoloInTesta(CartaOstacolo *mazzoOstacoli, CartaOstacolo *cartaOstacolo) {
+	// Appendo la il mazzo gia presente alla carta da aggiungere
 	cartaOstacolo->next = mazzoOstacoli;
 	mazzoOstacoli = cartaOstacolo;
 	return mazzoOstacoli;
@@ -119,38 +115,39 @@ CartaOstacolo *indexEstraiCartaOstacolo(CartaOstacolo **mazzoOstacoli, int index
 CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
 	CartaOstacolo *carta = NULL;
 	carta = *mazzoOstacoli; // La carta da pescare è la prima del mazzo
-	*mazzoOstacoli = (*mazzoOstacoli)->next;    // La nuova prima del mazzo, sarà la successiva
+	*mazzoOstacoli = (*mazzoOstacoli)->next; // La nuova prima del mazzo, sarà la successiva
 	carta->next = NULL; // Isolo la carta pescata
 	return carta;
 }
 
 /**
- * ostacoloInCoda() è la subroutine che assegna a un giocatore una carta ostacolo.
- * La carta ostacolo è un doppio puntatore, per poter modificare a NULL il puntatore che puntava alla carta ostacolo
- * ora assegnata
- * @param pOstacolo è un doppio puntatore a lla carta ostacolo da assegnare
- * @param listaOstacoli è un doppio puntatore alla lista al quale aggiungere la carta ostacolo
+ * ostacoloInCoda() aggiugnge una carta ostacolo al termine di una lista
+ * @param pOstacolo CartaOstacolo *: puntatore a carta da aggiungere in coda
+ * @param listaOstacoli CartaOstacolo *: doppio puntatore alla lista alla quale aggiungere la carta ostacolo
  */
-// Continuo a non capire cosa cazzo non vada
+// TODO Continuo a non capire cosa cazzo non vada
 void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli){
-	CartaOstacolo *headOstacoli = *listaOstacoli;
-	if (*listaOstacoli == NULL) {
+	CartaOstacolo *currOstacolo = *listaOstacoli;
+
+	if (currOstacolo == NULL) {
 		*listaOstacoli = pOstacolo;
 	} else {
-		while (headOstacoli->next != NULL) {
-			headOstacoli = headOstacoli->next;
+		while (currOstacolo->next != NULL) {
+			currOstacolo = currOstacolo->next;
 		}
-		headOstacoli->next = pOstacolo;
+		currOstacolo->next = pOstacolo;
 	}
 	pOstacolo->next = NULL;
 }
+
 // ============ OUTPUT ========================================================
 /**
- * printOstacoli() è la subroutine che si occupa di stampare una lista di ostacoli
+ * printOstacoli() stampa una lista di ostacoli
  * @param listaOstacoli CartaOstacolo *: lista degli ostacoli da stampare
  */
 void printOstacoli(CartaOstacolo *listaOstacoli){
 	CartaOstacolo *curr = listaOstacoli;
+	// Array con i tipi delle carte
 	char *types[] = {"null", "Studio", "Sopravvivenza", "Sociale", "Esame"};
 
 	// Ciclo sulla lista
@@ -165,13 +162,19 @@ void printOstacoli(CartaOstacolo *listaOstacoli){
 	}
 }
 
+/**
+ * contaOstacoli() conta il numero di nodi CartaOstacolo in una lista
+ * @param listaOstacoli CartaOstacolo *: lista da contare
+ * @return
+ */
 int contaOstacoli(CartaOstacolo *listaOstacoli) {
-	CartaOstacolo *headOstacoli = listaOstacoli;
-	int count = 0;
+	CartaOstacolo *curr = listaOstacoli; // Nodo corrente dell lista
+	int count           = 0;
 
-	while (headOstacoli != NULL) {
+	// Ciclo sulla lista e incremento il contatore
+	while (curr != NULL) {
 		count++;
-		headOstacoli = headOstacoli->next;
+		curr = curr->next;
 	}
 	return count;
 }

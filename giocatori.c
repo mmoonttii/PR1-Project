@@ -10,10 +10,10 @@
 
 // ============ PERSONAGGI =====================================================
 /**
- * parseCharacters() è la subroutine che legge il file dei personaggi e conserva le informazioni di ogni personaggio in
- * un'array di sturtture personaggio
+ * parseCharacters() legge il file dei personaggi e conserva le informazioni di ogni personaggio in un'array di
+ * sturtture personaggio
  *
- * Una struttura characters nel campo bonusMalus abbiamo un array dove vengono salvati gli eventuali bonus e malus di
+ * Una struttura characters nel campo bonusMalus ha un array dove vengono salvati gli eventuali bonus e malus di
  * ogni giocatore per ogni tipologia di ostacolo
  *
  * @param fPersonaggi FILE *: puntatore al file da leggere [personaggi.txt]
@@ -35,38 +35,45 @@ void parseCharacters(FILE *fPersonaggi, Character characters[]) {
 
 /**
  * printBonusMalus() è la subroutine che stampa i bonus e i malus di un personaggio
- * @param arr è l'array corrispondente a ciascun personaggio
+ * @param arr int[]: array corrispondente a ciascun personaggio
  */
 void printBonusMalus(int arr[N_OSTACOLI]){
 	char *types[] = {"Studio", "Sopravvivenza", "Sociale", "Esame"};
 
+	// Per ogni tipo di ostacolo, stampa bonus/malus corrispondente
 	printf("Bonus e Malus:\n");
 	for (int j = 0; j < N_OSTACOLI; ++j) {
 		printf("|\t%13s: %d\n", types[j], arr[j]);
 	}
 }
 
+/**
+ * printCharacter() è la subroutine per stampare il personaggio di un giocatrore
+ * @param pCharacter Character *: puntatpre a personaffio
+ */
 void printCharacter(Character *pCharacter){
 	printf("Personaggio: %s\n"
 	       "|\t", pCharacter->name);
+	// Stampo i binus/malus usnado la subtoutine printBonusMalus()
 	printBonusMalus(pCharacter->bonusMalus);
 
 }
 
 // ============ IO ============================================================
-
 /**
- * acquisisciNumGiocatore() è la funzione che acquisisce il numero dei partecipanti alla partita
+ * acquisisciNumGiocatore() acquisisce il numero dei partecipanti alla partita
  * La funzione si occupa di controllare che l'input sia valido e invita a ritentare in caso di input non valido
  * @return int: numero di giocatori alla partita
  */
 int acquisisciNumGiocatori() {
 	int nGiocatori;
 	printf("Quanti giocatori parteciperanno oggi? [2-4]\n");
+
 	do {
 		printf(">>> ");
 		scanf("%d", &nGiocatori);
 
+		// Ripeto il ciclo fino a quando l'input non è valido
 		if (nGiocatori < 2 || nGiocatori > 4){
 			printf("Il numero di giocatori deve essere compreso tra 2 e 4:\n"
 			       "\t controlla l'input o organizzatevi in squadre :)\n");
@@ -76,6 +83,10 @@ int acquisisciNumGiocatori() {
 	return nGiocatori;
 }
 
+/**
+ * printGiocatore() stampa i dati di un giocatore
+ * @param pPlayer Player *: è il puntatore a un giocatore
+ */
 void printGiocatore(Player *pPlayer) {
 	printf("\nGiocatore:\n");
 	printf("|\t Username: %s\n"
@@ -83,6 +94,7 @@ void printGiocatore(Player *pPlayer) {
 	       "|\t ",
 	       pPlayer->username, pPlayer->cfu);
 
+	// Per stampara  il personaggio corrispondente uso la subroutine apposta
 	printCharacter(&pPlayer->character);
 
 	if (pPlayer->listaCarteOstacolo != NULL) {
@@ -92,21 +104,20 @@ void printGiocatore(Player *pPlayer) {
 	printf("+----------------------------------------\n");
 }
 
-
 /**
- * printGiocatori() è la subroutine che stampa la lista dei giocatori, il loro nome, personaggio, punteggio e mano
- * @param listaGiocatori è la lista di giocatori da stampare
+ * printGiocatori() è la subroutine che stampa la lista dei giocatori
+ * @param listaGiocatori Player *:  lista di giocatori da stampare
  */
-void printGiocatori(Player *listaGiocatori, bool stampaCarte) {
-	Player *head = listaGiocatori;
+void printGiocatori(Player *listaGiocatori) {
+	Player *curr = listaGiocatori;
 	printf("\n=== GIOCATORI ===\n");
 
-	// Fino a quando head indica un giocatore valido
-	for (int i = 0; head != NULL; ++i) {
+	// Fino a quando curr indica un giocatore valido
+	for (int i = 0; curr != NULL; ++i) {
 		// Stampa le informazioni
-		printGiocatore(head);
+		printGiocatore(curr);
 		// Scorri al giocatore successivo
-		head = head->nextPlayer;
+		curr = curr->nextPlayer;
 	}
 }
 
@@ -177,30 +188,33 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 }
 
 /**
- * addPlayerInCoda() è la subroutine che, presi in input una lista e un nuovo nodo, COPIA tale nodo alla coda di
+ * addCopyOfPlayerInCoda() è la subroutine che, presi in input una lista e un nuovo nodo, COPIA tale nodo alla coda di
  * tale lista, assicurandosi che il puntatore next di questo sia NULL
- * @param playerList è la lista alla quale aggiungere il nodo
- * @param playerToAdd è il nodo da aggiungere
- * @return la testa della lista con il nodo aggiunto
+ * @param playerList Player *: lista alla quale aggiungere il nodo
+ * @param playerToAdd Player *: nodo da aggiungere
+ * @return Player *: testa della lista con il nodo aggiunto
  */
-Player *addPlayerInCoda(Player *playerList, Player *playerToAdd){
-
-	Player *head = playerList,
-	       aux = *playerToAdd;
-	aux.nextPlayer = NULL;
+Player *addCopyOfPlayerInCoda(Player *playerList, Player *playerToAdd){
+	Player *curr = playerList;
 
 	// Se la lista è vuota
 	if (playerList == NULL) {
 		// Posso direttamente allocare il nuovo nodo sulla testa
 		playerList = allocaGiocatore();
-		*playerList = aux;
+		// Lo copio sul nodo creato
+		*playerList = *playerToAdd;
+		// Il prossimo giocatore è settato a NULL
+		playerList->nextPlayer = NULL;
 	} else {
 		// Altrimenti scorro fino all'ultimo nodo e lo aggiungo dopo questo
-		while (head->nextPlayer != NULL) {
-			head = head->nextPlayer;
+		while (curr->nextPlayer != NULL) {
+			curr = curr->nextPlayer;
 		}
-		head->nextPlayer = allocaGiocatore();
-		*(head->nextPlayer) = aux;
+		curr->nextPlayer = allocaGiocatore();
+		// Lo copio sul nuovo nodo
+		*(curr->nextPlayer) = *playerToAdd;
+		// Setto il prox platyer a NILL
+		curr->nextPlayer->nextPlayer = NULL;
 	}
 	return playerList;
 }
@@ -212,25 +226,28 @@ Player *addPlayerInCoda(Player *playerList, Player *playerToAdd){
  * - tre carte ostacolo dello stesso tipo in mano, \n
  * - una carta di ogni tipo \n
  * NB: le carte ostacolo sono Jolly e valgono come qualunque altro tipo di carta, ma non contemporaneamente
- * @param pPlayer è il giocatore da analizzare
- * @return booleano lost: true se il giocatore selezionato ha perso
+ * @param pPlayer Player *: giocatore da analizzare
+ * @return bool: true se il giocatore selezionato ha perso
  */
 bool hasLost(Player *pPlayer) {
-	CartaOstacolo *headOstacoli = pPlayer->listaCarteOstacolo;
+	CartaOstacolo *currOstacoli = pPlayer->listaCarteOstacolo;
 	int numOstacoli[N_OSTACOLI] = {};
 	bool lost = false;
 
-	while (headOstacoli != NULL) {
-		numOstacoli[headOstacoli->type - 1]++;
-		headOstacoli = headOstacoli->next;
+	// Conteggio ostacoli per tipo
+	while (currOstacoli != NULL) {
+		numOstacoli[currOstacoli->type - 1]++;
+		currOstacoli = currOstacoli->next;
 	}
 
+	// Se il numero di ostacoli di un singolo tipo è >= a 3 il giocatore ha perso
 	for (int i = 0; i < N_OSTACOLI; ++i) {
-		if (numOstacoli[i] == 3) {
+		if (numOstacoli[i] >= 3) {
 			lost = true;
 		}
 	}
 
+	// Se non ha 3 ostacoli dello stesso tipo, posso continura il controllo
 	if (lost != true) {
 		// Se si hanno due carte esame, è sufficiente avere una sola carta di altro tipo per perdere
 		if ((numOstacoli[ESAME-1] == 2) &&
@@ -256,8 +273,8 @@ bool hasLost(Player *pPlayer) {
 /**
  * hasWon() è la subroutine che controlla se il gioatore ha vinto la partita
  * CONDIZIONI DI VITTORIA: si vince se si hanno 60 CFU o si è l'ultimo giocatore rimasto
- * @param pPlayer è il giocatore da analizzare
- * @return booleano: true se il giocatore ha vinto la bartita
+ * @param pPlayer Player *: giocatore da analizzare
+ * @return bool: true se il giocatore ha vinto la bartita
  */
 bool hasWon(Player *pPlayer) {
 	bool won = false;
@@ -270,34 +287,42 @@ bool hasWon(Player *pPlayer) {
 }
 
 /**
- * playerCheck() è la subroutine che controlla se un giocatore ha vinto o perso la partita e effettua le operazioni
- * dovute
- * @param playersList è la lista gioatori da controllare
- * @param mazzoOstacoli è il mazzo delle carte ostacolo per mettere in fondo le carte di eventuali giocatori morti
- * @param mazzoScarti è il mazzo scarti delle carte cfu per scartare le carte dei giocatori morti
- * @param nPlayers è il numero di giocatori in gioco
- * @return un booleano che indica il termine della partita
+ * playerCheck() è la subroutine che controlla se un giocatore ha vinto o perso e effettua le operazioni dovute
+ * @param nPlayers int: numero di giocatori in gioco
+ * @param playersList Player **: doppio pt a lista gioatori da controllare
+ * @param mazzoOstacoli CartaOstacolo **: mazzo carte ostacolo per mettere in fondo le carte di giocatori morti
+ * @param mazzoScarti CarteCfu **: mazzo scarti carte cfu per scartare le carte di giocatori morti
+ * @return bool: indica il termine della partita
  */
-bool playerCheck(Player **playersList, CartaOstacolo **mazzoOstacoli, CartaCfu **mazzoScarti, int *nPlayers) {
+bool playerCheck(int *nPlayers, Player **playersList,
+				 CartaOstacolo **mazzoOstacoli, CartaCfu **mazzoScarti) {
 	Player *pPlayer = *playersList,
 	       *prev    = NULL;
 	bool end = false;
 
 	while (pPlayer != NULL){
+		// Se il giocatopre ha perso
 		if (hasLost(pPlayer)) {
 			printf("\n%s ha fatto la rinuncia agli studi\n", pPlayer->username);
-			ostacoloInCoda(&pPlayer->listaCarteOstacolo, mazzoOstacoli);
-			scartaCarte(&pPlayer->manoCarteCfu, mazzoScarti);
-			if (prev == NULL){
+			// Aggiungo i suoi ostacoli in coda al mazzo Ostacoli
+			ostacoloInCoda(pPlayer->listaCarteOstacolo, mazzoOstacoli);
+			// Scarto le sue carte on mano
+			*mazzoScarti = scartaCarte(&pPlayer->manoCarteCfu, *mazzoScarti);
+
+			// Isolo il suo puntatore
+			if (prev == NULL) {
 				*playersList = pPlayer->nextPlayer;
 			} else {
 				prev->nextPlayer = pPlayer->nextPlayer;
 			}
 			pPlayer->nextPlayer = NULL;
+			// Dealloco la memoria connessa
 			freeGiocatore(pPlayer);
+			// Decremento il numero di giocatori
 			*nPlayers --;
 
-		} else if (hasWon(pPlayer) || (*playersList)->nextPlayer == NULL ){
+		// Se il fiocatore ha vinto o è l'ìunico rimasto
+		} else if (hasWon(pPlayer)){
 			printf("\n%s hai terminato il primo anno e vinto la partita\n"
 			       "**************************************************************************\n"
 			       "*   ____ ___  __  __ ____  _     ___ __  __ _____ _   _ _____ ___   _ _  *\n"
@@ -308,10 +333,32 @@ bool playerCheck(Player **playersList, CartaOstacolo **mazzoOstacoli, CartaCfu *
 			       "*                                                                        *\n"
 			       "**************************************************************************\n",
 			       pPlayer->username);
+			// La partita termina
 			end = true;
 		}
+
+		// Se il giocatore corrente non ha ne vinto ne perso, passo al giocatore successivo
 		prev = pPlayer;
 		pPlayer = pPlayer->nextPlayer;
+	}
+
+	pPlayer = *playersList;
+	// Effettuo il controllo di vittoria come ultimo giocatore al termine del ciclo per essere sicuro che venga
+	// risulti sempre la vittoria eventuale anxhe se giocatori successivi a lui perdono
+	if ((*playersList)->nextPlayer == NULL ){
+				printf("\n%s sei rimasto l'unico tra i tuoi colleghi a non rinunciare agli studi e hai vinto la "
+					   "partita\n"
+			       "**************************************************************************\n"
+			       "*   ____ ___  __  __ ____  _     ___ __  __ _____ _   _ _____ ___   _ _  *\n"
+			       "*  / ___/ _ \\|  \\/  |  _ \\| |   |_ _|  \\/  | ____| \\ | |_   _|_ _| | | | *\n"
+			       "* | |  | | | | |\\/| | |_) | |    | || |\\/| |  _| |  \\| | | |  | |  | | | *\n"
+			       "* | |__| |_| | |  | |  __/| |___ | || |  | | |___| |\\  | | |  | |  |_|_| *\n"
+			       "*  \\____\\___/|_|  |_|_|   |_____|___|_|  |_|_____|_| \\_| |_| |___| (_|_) *\n"
+			       "*                                                                        *\n"
+			       "**************************************************************************\n",
+			       pPlayer->username);
+			// La partita termina
+			end = true;
 	}
 	return end;
 }

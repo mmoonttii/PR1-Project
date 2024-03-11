@@ -6,7 +6,6 @@
 #include "saves.h"
 
 // ============ TURNO - GIOCA CARTA ====================================================================================
-
 /**
  * acquisisciAzione() è la subroutine per scegliere quale azione compiere all'inzio del turno
  * @return int: input del giocatore
@@ -63,7 +62,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 			printf("\n Tutte le carte che hai in mano sono istantanee, scarta tutta la tua mano e pesca 5 nuove carte");
 			enterClear();
 			// Posso scartare le carte e prendere una nuova mano
-			scartaCarte(manoCarteCfu, mazzoScarti);
+			*mazzoScarti = scartaCarte(manoCarteCfu, *mazzoScarti);
 			*manoCarteCfu = distribuisciCarte(*manoCarteCfu, mazzoCarteCfu, mazzoScarti);
 
 		// Se si hanno solo carte istantanee in mano e non è concesso il rimescolamento, giocabile è false
@@ -80,7 +79,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 			// Acquisisco quale carta vuole giocare
 			choice = acquisisciCarta(CARTE_PER_MANO);
 			// Trovo la carta nella mano
-			choosenCard = findCartaCfu(manoCarteCfu, choice);
+			choosenCard = findCartaCfu(*manoCarteCfu, choice);
 
 			// Controllo se è istantanea, se non è istantanea posso restituirla, altrimenti chiedo nuovamente al
 			// giocatore
@@ -128,7 +127,7 @@ void giocaCarta(Turno *turno, Player *pPlayer,
 		cartaCfuInCoda(&(turno->carteGiocate), choosenCard);
 	} else {
 		exit(ERR_PLAY_CARD);
-	};
+	}
 }
 
 /**
@@ -153,29 +152,31 @@ int acquisisciCarta(int i) {
 }
 
 // ============ TURNO - INFO GIOCATORE =================================================================================
-
 /**
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno
- * @param listaGiocatori è la lista dei giocatori
+ * @param listaGiocatori Player *: lista di giocatori
+ * @param currentPlayer Player *: giocatore attuale
+ * @param nPlayers int: numero di giocatori in corso
  */
 void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) {
-	Player *head = listaGiocatori,
+	Player *curr          = listaGiocatori,
 		   *choosenPlayer = listaGiocatori;
+
 	int count = 0,
 		input;
 
 	printf("\nDi quale giocatore vuoi avere informazioni?\n");
 
 	// Stampa dei giocatori dei quali si possono avere informazioni
-	for (int i = 0; i < nPlayers; ++i) {
-		if (strcmp(head->username, currentPlayer->username) != 0) {
-			printf("[%d] %s\n", count, head->username);
+	for (int i = 0; i < nPlayers && curr != NULL; ++i) {
+		// Se il giocatore è quello attuale non stampo il corrispondente indice
+		if (strcmp(curr->username, currentPlayer->username) != 0) {
+			printf("[%d] %s\n", count, curr->username);
 		}
-		if (head->nextPlayer != NULL) {
-			head = head->nextPlayer;
-		}
+		curr = curr->nextPlayer;
 		count++;
 	}
+
 	// Acquisizione del giocatore del quale si vogliono avere infomrmazioni
 	do {
 		printf("\n>>> ");
@@ -198,40 +199,50 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 
 // ============ TURNO - CALCOLO PUNTEGGIO ==============================================================================
 /**
- * calcolaPunteggio() è la subroutine che si occupa di calcolare il punteggio ottenuto da ciascun giocatore in un
- * turno, considerando i punti cfu di ciascuna carta e i bonus/malus di ogni personaggio e li salva in un array
- * allocato dinamicamente nella struttura turno
- * @param turno è la struttura di tipo Turno che rappresenta un turno di gioco
- * @param playerList è la lista dei giocatori nella partita
- * @param nPlayers è il numero di giocatori ing iococ
- * @param characters indica se le personalità dei personaggi debbano inficiare sul calcolo dei punteggi
+ * calcolaPunteggio() calcola il punteggio ottenuto da ciascun giocatore in un turno, considerando i punti cfu di
+ * ciascuna carta e i bonus/malus di ogni personaggio e li salva in turno.points come array allocato dinamicamente
+ * @param turno Turno *: turno di gioco
+ * @param playerList Player *: lista di giocatori
+ * @param nPlayers int: numero di giocatori in gioco
+ * @param characters bool: indica se le personalità dei personaggi debbano inficiare sul calcolo dei punteggi
  */
 void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers, bool characters) {
-	Player *headPlayer = playerList;
-	CartaCfu *headCarte = turno->carteGiocate;
-	int modifier = 0;
+	Player *currPlayer = playerList;
+	CartaCfu *currCfu  = turno->carteGiocate;
+	int modifier       = 0;
 
+	// Alloco array di punti
 	if (turno->points == NULL) {
 		turno->points = (int *)calloc(nPlayers, sizeof(int));
 		if (turno->points == NULL){
 			exit(ERR_FAIL_ALLOC_POINTS);
 		}
 	}
+	// Ciclo sui giocatori
 	for (int i = 0; i < nPlayers; ++i) {
 		// Se characters è vero devo considerare anche i bonus/malus dei giocatori
-		modifier = characters ? headPlayer->character.bonusMalus[turno->cartaOstacolo->type - 1] : 0;
+		modifier = characters ? currPlayer->character.bonusMalus[turno->cartaOstacolo->type - 1] : 0;
 
-		turno->points[i] = headCarte->cfu + modifier;
-		headPlayer = headPlayer->nextPlayer;
-		headCarte = headCarte->next;
+		// Salvo il punteggio dell'i-esimo giocatore in points[i]
+		turno->points[i] = currCfu->cfu + modifier;
+		currPlayer = currPlayer->nextPlayer;
+		currCfu    = currCfu->next;
 	}
 }
 
-void printPuntiParziali(Turno *turno, Player *playerList, int nPlayers) {
-	Player *pPlayer = playerList;
+/**
+ * printPunti() stampa i punteggi dei giocatori in un turno
+ * @param turno Turno *: struttura turno
+ * @param playerList Player *: lista di giocatori
+ * @param nPlayers int: numero di giocatroi
+ */
+void printPunti(Turno *turno, Player *playerList, int nPlayers) {
+	Player *pPlayer = playerList; // puntatore al player attuale
 
 	printf("\nPunti Cfu del turno %d\n", turno->numTurno);
+	// Ciclo sul numero di giocatori
 	for (int i = 0; i < nPlayers; ++i) {
+		// Per ogni giocatore stampo usernamen e punteggio corrispondente
 		printf("%31s: %d\n", pPlayer->username, turno->points[i]);
 		pPlayer = pPlayer->nextPlayer;
 	}
@@ -239,135 +250,141 @@ void printPuntiParziali(Turno *turno, Player *playerList, int nPlayers) {
 }
 
 /**
- * winnersLosers() è la subroutine che si occupa di identificare i vincitori e i perdenti di ogni turno, analizzando
+ * winnersLosers() occupa di identificare i vincitori e i perdenti di ogni turno, analizzando
  * i punti totalizzati nel punto e crea una lista di giocatori perdenti e vincenti
- * @param turno è la struttura che identifica ogni turno
- * @param playersList è la lista di giocatori partecipanti
- * @param nPlayers è il numero di giocatori attualmente in partita
+ * @param turno Turno *: struttura che identifica ogni turno
+ * @param playersList Player *: lista di giocatori partecipanti
+ * @param nPlayers int: numero di giocatori attualmente in partita
  */
 void winnersLosers(Turno *turno, Player *playersList, int nPlayers) {
-	Player *pPlayer = playersList;
-	// minMax calcola il punteggio massimo ottenuto dai giocatori, e quindi il punteggio per vincere e il punteggio
-	// minimo ottenuto, quindi il punteggio per perdere
+	Player *curr = playersList;
 
+	// Se i cfu di vittoria sono uguali ai cfu per perdere, i giocatori sono tutti in pareggio e non ci sono
+	// vincitori o perdentei, altrimenti
 	if (turno->cfuToWin != turno->cfuToLose) {
+		// Ciclo sul numero di giocatori
 		for (int i = 0; i < nPlayers; ++i) {
+			// Se l'i-esimo giocatore
+			// Ha i punteggi come quelli per vincere
 			if (turno->points[i] == turno->cfuToWin) {
-				turno->winners = addPlayerInCoda(turno->winners, pPlayer);
+				// Ne creo una copia sulla lista winners
+				turno->winners = addCopyOfPlayerInCoda(turno->winners, curr);
 			}
+			// Ha i punteggi come quelli per perdere
 			if (turno->points[i] == turno->cfuToLose) {
-				turno->losers = addPlayerInCoda(turno->losers, pPlayer);
+				// Ne creo una copia sulla lista losere
+				turno->losers = addCopyOfPlayerInCoda(turno->losers, curr);
 			}
-			pPlayer = pPlayer->nextPlayer;
+			curr = curr->nextPlayer;
 		}
-	} else {
-
 	}
 }
 
-/**
- * printWinners() è la subroutine che data una lista di giocatori, ne stampa i nomi, formattati come lista di vincitori
- * @param playerList è la lista di giocatori da stampare
- */
-void printWinners(Player *playerList) {
-	Player *head = playerList;
-	printf("\nVincitori:\n");
-	while (head != NULL){
-		printf("%31s\n", head->username);
-		head = head->nextPlayer;
-	}
-}
-/**
- * printLosers() è la subroutine che data una lista di giocatori, ne stampa i nomi, formattati come lista di perdenti
- * @param playerList è la lista di giocatori da stampare
- */
-void printLosers(Player *playerList) {
-	Player *head = playerList;
-	printf("\nPerdenti:\n");
-	while (head != NULL){
-		printf("%31s\n", head->username);
-		head = head->nextPlayer;
-	}
-}
 // ============ VINCITORI ==============================================================================================
 /**
- * assegnaPunti() è la subroutine che assegna ai giocatori vincenti i punti cfu che gli spettano
- * @param turno è la struttura turno, che contiene i punti necessari a vincere e i punti parziali di ciascun giocatore
- * @param playerList è la lista di giocatori in partita
- * @param nPlayers è il numero di giocatori in partita
+ * printWinners() data una lista di giocatori, ne stampa i nomi, formattati come lista di vincitori
+ * @param playerList Player *: lista di giocatori da stampare
+ */
+void printWinners(Player *playerList) {
+	Player *curr = playerList;
+	printf("\nVincitori:\n");
+	while (curr != NULL){
+		printf("%31s\n", curr->username);
+		curr = curr->nextPlayer;
+	}
+}
+
+/**
+ * assegnaPunti() assegna ai giocatori vincenti i punti cfu che gli spettano
+ * @param turno Turno *: struttura turno, contiene i punti per vincere e i punti di ciascun giocatore
+ * @param playerList Player *: lista di giocatori in partita
+ * @param nPlayers int: numero di giocatori in partita
  */
 void assegnaPunti(Turno *turno, Player *playerList, int nPlayers){
-	Player *pPlayer = playerList;
+	Player *curr      = playerList;
 	int pointsWinners = turno->cfuToWin; // Salvo in pointsWinners i punti che devono aver fatto i giocatori per
 	                                     // vincere per non dover fare l'accesso alla memoria di turno ripetutamente
 
 	for (int i = 0; i < nPlayers; ++i) {         // Per ogni giocatore
 		if (pointsWinners == turno->points[i]) { // Se i punti fatti in questo turno sono uguali ai punti per vincere
-			pPlayer->cfu += pointsWinners;       // Allora incremento i suoi punti cfu
+			curr->cfu += pointsWinners;          // Allora incremento i suoi punti cfu
 		}
-		pPlayer = pPlayer->nextPlayer;
+		curr = curr->nextPlayer;
 	}
 }
-// ============ SPAREGGI ===============================================================================================
+
+// ============ PERDENTI ===============================================================================================
+/**
+ * printLosers() data una lista di giocatori, ne stampa i nomi, formattati come lista di perdenti
+ * @param playerList Player *: lista di giocatori da stampare
+ */
+void printLosers(Player *playerList) {
+	Player *curr = playerList;
+	printf("\nPerdenti:\n");
+	while (curr != NULL){
+		printf("%31s\n", curr->username);
+		curr = curr->nextPlayer;
+	}
+}
 
 /**
- * contaLosers() è la funzione che si occupa di controllare se sia necessario far partire spareggi tra i giocatori
- * perdenti, in caso questo non sia necessario, chiama la funzione ostacoloInCoda() che da la carta ostacolo al
- * giocatore perdente
- * @param turno è la struttura di tipo Turno che identifica un turno in particolare
- * @param playerList è la lista dei giocatori in partita
+ * contaLosers() conta quanti giocatori sono perdenti
+ * @param turno Turno *: struttura Turno
  */
 int contaLosers(Turno *turno, Player *playerList) {
-	Player *losersHead = turno->losers,
-	       *pPlayer = playerList;
+	Player *curr    = turno->losers;
 	int losersCount = 0;
 
 	// Controlla quanti perdenti ci sono nel turno
-	while (losersHead != NULL) {
+	while (curr != NULL) {
 		losersCount++;
-		losersHead = losersHead->nextPlayer;
+		curr = curr->nextPlayer;
 	}
-
 	return losersCount;
 }
 
 /**
- * puntiCarteOstacolo() è la subroutine che a termine del turno assegna ai giocatori tanti punti quante carte
- * ostacolo hanno
- * @param playerList è la lista di giocatori
+ * puntiCarteOstacolo() a termine turno assegna ai giocatori tanti punti quante carte ostacolo hanno
+ * @param playerList Player *: lista di giocatori
  */
-void puntiCarteOstacolo (Player *playerList){
-	Player        *headPlayer   = playerList; // Testa della lista giocatori
-	CartaOstacolo *headOstacoli = NULL;       // Testa della lista di ostacoli di ogni giocatore
-	int countOstacoli = 0;                    // Contatore di ostacoli per ogni giocatore
+void puntiCarteOstacolo (Player *playerList) {
+	Player        *currPlayer   = playerList; // Testa della lista giocatori
+	CartaOstacolo *currOstacoli = NULL;       // Testa della lista di ostacoli di ogni giocatore
+	int countOstacoli           = 0;          // Contatore di ostacoli per ogni giocatore
 
-	while (headPlayer != NULL) {    // Per ogni giocatore
-		countOstacoli = 0;
-		headOstacoli = headPlayer->listaCarteOstacolo;
-
-		while (headOstacoli != NULL) { // Per ogni carta ostacolo nella sua plancia
-			countOstacoli++;           // Conta carte ostacolo
-			headOstacoli = headOstacoli->next;
-		}
-
-		headPlayer->cfu += countOstacoli; // Incrementa i CFU del giocatore di quante ostacolo ha
-		headPlayer = headPlayer->nextPlayer; // Passa al giocatore successivo
+	while (currPlayer != NULL) {    // Per ogni giocatore
+		countOstacoli = contaOstacoli(currPlayer->listaCarteOstacolo); // Conto le carte ostacolo
+		currPlayer->cfu += countOstacoli;    // Incrementa i CFU del giocatore di quante ostacolo ha
+		currPlayer = currPlayer->nextPlayer; // Passa al giocatore successivo
 	}
 }
 
 // ============ CHIUSURA ===============================================================================================
-
 /**
  * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria
- * @param mazzoCfu
- * @param mazzoOstacoli
- * @param playerList
- * @param mazzoScarti
+ * @param playerList Player *: lista giocatori
+ * @param mazzoCfu CartaCfu *: mazzo di pesca Cfu
+ * @param mazzoScarti CartaCfu *: mazzo di scarto Cfu
+ * @param mazzoOstacoli CartaOstacolo *: mazzo carte ostacolo
  */
-void end (CartaCfu *mazzoCfu, CartaOstacolo *mazzoOstacoli, Player *playerList, CartaCfu *mazzoScarti){
+void end(Player *playerList, CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Turno *turno) {
+	// Chiamo la funzione per liberare la memoria per ogni lista aloocata
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	playerList    = freeGiocatore(playerList);
 	mazzoScarti   = freeCfu(mazzoScarti);
+	freeTurno(turno);
 	exit(EXIT_SUCCESS);
+}
+
+/**
+ * freeTurno() libera tutti gli oggetti allocati sull'heap in una struttura turno
+ * @param turno Turno *: struttura turno da liberare
+ */
+void freeTurno(Turno *turno) {
+	turno->points = freeIntArr(turno->points);
+	turno->cartaOstacolo = freeOstacoli(turno->cartaOstacolo);
+	turno->carteGiocate = freeCfu(turno->carteGiocate);
+	turno->winners = freeGiocatore(turno->winners);
+	turno->losers = freeGiocatore(turno->losers);
 }

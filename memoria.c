@@ -22,11 +22,12 @@ CartaCfu *allocaCartaCfu() {
 
 /**
  * freeCfu() è la funzione per liberare la memoria precedentemente allocata per una lista
- * @param mazzoCfu è il puntatore alla testa della lista
+ * @param mazzoCfu CartaCfu *: puntatore alla testa della lista
  */
 CartaCfu *freeCfu(CartaCfu *mazzoCfu) {
 	CartaCfu *pAux = NULL;
 
+	// Salvo la posizione della carta attuale, salvo la carta successiva e la libero la attuale
 	while (mazzoCfu != NULL) {
 		pAux = mazzoCfu;
 		mazzoCfu = mazzoCfu->next;
@@ -41,7 +42,6 @@ CartaCfu *freeCfu(CartaCfu *mazzoCfu) {
 // ============ CARTE OSTACOLO =============================================
 /**
  * allocaCartaOstacolo() è la funzione che si occupa di allocare in memoria lo spazio necessario a contenere una carta
- *
  * @return un puntatore alla locazione della nuova carta
  */
 CartaOstacolo *allocaCartaOstacolo() {
@@ -54,7 +54,7 @@ CartaOstacolo *allocaCartaOstacolo() {
 	return newCard;
 } /**
  * freeOstacolo() è la funzione per liberare la memoria precedentemente allocata per una lista
- * @param mazzoOstacoli è il puntatore alla testa della lista
+ * @param mazzoOstacoli CartaOstacolo *: è il puntatore alla testa della lista
  */
 CartaOstacolo *freeOstacoli(CartaOstacolo *mazzoOstacoli) {
 	CartaOstacolo *pAux = NULL;
@@ -107,13 +107,18 @@ Player *freeGiocatore(Player *playerList) {
 	return playerList;
 }
 
+// ========== ARRAYS ===================================================================================================
+/**
+ * freeIntArr() è la subroutine per liberare un array di interi
+ * @param arr array da liberare
+ * @return
+ */
 int *freeIntArr(int *arr) {
 	free(arr);
 	arr = NULL;
 
 	return arr;
 }
-
 
 /**
  * allocaArrBool() è la funzione che alloca un array di n booleani inizializzato a false
@@ -134,12 +139,25 @@ bool *allocaArrBool(int n) {
 	return arr;
 }
 
+/**
+ * freeBoolARR() libera la memoria allocata per un array di booleani
+ * @param arr
+ * @return
+ */
 bool *freeBoolArr(bool *arr) {
 	free(arr);
 	arr = NULL;
 	return arr;
 }
 
+// ========== FREE ALL =================================================================================================
+/**
+ * freeAll() è la subroutine che si occupa di liberare la memoria allocata durante il gioco
+ * @param mazzoCfu CartaCfu *: mazzo carte Cfu
+ * @param mazzoScarti CartaCfu *: mazzo scarti
+ * @param mazzoOstacoli CartaOstacolo *: mazzoOstacoli
+ * @param playerList Player *: lidta di giocatori
+ */
 void freeAll(CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Player *playerList) {
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);

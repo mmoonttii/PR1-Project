@@ -10,12 +10,17 @@
 
 // ============ LIST MANAGEMENT ===============================================/**
 CartaOstacolo *creaMazzoOstacoli(FILE *fOstacoli);
+
 CartaOstacolo *ostacoloInTesta(CartaOstacolo *mazzoOstacoli, CartaOstacolo *cartaOstacolo);
+
 CartaOstacolo *mescolaMazzoOstacoli(CartaOstacolo **mazzoDaMischiare);
+
 CartaOstacolo *indexEstraiCartaOstacolo(CartaOstacolo **mazzoOstacoli, int index);
 
 CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli);
+
 void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli);
+
 // ============ OUTPUT ========================================================
 void printOstacoli(CartaOstacolo *listaOstacoli);
 

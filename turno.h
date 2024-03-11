@@ -31,9 +31,9 @@ void calcolaPunteggio(Turno  *turno,
                       int    nPlayers,
 					  bool   characters);
 
-void printPuntiParziali(Turno  *turno,
-                        Player *playerList,
-                        int    nPlayers);
+void printPunti(Turno  *turno,
+                Player *playerList,
+                int    nPlayers);
 
 void winnersLosers(Turno  *turno,
                    Player *playersList,
@@ -59,9 +59,6 @@ void puntiCarteOstacolo(Player *playerList);
 
 // ============ CHIUSURA ===============================================================================================
 
-void end(CartaCfu      *mazzoCfu,
-         CartaOstacolo *mazzoOstacoli,
-         Player        *playerList,
-         CartaCfu      *mazzoScarti);
-
+void end(Player *playerList, CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Turno *turno);
+void freeTurno(Turno *turno);
 #endif //PR1_PROJECT_TURNO_H

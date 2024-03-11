@@ -17,21 +17,21 @@ void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, Cart
                      bool *checkDOPPIOE);
 
 bool
-risolviEffetti(int iPlayer, Player *pPlayer, int nPlayers, Player *playerList, CartaCfu *pCarta, CartaCfu **mazzoCfu,
+risolviEffetti(int iPlayer, Player *currPlayer, int nPlayers, Player *playerList, CartaCfu *currCarta, CartaCfu **mazzoCfu,
                CartaCfu **mazzoScarti, Turno *turno, bool arrRisolte[], bool *checkDOPPIOE);
 
 // ===== EFFETTI DELLE CARTE ====================
-void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, Turno *turno, int iPlayer);
+void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, int iPlayer, Turno *turno);
 
 // ====================================================================================================================
 void effettoRUBA(Player *playerList, Player *pPlayer);
 CartaCfu *steal(Player *pPlayer);
 
 // ====================================================================================================================
-void effettoSCAMBIADS(Player *playerList, Player *pPlayer, Turno *turno, int iPlayer, int nPlayers, CartaCfu *pCarta,
+void effettoSCAMBIADS(int iPlayer, Player *pPlayer, int nPlayers, Player *playerList, CartaCfu *pCarta, Turno *turno,
                       bool arrRisolte[]);
 // ====================================================================================================================
-void effettoSCARTAE(CartaCfu **mazzoScarti, Player *pPlayer, Turno *turno, int iPlayer);
+void effettoSCARTAE(int iPlayer, Player *pPlayer, CartaCfu **mazzoScarti, Turno *turno);
 CartaCfu *discard(Player *pPlayer);
 
 // ====================================================================================================================
