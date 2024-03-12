@@ -74,3 +74,27 @@ void minMax(int arr[], int size, int *min, int *max) {
 		}
 	}
 }
+
+/**
+ * acquisisciInputInt() attende dall'utente un input intero e si assicura che esso non sia minore di min o maggiore
+ * di max
+ * @param min int: valore minimo dell'input
+ * @param max int: valore massimo dell'input
+ * @return int: scelta dell'utente
+ */
+int acquisisciInputInt(int min, int max) {
+	int choice;
+	// Aspetto input dell'utente
+	do {
+		printf("\n>>> ");
+		scanf("%d", &choice);
+
+		// Controllo che sia valido
+		if (choice < min || choice > max) {
+			printf("\nInput non valido, riprovare\n");
+		}
+	} while (choice < min || choice > max);
+
+	return choice;
+}
+

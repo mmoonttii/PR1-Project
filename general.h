@@ -32,6 +32,8 @@
 #define FILE_CARTE_CFU  "carte.txt"
 #define FILE_OSTACOLI   "ostacoli.txt"
 #define FILE_LOG        "log.txt"
+
+// TODO: settare DBG a flase
 #define DBG             true
 
 // =========== CARTE CFU ===============================================================================================
@@ -126,4 +128,6 @@ FILE *openFile(char filePath[], char mode[]);
 void enterClear();
 
 void minMax(int arr[], int size, int *min, int *max);
+
+int acquisisciInputInt(int min, int max);
 #endif //PR1_PROJECT_GENERAL_H

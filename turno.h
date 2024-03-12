@@ -6,9 +6,9 @@
 #include "giocatori.h"
 
 // ============ TURNO - AZIONI GIOCATORI ===============================================================================
-int acquisisciAzione();
-
-CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu **mazzoCarteCfu, bool rimescolaMano);
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
+					  CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti,
+					  bool rimescolaMano);
 
 int acquisisciCarta(int i);
 
@@ -39,6 +39,9 @@ void printWinners(Player *playerList);
 
 void printLosers(Player *playerList);
 
+// ============ SPAREGGI ===============================================================================================
+Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog);
+
 // ============ VINCITORI ==============================================================================================
 void assegnaPunti(Turno  *turno,
                   Player *playerList,
@@ -54,7 +57,8 @@ void ostacoloInCoda(CartaOstacolo *pOstacolo,
 void puntiCarteOstacolo(Player *playerList);
 
 // ============ CHIUSURA ===============================================================================================
-
 void end(Player *playerList, CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Turno *turno);
+
 void freeTurno(Turno *turno);
+
 #endif //PR1_PROJECT_TURNO_H

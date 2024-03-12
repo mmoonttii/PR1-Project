@@ -166,7 +166,7 @@ void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, int iPlayer, Turno 
 	currMano = pPlayer->manoCarteCfu;
 
 	if (nonGiocabile != numCarte && flag != false) { // se c'è almeno una carta giocabile
-		choosenCard = chooseCarta(&currMano, mazzoScarti, NULL, SPAREGGIO);
+		choosenCard = chooseCarta(&currMano, NULL, mazzoScarti, SPAREGGIO);
 		choosenCard = estraiCartaCfu(&currMano, choosenCard);
 		turno->points[iPlayer] += choosenCard->cfu;  //assegno i punti della carta al punteggio del giocatore
 		printf("%s aggiungi %d CFU al tuo punteggio parziale!\n", pPlayer->username, choosenCard->cfu);
@@ -251,16 +251,7 @@ CartaCfu *steal(Player *pPlayer) {
 		i++;
 	}
 
-	// Scelta della carta da rubare
-	do {
-		printf("\n>>> ");
-		scanf("%d", &choice);
-
-		if (choice < 0 || choice > i) {
-			printf("\nInput non valido, riprovare");
-		}
-	} while (choice < 0 || choice > i);
-
+	choice = acquisisciInputInt(0, i);
 	stolenCard = indexEstraiCartaCfu(&(pPlayer->manoCarteCfu), choice);
 
 	return stolenCard;
@@ -514,7 +505,6 @@ CartaCfu *discard(Player *pPlayer) {
 }
 
 // ====================================================================================================================
-
 /**
  * effettoSCARTAC() subroutine per l'effetto SCARTAC:\n
  * 	Scarta da uno a tre carte dalla tua mano
@@ -547,14 +537,7 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 			}
 			printf("[0] Non scartare nulla\n");
 
-			do{
-				printf(">>>");
-				scanf("%d", &choice);
-				if (choice < 0 || choice > i) {
-					printf("Input non valido, riprovare");
-				}
-			} while (choice < 0 || choice > i);
-
+			choice = acquisisciInputInt(0, i);
 			choice--;
 
 			if (choice == -1) { // se non si vogliono scartare carte
@@ -595,7 +578,6 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 	}
 }
 
-
 // ====================================================================================================================
 /**
  * effettoSCAMBIAP() subroutine per l'effetto SCAMBIAP\n:
@@ -607,7 +589,6 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList) {
 	Player *playerHead = playerList;
 	if (turno->cfuToLose != turno->cfuToWin) {
-
 		for (int i = 0; i < nPlayers; ++i) {
 			if (turno->points[i] == turno->cfuToWin){
 				turno->points[i] = turno->cfuToLose;
@@ -622,6 +603,7 @@ void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList) {
 		printf("I giocatori al momento sono tutti pari! Nessuno scambio\n");
 	}
 }
+
 // ====================================================================================================================
 /**
  * effettoDOPPIOE() subroutine per l'effetto DOPPIOE:\n
@@ -635,75 +617,67 @@ void effettoDOPPIOE(bool *checkDOPPIOE) {
 }
 
 // ====================================================================================================================
-
-// TODO !!! CONTROLLA QUESTE SUBROUTINE!!!
 /**
  * effettoSBIRCIA() subroutine per l'effetto SBIRCIA:\n
  * 	Guarda due carte in cima al mazzo, prendine una e scarta l’altra
- * @param mazzoCfu
- * @param pPlayer
- * @param mazzoScarti
+ * @param mazzoCfu CartaCfu **: mazzo di pesca Cfu
+ * @param pPlayer Player *: player che sbircia
+ * @param mazzoScarti CartaCfu **: mazzo degli scarti
  */
 void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti) {
-	CartaCfu *carteSbirciate = NULL, //lista delle carte guardate
-			 *headCfu        = NULL, //puntatore per scorrere la lista
-			 *discardedCarta = NULL; //carta che viene scartata
+	CartaCfu *carteSbirciate = NULL, // Carte sbirciate
+			 *currCartaCfu   = NULL, // Carta cfu attuale
+			 *discardedCarta = NULL; // Carta da scartare
 
-	bool flag = false; //bool di controllo
-	//variabili di conteggio delle carte nel mazzo e scelta della carta
-	int nCarte,
-		carta;
+	int choice; // Scelta carta da tenere
 
-	// TODO ATTENZIONE DEVO CAMBIARE LOGICA MESCOLAMNETNO
-	nCarte = contaCarteCfu(*mazzoCfu); //conteggio numero di carte nel mazzo
-	if (nCarte < CARTE_SBIRCIABILI) { //se le carte del mazzo sono meno di quelle necessarie
-		*mazzoCfu = mescolaMazzo(mazzoScarti); //rimescoliamo la pila degli scarti con il mazzo
+	if (contaCarteCfu(*mazzoCfu) <= CARTE_SBIRCIABILI) {
+		*mazzoCfu = mescolaMazzo(mazzoScarti);
 	}
-	carteSbirciate = (*mazzoCfu);
-	(*mazzoCfu) = (*mazzoCfu)->next->next; //la nuova testa è la terza carta del mazzo
-	carteSbirciate->next->next = NULL; //separo le due carte sbirciate dal mazzo
-	headCfu = carteSbirciate;
-	printf("%s sbirci le prime due carte del mazzo e ne tieni una...\n", pPlayer->username);
+	carteSbirciate = indexEstraiCartaCfu(mazzoCfu, 0);
+	carteSbirciate->next = indexEstraiCartaCfu(mazzoCfu, 0);
 
-	// end TODO
+	currCartaCfu = carteSbirciate;
+	printf("%s sta sbirciando nel mazzo:\n", pPlayer->username);
 
-	//ciclo for stampare le carte disponibili
+	// Stampa carte sbirciate
 	for (int i = 0; i < CARTE_SBIRCIABILI; ++i) {
-		printSingleCartaCfu(headCfu);
+		printf("[%d]", i);
+		printSingleCartaCfu(currCartaCfu);
 		printf("\n");
-		headCfu = headCfu->next; //passaggio alla carta successiva
+		currCartaCfu = currCartaCfu->next; // Passaggio alla carta successiva
 	}
 
-	do { //ciclo per permettere la scelta e ripeterla in caso di errore
-		printf("Scegli la carta:");
-		scanf("%d", &carta); //acquisizione scelta
-		flag = false; //a ogni ciclo flag torna a false
-		switch (carta) { //switch case che permette la scelta di una delle 2 carte
-			case 0:
-				discardedCarta = carteSbirciate->next; //la carta scartata è la seconda
-				printf("Hai scelto %s!\n", carteSbirciate->name);
-				break;
-			case 1:
-				discardedCarta = carteSbirciate; //la scartata è la prima della lista
-				carteSbirciate = carteSbirciate->next; //la testa delle carte sbirciate diventa la successiva
-				printf("Hai scelto %s!\n", carteSbirciate->name);
-				break;
-			default: //se vengono messi altri input oltre a quelli disponibili
-				printf("Errore, riprovare\n");
-				flag = true; //la variabile di controllo è true e si ripete il ciclo
-		}
-	} while (flag); //se flag è true l'immissione si ripete
+	// Acquisizione carta da tenere, con controllo errori
+	printf("Quale carta vuoi?\n");
+	choice = acquisisciInputInt(0, CARTE_SBIRCIABILI - 1);
 
-	//inserimento in testa della carta scelta nella mano
-	carteSbirciate->next = pPlayer->manoCarteCfu;
-	pPlayer->manoCarteCfu = carteSbirciate;
+	// Attauazione scelta carta
+	switch (choice) {
+		case 0:
+			discardedCarta = carteSbirciate->next; // Scarta seconda carta
+			discardedCarta->next = NULL;
+			carteSbirciate->next = NULL;
+			printf("\nStai tenendo %s\n", carteSbirciate->name);
+			break;
+		case 1:
+			discardedCarta = carteSbirciate; // Scarta la prima carta
+			carteSbirciate = carteSbirciate->next; // La testa della lista prende la seconda carta
+			discardedCarta->next = NULL;
+			carteSbirciate->next = NULL;
+			printf("Hai scelto %s!\n", carteSbirciate->name);
+			break;
+	}
 
-	//inserimento in testa della carta scartata nella pila
-	discardedCarta->next = (*mazzoScarti);
-	(*mazzoScarti) = discardedCarta;
+	// Aggiungo carte sbirciate alla mano del playere
+	cartaCfuInTesta(pPlayer->manoCarteCfu, carteSbirciate);
+
+	// Aggiungo la carta scartata al mazzo di scarti
+	cartaCfuInTesta(pPlayer->manoCarteCfu, discardedCarta);
 }
 
 // ====================================================================================================================
+// TODO CONTROLLAAAAAAAA
 /**
  * effettoSCAMBIAC() subroutine per l'effetto SCAMBIAC\n:
  * 	Scambia le carte punto di due giocatori qualsiasi

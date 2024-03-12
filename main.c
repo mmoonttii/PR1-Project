@@ -2,15 +2,12 @@
 // Matricola: 60/61/66424
 // Tipologia progetto: medio
 
-/// TODO RICORDATI DI TOGLIERE DBG
-
 #include "carteOstacolo.h"
 #include "general.h"
 #include "giocatori.h"
 #include "mazzoCfu.h"
 #include "memoria.h"
 #include "turno.h"
-#include "spareggi.h"
 #include "effetti.h"
 #include "saves.h"
 #include "starting.h"
@@ -87,7 +84,13 @@ int main() {
 
 			// Menu delle azioni player
 			do {
-				input = acquisisciAzione();
+				printf("\nAzioni:\n"
+	            "\t[%d] Gioca una carta Cfu\n"
+	            "\t[%d] Controlla lo stato di altri giocatori (Cfu e carte ostacolo\n"
+	            "\t[%d] Esci dalla partita\n",
+		        GIOCA_CARTA, INFO_GIOCATORI, LEAVE_GAME);
+
+				input = acquisisciInputInt(LEAVE_GAME, INFO_GIOCATORI);
 				switch (input) {
 					case GIOCA_CARTA:
 						giocaCarta(&turno, pPlayer, &mazzoCfu, &mazzoScarti, fLog, !SPAREGGIO);

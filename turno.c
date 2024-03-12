@@ -7,29 +7,6 @@
 
 // ============ TURNO - GIOCA CARTA ====================================================================================
 /**
- * acquisisciAzione() è la subroutine per scegliere quale azione compiere all'inzio del turno
- * @return int: input del giocatore
- */
-int acquisisciAzione() {
-	int input;
-	printf("\nAzioni:\n"
-	       "\t[%d] Gioca una carta Cfu\n"
-	       "\t[%d] Controlla lo stato di altri giocatori (Cfu e carte ostacolo\n"
-	       "\t[%d] Esci dalla partita\n",
-		   GIOCA_CARTA, INFO_GIOCATORI, LEAVE_GAME);
-	do {
-		printf(">>> ");
-		scanf("%d", &input);
-
-		// Controllo la coerenza dell'input
-		if (input > INFO_GIOCATORI || input < LEAVE_GAME) {
-			printf("Input non valido, riprovare\n");
-		}
-	} while (input < LEAVE_GAME || input > INFO_GIOCATORI);
-	return input;
-}
-
-/**
  * giocaCarta() gestisce l'acquisizione da parte di un giocatore della carta che vuole giocare e aggiungere la carta
  * alla lista delle carte giocate
  * @param manoCarteCfu CartaCfu **: doppio puntatore alla mano di carte del player
@@ -39,7 +16,7 @@ int acquisisciAzione() {
  * carte punto
  * @return CartaCfu *: la carta scelta
  */
-CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu **mazzoCarteCfu, bool rimescolaMano) {
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti, bool rimescolaMano) {
 	CartaCfu *currMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
 	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
@@ -113,7 +90,7 @@ giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoS
 	manoCarteCfu = &(pPlayer->manoCarteCfu);
 
 	// con chooseCarta() ottengo la carta che il giocatore intende giocare
-	choosenCard = chooseCarta(manoCarteCfu, mazzoScarti, mazzoCfu, spareggioFlag);
+	choosenCard = chooseCarta(manoCarteCfu, mazzoCfu, mazzoScarti, spareggioFlag);
 
 	// Se la carta scelta è valida
 	if (choosenCard != NULL) {
