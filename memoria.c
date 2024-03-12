@@ -14,7 +14,6 @@ CartaCfu *allocaCartaCfu() {
 	CartaCfu *newCard = NULL;
 	newCard = (CartaCfu *)calloc(1, sizeof(CartaCfu));
 	if (newCard == NULL) {
-		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOC_CFU);
 	}
 	return newCard;
@@ -48,7 +47,6 @@ CartaOstacolo *allocaCartaOstacolo() {
 	CartaOstacolo *newCard = NULL;
 	newCard = (CartaOstacolo *)calloc(1, sizeof(CartaOstacolo));
 	if (newCard == NULL) {
-		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOC_OSTACOLO);
 	}
 	return newCard;
@@ -80,7 +78,6 @@ Player *allocaGiocatore() {
 	// Allocazione
 	player = (Player *)malloc(sizeof(Player));
 	if (player == NULL) { // Se l'allocazione è fallita: libero la memoria già allocata ed esco dal programma con errore
-		// TODO: FREE MEM
 		exit(ERR_FAIL_ALLOC_PLAYER);
 	}
 	return player;
@@ -116,32 +113,30 @@ Player *freeGiocatore(Player *playerList) {
 int *freeIntArr(int *arr) {
 	free(arr);
 	arr = NULL;
-
 	return arr;
 }
 
 /**
  * allocaArrBool() è la funzione che alloca un array di n booleani inizializzato a false
- * @param n numero di booleani nell'array
+ * @param n int: elementi nell'array
  * @return puntatore all'array
  */
 bool *allocaArrBool(int n) {
 	bool *arr = NULL;
 
+	// Calloc alloca lo spazio necessario e lo cleara a 0, quindi false
 	arr = (bool *)calloc(sizeof(bool), n);
+	// Controllo allocazione corrette
 	if (arr == NULL) {
 		exit(ERR_FAIL_ALLOC_BOOLS);
 	}
 
-	for (int i = 0; i < n; ++i) {
-		arr[i] = false;
-	}
 	return arr;
 }
 
 /**
  * freeBoolARR() libera la memoria allocata per un array di booleani
- * @param arr
+ * @param arr bool []: array da liberare
  * @return
  */
 bool *freeBoolArr(bool *arr) {
