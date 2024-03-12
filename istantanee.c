@@ -1,7 +1,3 @@
-//
-// Created by Monti on 07/03/24.
-//
-
 #include "istantanee.h"
 #include "mazzoCfu.h"
 #include "turno.h"

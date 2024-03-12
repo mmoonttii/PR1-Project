@@ -12,12 +12,8 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
 
 int acquisisciCarta(int i);
 
-void giocaCarta(Turno    *turno,
-                Player   *pPlayer,
-                CartaCfu **mazzoScarti,
-                CartaCfu **mazzoCfu,
-                FILE     *fLog,
-                bool     spareggioFlag);
+void
+giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, FILE *fLog, bool spareggioFlag);
 
 CartaCfu *scegliCarta(CartaCfu **manoCarteCfu);
 

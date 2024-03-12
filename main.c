@@ -90,7 +90,7 @@ int main() {
 				input = acquisisciAzione();
 				switch (input) {
 					case GIOCA_CARTA:
-						giocaCarta(&turno, pPlayer, &mazzoScarti, &mazzoCfu, fLog, !SPAREGGIO);
+						giocaCarta(&turno, pPlayer, &mazzoCfu, &mazzoScarti, fLog, !SPAREGGIO);
 						leave = true;
 						break;
 					case INFO_GIOCATORI:

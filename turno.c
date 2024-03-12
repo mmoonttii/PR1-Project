@@ -105,9 +105,8 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoScarti, CartaCfu 
  * @param fLog FILE *: puntatore al file di Log
  * @param spareggioFlag bool: flag di controllo per considerazione caratteristiche personaggi
  */
-void giocaCarta(Turno *turno, Player *pPlayer,
-				CartaCfu **mazzoScarti, CartaCfu **mazzoCfu,
-				FILE *fLog, bool spareggioFlag) {
+void
+giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, FILE *fLog, bool spareggioFlag) {
 	CartaCfu *choosenCard = NULL,
 			 **manoCarteCfu = NULL;
 
@@ -278,6 +277,78 @@ void winnersLosers(Turno *turno, Player *playersList, int nPlayers) {
 			curr = curr->nextPlayer;
 		}
 	}
+}
+
+// ============ SPAREGGI ===============================================================================================
+/**
+ * gestisciSpareggi() si occupa di chiamare eventuali spareggi tra i giocatori
+ * @param countLosers int: numero di giocatori perdenti
+ * @param turno Turno *: struttura che identifica il turno principaòe
+ * @param mazzoCfu CartaCfu **: mazzo di pesac delle carte
+ * @param mazzoScarti CartaCfu **: mazzo scarti carte cfu
+ * @param fLog FILE *: puntatore al file di log
+ * @return Player *: giocatore perdente finale
+ */
+Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog) {
+	Turno spareggio = {}; // Struttura turno che identifica questo spareggio
+	Player *playerList  = NULL,
+		   *currPlayer  = NULL,
+		   *pLoser      = NULL;
+	CartaCfu *currCarta = NULL;
+	bool tutteIstantanee,
+		 loser = false;
+
+	currPlayer = turno->losers;
+
+	printf("\nSpareggio tra:\n");
+	while (currPlayer != NULL) {
+		printf("%s\n", currPlayer->username);
+	}
+
+	// Ciclo sui giocatori, per permettere di giocare le carte
+	while (!loser && currPlayer != NULL ) {
+		// Controllo che il giocatore abbia carte da giocare questo turno
+		currCarta = currPlayer->manoCarteCfu;
+		if (contaCarteCfu(currCarta) > 0 && !tutteIstantaneeCheck(currCarta)) {
+			giocaCarta(&spareggio, currPlayer, mazzoCfu, NULL, fLog, SPAREGGIO);
+			currPlayer = currPlayer->nextPlayer;
+		} else {
+			// Altrimenti lo aggiungo alla lista dei perdenti
+			addCopyOfPlayerInCoda(spareggio.losers, currPlayer);
+			// E lascio il loop
+			loser = true;
+		}
+	}
+
+	// Se non c'è un perdente per mancanzza di carte in mano
+	if (!loser) {
+		// Calcolo punteggi
+		calcolaPunteggio(&spareggio, playerList, countLosers, SPAREGGIO);
+		printPunti(&spareggio, playerList, countLosers);
+
+		// Vincitori e perdenti
+		winnersLosers(&spareggio, playerList, countLosers);
+		printLosers(spareggio.losers);
+	}
+
+	countLosers = contaLosers(&spareggio, playerList); // Conta i giocatori che hanno perso
+
+	// Se il giocatore perdente è solo uno, posso restituirlo come perdente
+	if (countLosers == 1) {
+		currPlayer = playerList;
+		while (spareggio.losers != NULL) {
+			if (strcmp(spareggio.losers->username, currPlayer->username) == 0) {
+				pLoser = currPlayer;
+			}
+			spareggio.losers = spareggio.losers->nextPlayer;
+		}
+	} else {
+		// Altrimenti passo a un nuovo spareggio
+		printf("\nRisoluzione spareggi");
+		pLoser = gestisciSpareggi(countLosers, &spareggio, mazzoScarti, mazzoCfu, fLog);
+	}
+
+	return pLoser;
 }
 
 // ============ VINCITORI ==============================================================================================
