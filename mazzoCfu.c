@@ -238,6 +238,8 @@ CartaCfu *scartaCarte(CartaCfu **daScartare, CartaCfu *mazzoScarti) {
 
 	// Mi assicuro che la vecchia lista punti a NULL
 	*daScartare = NULL;
+
+	return mazzoScarti;
 }
 
 // ========== OUTPUT ===================================================================================================

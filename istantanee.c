@@ -2,6 +2,7 @@
 #include "mazzoCfu.h"
 #include "turno.h"
 #include "saves.h"
+#include "carteOstacolo.h"
 
 // ========== ISTANTANEE PUNTEGGIO =====================================================================================
 /**

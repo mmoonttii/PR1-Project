@@ -97,12 +97,6 @@ build CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o: C_COMPILER__66424_monta
   OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
   OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
 
-build CMakeFiles/66424_montalto_lorenzo.dir/spareggi.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/spareggi.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/spareggi.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-
 build CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/saves.c || cmake_object_order_depends_target_66424_montalto_lorenzo
   DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o.d
   FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
@@ -129,7 +123,7 @@ build CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o: C_COMPILER__66424_mo
 #############################################
 # Link the executable 66424_montalto_lorenzo
 
-build 66424_montalto_lorenzo: C_EXECUTABLE_LINKER__66424_montalto_lorenzo_Debug CMakeFiles/66424_montalto_lorenzo.dir/main.c.o CMakeFiles/66424_montalto_lorenzo.dir/general.c.o CMakeFiles/66424_montalto_lorenzo.dir/carteOstacolo.c.o CMakeFiles/66424_montalto_lorenzo.dir/giocatori.c.o CMakeFiles/66424_montalto_lorenzo.dir/turno.c.o CMakeFiles/66424_montalto_lorenzo.dir/memoria.c.o CMakeFiles/66424_montalto_lorenzo.dir/mazzoCfu.c.o CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o CMakeFiles/66424_montalto_lorenzo.dir/spareggi.c.o CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o CMakeFiles/66424_montalto_lorenzo.dir/starting.c.o CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o
+build 66424_montalto_lorenzo: C_EXECUTABLE_LINKER__66424_montalto_lorenzo_Debug CMakeFiles/66424_montalto_lorenzo.dir/main.c.o CMakeFiles/66424_montalto_lorenzo.dir/general.c.o CMakeFiles/66424_montalto_lorenzo.dir/carteOstacolo.c.o CMakeFiles/66424_montalto_lorenzo.dir/giocatori.c.o CMakeFiles/66424_montalto_lorenzo.dir/turno.c.o CMakeFiles/66424_montalto_lorenzo.dir/memoria.c.o CMakeFiles/66424_montalto_lorenzo.dir/mazzoCfu.c.o CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o CMakeFiles/66424_montalto_lorenzo.dir/starting.c.o CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2
   OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
   POST_BUILD = :

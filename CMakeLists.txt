@@ -20,8 +20,6 @@ add_executable(66424_montalto_lorenzo
 		mazzoCfu.h
 		effetti.c
 		effetti.h
-		spareggi.c
-		spareggi.h
 		saves.c
 		saves.h
 		starting.c
