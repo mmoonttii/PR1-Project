@@ -171,7 +171,8 @@ void risolviInstantPunteggio(int nPlayers, Player *playerList,
  * @param turno TurnO *: struttura turno
  * @param checkDOPPIOE bool: flag attivazione effetto DOPPIOE
  */
-void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE) {
+void effettoAUMENTA(int nPlayers, Player *playerList,
+					Turno *turno, bool checkDOPPIOE) {
 	int choice = 0,
 		mult;
 	Player *currPlayer = NULL;
@@ -201,7 +202,8 @@ void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDO
  * @param turno TurnO *: struttura turno
  * @param checkDOPPIOE bool: flag attivazione effetto DOPPIOE
  */
-void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool checkDOPPIOE) {
+void effettoDIMINUISCI(int nPlayers, Player *playerList,
+					   Turno *turno, bool checkDOPPIOE) {
 	int choice = 0,
 		mult;
 	Player *currPlayer = NULL;
@@ -393,7 +395,9 @@ void effettoSALVA(CartaCfu *pCartaCfu,
  * @param pCartaCfu
  * @param pCartaOstacolo
  */
-void effettoDIROTTA(Player *pPlayer, Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **pCartaOstacolo) {
+void effettoDIROTTA(Player *pPlayer, Player *playerList,
+					CartaCfu *pCartaCfu,
+					CartaOstacolo **pCartaOstacolo) {
 	Player *currPlayer = NULL;
 	currPlayer = playerList;
 	int count  = 0,

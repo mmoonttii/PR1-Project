@@ -16,7 +16,9 @@
  * carte punto
  * @return CartaCfu *: la carta scelta
  */
-CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti, bool rimescolaMano) {
+CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
+					  CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti,
+					  bool rimescolaMano) {
 	CartaCfu *currMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
 	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
@@ -54,7 +56,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoCarteCfu, CartaCf
 	if (giocabile) {
 		do {
 			// Acquisisco quale carta vuole giocare
-			choice = acquisisciCarta(CARTE_PER_MANO);
+			choice = acquisisciInputInt(0, CARTE_PER_MANO - 1);
 			// Trovo la carta nella mano
 			choosenCard = findCartaCfu(*manoCarteCfu, choice);
 
@@ -82,8 +84,9 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu, CartaCfu **mazzoCarteCfu, CartaCf
  * @param fLog FILE *: puntatore al file di Log
  * @param spareggioFlag bool: flag di controllo per considerazione caratteristiche personaggi
  */
-void
-giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, FILE *fLog, bool spareggioFlag) {
+void giocaCarta(Turno *turno, Player *pPlayer,
+		   CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+		   FILE *fLog, bool spareggioFlag) {
 	CartaCfu *choosenCard = NULL,
 			 **manoCarteCfu = NULL;
 
@@ -106,27 +109,6 @@ giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoS
 	}
 }
 
-/**
- * Acquisisci carta è la subroutione() che acquisisce dall''utente un intero compreso tra 0 e i
- * @param i int: intero massimo di scelta
- * @return intero scelto
- */
-int acquisisciCarta(int i) {
-	int choice;
-
-	do {
-		printf("[0 - %d]>>> ", i - 1);
-		scanf("%d", &choice);
-
-		// Se la scelta dell'utente non è compresa tra 0 e i, chiedo di reimmettere l'input
-		if (choice < 0 || choice > i - 1) {
-			printf("\n\t%d non è una scelta valida, riprova", choice);
-		}
-	} while (choice < 0 || choice > i);
-
-	return choice;
-}
-
 // ============ TURNO - INFO GIOCATORE =================================================================================
 /**
  * infoGiocateori() è la subroutine che data la lista dei giocatori si occupa di stampare le informazioni di uno
@@ -134,7 +116,9 @@ int acquisisciCarta(int i) {
  * @param currentPlayer Player *: giocatore attuale
  * @param nPlayers int: numero di giocatori in corso
  */
-void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) {
+void infoGiocatori(Player *listaGiocatori,
+				   Player *currentPlayer,
+				   int nPlayers) {
 	Player *curr          = listaGiocatori,
 		   *choosenPlayer = listaGiocatori;
 
@@ -154,14 +138,7 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
 	}
 
 	// Acquisizione del giocatore del quale si vogliono avere infomrmazioni
-	do {
-		printf("\n>>> ");
-		scanf("%d", &input);
-
-		if (input < 0 || input > count){
-			printf("Valore inserito non valido, riprovare.\n");
-		}
-	} while (input < 0 || input > count);
+	input = acquisisciInputInt(0, count);
 
 	// Scorro fino al giocatore che devo stampare
 	for (int i = 0; i < input; ++i) {
@@ -182,7 +159,8 @@ void infoGiocatori(Player *listaGiocatori, Player *currentPlayer, int nPlayers) 
  * @param nPlayers int: numero di giocatori in gioco
  * @param characters bool: indica se le personalità dei personaggi debbano inficiare sul calcolo dei punteggi
  */
-void calcolaPunteggio(Turno *turno, Player *playerList, int nPlayers, bool characters) {
+void calcolaPunteggio(Turno *turno, Player *playerList,
+					  int nPlayers, bool characters) {
 	Player *currPlayer = playerList;
 	CartaCfu *currCfu  = turno->carteGiocate;
 	int modifier       = 0;

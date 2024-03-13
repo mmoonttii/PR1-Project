@@ -125,7 +125,6 @@ CartaOstacolo *pescaCartaOstacolo(CartaOstacolo **mazzoOstacoli) {
  * @param pOstacolo CartaOstacolo *: puntatore a carta da aggiungere in coda
  * @param listaOstacoli CartaOstacolo *: doppio puntatore alla lista alla quale aggiungere la carta ostacolo
  */
-// TODO Continuo a non capire cosa cazzo non vada
 void ostacoloInCoda(CartaOstacolo *pOstacolo, CartaOstacolo **listaOstacoli){
 	CartaOstacolo *currOstacolo = *listaOstacoli;
 

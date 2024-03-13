@@ -1,7 +1,3 @@
-//
-// Created by Monti on 03/03/24.
-//
-
 #include "starting.h"
 #include "giocatori.h"
 #include "mazzoCfu.h"
@@ -106,8 +102,11 @@ int mainMenu() {
  * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
-void newGame(char *saveName, Character charactersArr[], int *nPlayers, Player **playerList, CartaCfu **mazzoCfu,
-              CartaCfu **mazzoScarti, CartaOstacolo **mazzoOstacoli) {
+void newGame(char *saveName,
+			 Character charactersArr[],
+			 int *nPlayers, Player **playerList,
+			 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+			 CartaOstacolo **mazzoOstacoli) {
 	FILE *fSave = NULL;
 
 	// Lettura nome save
@@ -145,9 +144,10 @@ void newGame(char *saveName, Character charactersArr[], int *nPlayers, Player **
  * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
-void initNewGame(Character charactersArr[], int *nPlayers, Player **playerList,
-                  CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
-                  CartaOstacolo **mazzoOstacoli) {
+void initNewGame(Character charactersArr[],
+				 int *nPlayers, Player **playerList,
+				 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+                 CartaOstacolo **mazzoOstacoli) {
 	FILE *fPersonaggi = NULL,
 		 *fCfu        = NULL,
 		 *fOstacoli   = NULL;

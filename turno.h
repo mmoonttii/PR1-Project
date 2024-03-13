@@ -5,18 +5,16 @@
 #include "errors.h"
 #include "giocatori.h"
 
-// ============ TURNO - AZIONI GIOCATORI ===============================================================================
+// ============ TURNO - GIOCA CARTA ====================================================================================
 CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 					  CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti,
 					  bool rimescolaMano);
 
-int acquisisciCarta(int i);
+void giocaCarta(Turno *turno, Player *pPlayer,
+				CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+				FILE *fLog, bool spareggioFlag);
 
-void
-giocaCarta(Turno *turno, Player *pPlayer, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, FILE *fLog, bool spareggioFlag);
-
-CartaCfu *scegliCarta(CartaCfu **manoCarteCfu);
-
+// ============ TURNO - INFO GIOCATORE =================================================================================
 void infoGiocatori(Player *listaGiocatori,
                    Player *currentPlayer,
                    int    nPlayers);
@@ -35,23 +33,20 @@ void winnersLosers(Turno  *turno,
                    Player *playersList,
                    int    nPlayers);
 
-void printWinners(Player *playerList);
-
-void printLosers(Player *playerList);
-
 // ============ SPAREGGI ===============================================================================================
 Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog);
 
 // ============ VINCITORI ==============================================================================================
+void printWinners(Player *playerList);
+
 void assegnaPunti(Turno  *turno,
                   Player *playerList,
                   int    nPlayers);
 
 // ============ PERDENTI ===============================================================================================
-int contaLosers(Turno *turno);
+void printLosers(Player *playerList);
 
-void ostacoloInCoda(CartaOstacolo *pOstacolo,
-                    CartaOstacolo **listaOstacoli);
+int contaLosers(Turno *turno);
 
 void puntiCarteOstacolo(Player *playerList);
 

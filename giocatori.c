@@ -150,6 +150,7 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 	Player *playersList = NULL, // Testa della lista dei giocatori
 	       *newPlayer   = NULL; // Nuovo personaggio in allocazione
 
+	char temp[STR_LEN + 1] = {};
 	int k; // Indice per l'accesso all'array di personaggi
 
 	Character emptyCharacter  = {}; // Struttura personaggio ausiliaria vuota
@@ -160,8 +161,17 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 		newPlayer = allocaGiocatore();
 		// Richiedi username
 		printf("\nGIOCATORE %d\n", i);
-		printf("Inserire username: ");
-		scanf(" %[^\n]31s", newPlayer->username);
+		// Mi assicuro che il nome utente non sia già utilizzato
+		do {
+			printf("\nInserire username: ");
+			scanf(" %[^\n]31s", temp);
+
+			if (!checkUsernames(playersList, temp)) {
+				strcpy(playersList->username, temp);
+			} else {
+				printf("\nUsername già inserito, riprova");
+			}
+		} while (checkUsernames(playersList, temp));
 
 		// Inizializza la struttura con 0 cfu, mano di carte, carte ostacolo e prossimo gicatore a null
 		newPlayer->cfu                = 0; // Punteggio di partenza
@@ -187,6 +197,23 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 	return playersList;
 }
 
+/**
+ * checkUsernames() presi in input una username e la lista di giocatori e controlla che il nome utente non sia stato
+ * ancora inserito
+ * @param playersList Player *: lista dei giocatori già inseriti
+ * @param username char *: nome utente nuovo giocatore
+ * @return bool: true se la username è già stata utilizzata
+ */
+bool checkUsernames(Player *playersList, char *username) {
+	bool check = false;
+	while (playersList != NULL) {
+		if (strcmp(playersList->username, username) == 0) {
+			check = true;
+		}
+		playersList = playersList->nextPlayer;
+	}
+	return check;
+}
 /**
  * addCopyOfPlayerInCoda() è la subroutine che, presi in input una lista e un nuovo nodo, COPIA tale nodo alla coda di
  * tale lista, assicurandosi che il puntatore next di questo sia NULL

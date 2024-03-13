@@ -1,7 +1,3 @@
-//
-// Created by Monti on 24/02/24.
-//
-
 #include "mazzoCfu.h"
 #include "memoria.h"
 

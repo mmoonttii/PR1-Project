@@ -1,13 +1,10 @@
-//
-// Created by Monti on 28/02/24.
-//
-
 #include "saves.h"
 #include "memoria.h"
 #include "mazzoCfu.h"
 #include "carteOstacolo.h"
 #include "giocatori.h"
 
+// ========== SALVATAGGIO ==============================================================================================
 /**
  * saveOnFile() è la subroutine per salvare lo stato attuale della partita in un file binario
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
@@ -18,8 +15,7 @@
  * @param mazzoScarti CartaCfu **: doppio puntatore alla testa del mazzo di scarti delle carte Cfu
  * @param mazzoOstacoli CartaOstacolo **: doppio puntatore alla testa del mazzo delle carte Ostacolo
  */
-void
-saveOnFile(char *saveName, FILE *fSave,
+void saveOnFile(char *saveName, FILE *fSave,
 		   int *nPlayers, Player *playersList,
 		   CartaCfu *mazzoCfu, CartaCfu *mazzoScarti,
            CartaOstacolo *mazzoOstacoli) {
@@ -116,6 +112,7 @@ void writeOstacoliList(FILE *fSave, int n, CartaOstacolo *ostacoliList) {
 	if (DBG) printf("\nDBG: saved %d carteOstacolo", n);
 }
 
+// ========== CARICAMENTO ==============================================================================================
 /**
  * loadSaveFromFile() è la subroutine che legge il file di salvataggio e ne carica i contenuti
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
@@ -273,6 +270,7 @@ CartaOstacolo *readOstacoliList(FILE *fSave, int n) {
 	return ostacoliList;
 }
 
+// ========== LOG PARTITA ==============================================================================================
 /**
  * logPrintLn() è la subroutine per scrivere sul file di Log
  * @param fLog FILE *: puntatore al file su cui scrivere
