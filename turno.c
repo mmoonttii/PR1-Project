@@ -308,7 +308,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 		printLosers(spareggio.losers);
 	}
 
-	countLosers = contaLosers(&spareggio, playerList); // Conta i giocatori che hanno perso
+	countLosers = contaLosers(&spareggio); // Conta i giocatori che hanno perso
 
 	// Se il giocatore perdente è solo uno, posso restituirlo come perdente
 	if (countLosers == 1) {
@@ -378,8 +378,9 @@ void printLosers(Player *playerList) {
 /**
  * contaLosers() conta quanti giocatori sono perdenti
  * @param turno Turno *: struttura Turno
+ * @return int: numero di giocatori perdenti
  */
-int contaLosers(Turno *turno, Player *playerList) {
+int contaLosers(Turno *turno) {
 	Player *curr    = turno->losers;
 	int losersCount = 0;
 

@@ -48,8 +48,7 @@ void assegnaPunti(Turno  *turno,
                   int    nPlayers);
 
 // ============ PERDENTI ===============================================================================================
-int contaLosers(Turno  *turno,
-                Player *playerList);
+int contaLosers(Turno *turno);
 
 void ostacoloInCoda(CartaOstacolo *pOstacolo,
                     CartaOstacolo **listaOstacoli);

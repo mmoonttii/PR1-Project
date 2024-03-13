@@ -53,7 +53,7 @@ int main() {
 
 	printf("\nBenvenuto su Happy Little Students\n");
 
-	// inizio frl gioco, caricamento partita o inizializzazione mazzi e giocatori
+	// Inizio del gioco, caricamento partita o inizializzazione mazzi e giocatori
 	startGame(saveName,
 			  charactersArr,
 			  &nPlayers, &playerList,
@@ -131,38 +131,46 @@ int main() {
 		printLosers(turno.losers);
 		printWinners(turno.winners);
 
+		// ==== GESTIONE PERDENTI / SPAREGGI ===========
+		/* Se non ci sono vincitori o perdenti, dopo aver eseguito winnersLosers(), vuol dire che tutti i giocatori
+		 * hanno pareggiato e la carta ostacolo viene rimessa in fondo al mazzo
+		 */
 
-		// Se non ci sono vincitori o perdenti, dopo aver eseguito winnersLosers(), vuol dire che tutti i giocatori
-		// hanno pareggiato e la carta ostacolo viene rimessa in fondo al mazzo
+		// Se non ci sono giocatori perdenti o vincenti (quindi cfuToWin == cfuToLose), la carta va in fondo al mazzo
 		if (turno.winners == NULL && turno.losers == NULL) {
-			printf("\nTutti i giocatori sono a parimerito, la carta ostacolo di questo turno verrà messa alla fine del "
-				   "mazzo\n");
+			printf("\nTutti i giocatori sono a parimerito\n"
+				   "La carta ostacolo di questo turno verrà messa alla fine del mazzo\n");
 			ostacoloInCoda(turno.cartaOstacolo, &mazzoOstacoli);
 		} else {
 			assegnaPunti(&turno, playerList, nPlayers);   // Assegnazione punti ai vincitori
 
-			losersCount = contaLosers(&turno, playerList); // Conta i giocatori che hanno perso
+			losersCount = contaLosers(&turno); // Conta i giocatori che hanno perso
 
+			// Assegno a pLoser il giocatore perdente
 			if (losersCount == 1) {
-				pPlayer = playerList;
-				while (turno.losers != NULL) {
-					if (strcmp(turno.losers->username, pPlayer->username) == 0) {
-						pLoser = pPlayer;
-					}
-					turno.losers = turno.losers->nextPlayer;
-				}
+				// Se è solo uno, direttamente turno.losers
+				pLoser = turno.losers;
 			} else {
+				// Altrimenti devo risolvere gli spareggi
 				printf("\nRisoluzione spareggi");
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
-			ostacoloInCoda(turno.cartaOstacolo, &pLoser->listaCarteOstacolo);
+
+			// Assegno la carta ostacolo al giocatore perdente
+			pLoser->listaCarteOstacolo = ostacoloInTesta(pLoser->listaCarteOstacolo, turno.cartaOstacolo);
 		}
 
 		// ==== FINE DEL TURNO ==========
+		// Aggiugno al mazzo Scarti le carte giocate questo turno
 		mazzoScarti = scartaCarte(&turno.carteGiocate, mazzoScarti);
+
+		// Assegno i punti per le carte ostacolo in mano
 		puntiCarteOstacolo(playerList);
+
+		// Controllo che la partita non sia finita
 		endGame = playerCheck(&nPlayers, &playerList, &mazzoOstacoli, &mazzoScarti);
 
+		// Se la partita non è finita
 		if (!endGame) {
 			printf("\nDistribuendo le nuove carte...\n");
 			pPlayer = playerList;
@@ -171,18 +179,18 @@ int main() {
 				pPlayer = pPlayer->nextPlayer;
 			}
 		}
+
+		// Pulisco le variabili di ogni turno
 		turno.winners = freeGiocatore(turno.winners);
 		turno.losers = freeGiocatore(turno.losers);
 		turno.points = freeIntArr(turno.points);
 		turno.numTurno++;
 		turno.cartaOstacolo = NULL;
 		pLoser = NULL;
-
 	}
 
+	// A fine partita chiudo il file di log e pulisco la memoria
 	fclose(fLog);
-	fclose(fSave);
-	// Free mem
 	mazzoCfu      = freeCfu(mazzoCfu);
 	mazzoOstacoli = freeOstacoli(mazzoOstacoli);
 	playerList    = freeGiocatore(playerList);
