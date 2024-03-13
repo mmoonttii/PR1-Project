@@ -35,15 +35,7 @@ void gestioneInstantPunteggio(int nPlayers, Player *playerList,
 		}
 		printf("[0] Nessuno vuole giocare carte istantanee\n");
 
-		// Ciclo per assicurare un input valido da parte dell'utente
-		do {
-			printf(">>> ");
-			scanf("%d", &choice);
-
-			if (choice < 0 || choice >= nPlayers) {
-				printf("Input non valido, riprovare\n");
-			}
-		} while (choice < 0 || choice >= nPlayers);
+		choice = acquisisciInputInt(0, nPlayers + 1);
 
 		currPlayer = playerList;
 		// La scelta 0 permette di lasciare il loop
@@ -101,7 +93,7 @@ CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno) {
 
 		// Acquisisco scelta dell'utente
 		do {
-			choice    = acquisisciCarta(cardCount);
+			choice    = acquisisciInputInt(0, cardCount);
 			currCarte = pPlayer->manoCarteCfu;
 
 			// Identifico la carta scelta dal giocatore
@@ -192,15 +184,7 @@ void effettoAUMENTA(int nPlayers, Player *playerList, Turno *turno, bool checkDO
 		printf("[%d] %s\n", i, currPlayer->username);
 		currPlayer = currPlayer->nextPlayer;
 	}
-	// Ricevo l'input del gioactore, assicurandomi che sia valido
-	do {
-		printf(">>> [0 - %d] ", nPlayers - 1);
-		scanf("%d", &choice);
-
-		if (choice < 0 || choice > nPlayers - 1) {
-			printf("Input non valido, riprovare");
-		}
-	} while (choice < 0 || choice > nPlayers - 1);
+	choice = acquisisciInputInt(0, nPlayers);
 
 	// Se checkDOPPIOE è vero, mult prende 2, altrimenti uno
 	mult = checkDOPPIOE ? ON : OFF;
@@ -224,7 +208,6 @@ void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool chec
 
 	currPlayer = playerList;
 	// Stampo i giocatori
-
 	printf("\nA chi vuoi diminuire il punteggio?\n");
 	for (int i = 0; i < nPlayers; ++i) {
 		printf("[%d] %s\n", i, currPlayer->username);
@@ -232,14 +215,7 @@ void effettoDIMINUISCI(int nPlayers, Player *playerList, Turno *turno, bool chec
 	}
 
 	// Ricevo l'input del gioactore, assicurandomi che sia valido
-	do {
-		printf(">>> [0 - %d] ", nPlayers - 1);
-		scanf("%d", &choice);
-
-		if (choice < 0 || choice > nPlayers - 1) {
-			printf("Input non valido, riprovare");
-		}
-	} while (choice < 0 || choice > nPlayers - 1);
+	choice = acquisisciInputInt(0, nPlayers);
 
 	// Se checkDOPPIOE è vero, mult prende 2, altrimenti uno
 	mult = checkDOPPIOE ? ON : OFF;
@@ -304,39 +280,45 @@ void gestioneInstantPerdita(int numTurno,
 	}
 	if (choosenCard != NULL) {
 		risolviInstantPerdita(playerList, choosenCard, mazzoOstacoli, pCartaOstacolo);
+	} else {
+		printf("\nNon hai carte istantanee in mano, devi prendere l'ostacolo");
+		ostacoloInCoda(*pCartaOstacolo, &(pPlayer->listaCarteOstacolo));
 	}
 }
 
 /**
  * giocaInstantPerdita() acquisisce una carta istantanea perdita
- * @param numTurno
- * @param pPlayer
- * @param fLog
- * @return
+ * @param numTurno int: numero del turno corrente
+ * @param pPlayer Player *: giocatore che deve scegliere la carta
+ * @param fLog FILE *: handler del file di log
+ * @return CartaCfu *: carta cfu scelta dal player
  */
 CartaCfu *giocaInstantPerdita(int numTurno, Player *pPlayer, FILE *fLog) {
-	CartaCfu *headCarte        = pPlayer->manoCarteCfu,
-	         *choosenCard      = NULL;
-	int      i                 = 0,
-	         choice            = 0;
+	CartaCfu *currCarte   = pPlayer->manoCarteCfu,
+	         *choosenCard = NULL;
+	int      i            = 0,
+	         choice       = 0;
 	bool     atLeastOneInstant = false,
 	         instantCheck      = false;
 
-	while (headCarte != NULL) {
-		if (isIstantaneaPerdita(headCarte)) {
+	// Ciclo sulle carte della mano e le stampo
+	while (currCarte != NULL) {
+		if (isIstantaneaPerdita(currCarte)) { // Controllo che il giocatore abbia almeno una istantanea
 			atLeastOneInstant = true;
 		}
 		printf("[%d] ", i);
-		printSingleCartaCfu(headCarte);
-		headCarte = headCarte->next;
+		printSingleCartaCfu(currCarte);
+		currCarte = currCarte->next;
+		i++;
 	}
 
+	// Se ha alm eno una carta istantanea, gli permetto di giocare una carta dalla sua mano
 	if (atLeastOneInstant) {
 		do {
-			choice    = acquisisciCarta(i);
-			headCarte = pPlayer->manoCarteCfu;
+			choice    = acquisisciInputInt(0, i);
+			currCarte = pPlayer->manoCarteCfu;
 
-			choosenCard = findCartaCfu(headCarte, choice);
+			choosenCard = findCartaCfu(currCarte, choice);
 			instantCheck = isIstantaneaPerdita(choosenCard);
 
 			if (!instantCheck) {
@@ -345,7 +327,8 @@ CartaCfu *giocaInstantPerdita(int numTurno, Player *pPlayer, FILE *fLog) {
 
 		} while (!instantCheck);
 
-		choosenCard = estraiCartaCfu(&headCarte, choosenCard);
+		// Scelta una carta, la estraggo dalla mano e la restituisco
+		choosenCard = estraiCartaCfu(&currCarte, choosenCard);
 		logPrintLn(fLog, numTurno, pPlayer->username, choosenCard->name);
 	} else {
 		printf("\nNon hai carte istantanee in mano\n");
@@ -383,7 +366,7 @@ void risolviInstantPerdita(Player *playerList, CartaCfu *pCartaCfu,
 			effettoSALVA(pCartaCfu, mazzoOstacoli, pCartaOstacolo);
 			break;
 		case DIROTTA:
-			effettoDIROTTA(playerList, pCartaCfu, pCartaOstacolo);
+			effettoDIROTTA(NULL, playerList, pCartaCfu, pCartaOstacolo);
 			break;
 		default:
 			break;
@@ -410,32 +393,38 @@ void effettoSALVA(CartaCfu *pCartaCfu,
  * @param pCartaCfu
  * @param pCartaOstacolo
  */
-void effettoDIROTTA(Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **pCartaOstacolo) {
-	Player *playerHead = NULL;
-	playerHead = playerList;
+void effettoDIROTTA(Player *pPlayer, Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **pCartaOstacolo) {
+	Player *currPlayer = NULL;
+	currPlayer = playerList;
 	int count  = 0,
 		choice = 0;
 
+	bool flag = false;
+
+	// Stampa giocatori
 	printf("\nA chi vuoi dare questa carta ostacolo?\n");
-	while (playerHead != NULL) {
-		// Controllo non se stessi
-		printf("[%d] %s", count, playerHead->username);
+	while (currPlayer != NULL) {
+		printf("[%d] %s", count, currPlayer->username);
 		count++;
-		playerHead = playerHead->nextPlayer;
+		currPlayer = currPlayer->nextPlayer;
 	}
-	playerHead = playerList;
 
+	// Acquisisco giocatore su cui dirottare
 	do {
-		printf("\n>>> [0 - %d]", count - 1);
-		scanf("%d", &choice);
+		currPlayer = playerList;
+		choice = acquisisciInputInt(0, count - 1);
 
-		if (choice < 0 || choice > count - 1) {
-			printf("\nInput non valido, riprovare");
+		// Ciclo fino al gikocatore
+		for (int i = 0; i < choice; ++i) {
+			currPlayer = currPlayer->nextPlayer;
 		}
-	} while (choice < 0 || choice > count - 1);
+		// Se il giocatore è se stessi, allora chiedo di riptere l'input
+		if (currPlayer == pPlayer) {
+			printf("\nHai scelto te stesso, riprova\n");
+			flag = true;
+		}
+	} while (flag);
 
-	for (int i = 0; i < choice; ++i) {
-		playerHead = playerHead->nextPlayer;
-	}
-	ostacoloInCoda(*pCartaOstacolo, &playerHead->listaCarteOstacolo);
+	// Selezionato il gicoatore, posso assgnarli la carta sotacolo
+	ostacoloInCoda(*pCartaOstacolo, &currPlayer->listaCarteOstacolo);
 }

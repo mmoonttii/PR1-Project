@@ -4,7 +4,8 @@
 
 #include "effetti.h"
 
-/*typedef enum {
+/*
+typedef enum {
 	NESSUNO, 	Carta senza effetto
 	SCARTAP, 	Scarta una carta CFU punto e aggiungi il suo punteggio a quello del turno
 	RUBA, 		Guarda la mano di un collega e ruba una carta a scelta
@@ -21,7 +22,8 @@
 	INVERTI, 	Inverti punteggio minimo e massimo del turno
 	SALVA, 		Metti la carta Ostacolo che stai per prendere in fondo al mazzo
 	DIROTTA 	Dai la carta che stai per prendere ad un altro giocatore a tua scelta
-} Effect*/
+} Effect
+ */
 
 /**
  * gestioneEffetti() controlla le carte giocate e chiama la risoluzione degli effetti nell'ordine corretto
@@ -125,7 +127,7 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 			effettoSBIRCIA(mazzoCfu, currPlayer, mazzoScarti);
 			break;
 		case SCAMBIAC:
-			effettoSCAMBIAC(&(turno->carteGiocate), playerList, arrRisolte);
+			effettoSCAMBIAC(&(turno->carteGiocate), playerList, arrRisolte, nPlayers);
 			break;
 		default:
 			break;
@@ -685,119 +687,123 @@ void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti
  * @param playerList
  * @param arrRisolte
  */
-void effettoSCAMBIAC(CartaCfu **carteGiocate, Player *playerList, bool arrRisolte[]) {
-	CartaCfu *headCarte = NULL, //puntatore ausiliario per scorrere la lista
-			 *pCarta1 = NULL, //puntatore per salvare la carta del giocatore 1
-	         *pCarta2 = NULL, //puntatore per salvare la carta del giocatore 2
-	         cartaCfu1,
-	         cartaCfu2; //strutture cartaCFU ausiliarie per salvare i valori delle carte scambiate
+void effettoSCAMBIAC(CartaCfu **carteGiocate, Player *playerList, bool arrRisolte[], int nPlayers) {
+	CartaCfu *currCarte = NULL, // Cursore lista
+			 *pCarta1   = NULL, // Carta del giocatore 1
+	         *pCarta2   = NULL, // Carta del giocatore 2
+	         cartaCfu1, // Strutture per lo scambio delle carte
+	         cartaCfu2;
 
-	Player *headPlayers = playerList,
-		   *pPlayer1    = NULL,
-		   *pPlayer2    = NULL; //puntatori per salvare i giocatori scelti
+	Player *currPlayer = playerList,
+		   *pPlayer1   = NULL,
+		   *pPlayer2   = NULL; // Puntatori per giocatori scelti
 
 	bool check = false; // bool di controllo
 
-	int i        = 0, // i: indice dei cicli
-		iPlayer1 = 0, // iPlayer2: indice della carta del giocatore 2
-		iPlayer2 = 0; // iPlayer1: indice della carta del giocatore 1
+	int i             = 1, // Index cicli
+		choicePlayer1 = 0, // Index carta giocatore 1
+		choicePlayer2 = 0; // Index carta giocatore 2
 
-	headCarte = (*carteGiocate); //assegnazione della lista delle carte ad headCfu
+	currCarte = *carteGiocate;
 
-	do { //ciclo per stampare le scelte disponibili
-		printf("[%d] Carta di %s:\n", i + 1, headPlayers->username);
-		printSingleCartaCfu(headCarte);
-		headCarte   = headCarte->next; //passaggio carta successiva
-		headPlayers = headPlayers->nextPlayer; //passaggio al giocatore successivo
-		i++; //incremento l'indice
-	} while (headCarte != NULL); //il ciclo continua fino all'ultima carta giocata
-
+	for (int j = 1; j <= nPlayers; ++j) {
+		printf("[%d] Carta di %s:\n", j, currPlayer->username);
+		printSingleCartaCfu(currCarte);
+		currCarte  = currCarte->next; // Next carta
+		currPlayer = currPlayer->nextPlayer; // Next player
+	}
 	printf("[0] Non effettuare lo scambio\n");
-	do { //ciclo per immissione scelta e possibile ripetizione in caso di input errato
-		printf("Scelta:");
-		scanf("%d", &iPlayer1); //acquisizione scelta
-		if (iPlayer1 < 0 || iPlayer1 > i){ //errore se la scelta non rispetta quelle disponibili
-			printf("Errore, riprovare\n");
-		}
-	} while (iPlayer1 < 0 || iPlayer1 > i); //il ciclo si ripete se la scelta non rispetta quelle disponibili
 
-	if (iPlayer1 == 0) { //se si sceglie di non effettuare lo scambio si esce dalla subroutine
+	printf("A chi vuoi scambiare le carte?\n");
+	choicePlayer1 = acquisisciInputInt(0, nPlayers + 1);
+
+	if (choicePlayer1 == 0) { // Lascio la subroutine se la scelta è 0
 		printf("Nessuno scambio\n");
 	} else {
-		i=0; //reset dell'indice del ciclo
-		iPlayer1--; //decremento l'indice scelto (l'opzione di scelta era incrementata di uno)
-		headCarte = (*carteGiocate); //assegnazione della lista alla variabile headCfu
-		headPlayers = playerList; // pPlayer parte dalla testa della lista dei giocatori
-		do { //ciclo per individuare il giocatore scelto
-			if (i == iPlayer1) { //quando i raggiunge l'indice del giocatore scelto
-				pCarta1 = headCarte; //assegno la carta del giocatore
-			} else { //altrimenti passa al giocatore successivo
-				headPlayers = headPlayers->nextPlayer;
-				headCarte = headCarte->next; //prossima carta
-				i++; //incremento l'indice del ciclo
+		choicePlayer1--;              // Decremento l'indice perche le opzioni erano incrementate di uno
+		currCarte  = (*carteGiocate); // Reinizializzo currCarte alla lista
+		currPlayer = playerList;      // currPlayer parte dalla testa della lista dei giocatori
+
+		// Individuo la carta del primo giocatore da scambiare
+		do {
+			if (i == choicePlayer1) {
+				pCarta1 = currCarte;    // Salvo la carta del giocatore scelto
+				pPlayer1 = currPlayer;  // Salvo il giocatore a cui verrà scambiata la carta
+			} else {                    // Altrimenti continuo al prossimo giocatore e carta
+				currPlayer = currPlayer->nextPlayer;
+				currCarte  = currCarte->next;
+				i++;
 			}
-		} while (pCarta1 == NULL); //il ciclo termina quando viene assegnata la carta
+		} while (pCarta1 == NULL);  // Ciclo fin quando non viene assegnata la carta
 
-		headCarte = (*carteGiocate); //assegnazione della lista ad headCfu
-		i       = 0; //reset dell'indice
+		currCarte = (*carteGiocate);    // Reinizializzo la lista di carte
+		i = 0;                          // E l'indice
 
-		do { //ciclo per stampare i giocatori da scegliere
-			if (i == iPlayer1){ //se l'indice corrisponde al giocatore scelto in precedenza
-				printf("Giocatore: %s (Giocatore già scelto)\n[%d] Carta: %s (%d CFU)\n\n",
-				       headPlayers->username, i, headCarte->name, headCarte->cfu);
-			} else { //stampa delle altre scelte
-				printf("Giocatore: %s\n[%d] Carta: %s (%d CFU)\n\n",
-				       headPlayers->username, i, headCarte->name, headCarte->cfu);
+		// Ciclo per stampare nuovamente giocatori e carte
+
+		printf("Con quale giocatore vuoi scambiare la carta di %s?\n", pPlayer1->username);
+		for (int j = 0; j < nPlayers; ++j) {
+			printf("[%d] Carta di %s:\n", j, currPlayer->username);
+			printSingleCartaCfu(currCarte);
+			if (j == choicePlayer1) {
+				printf("| CARTA GIÀ SCELTA\n");
 			}
-			headCarte   = headCarte->next; //passaggio alla prossima carta
-			headPlayers = headPlayers->nextPlayer; //passaggio al giocatore successivo
-			i++; //incremento dell''indice
-		} while (headCarte != NULL); //il ciclo continua fino alla fine della lista delle carte giocate
+			currCarte  = currCarte->next; // Next carta
+			currPlayer = currPlayer->nextPlayer; // Next player
+		}
 
-		do { //ciclo per mettere la scelta e ripeterla in caso di input errato
-			printf("Scegli la carta:");
-			scanf("%d", &iPlayer2); //acquisizione scelta
-			//errore se l'input è maggiore o minore di quelli disponibili o se coincide con il giocatore precedente
-			if (iPlayer2 < 0 || iPlayer2 > i - 1 || iPlayer2 == iPlayer1) {
-				printf("Errore, riprovare\n");
+		// Acquisisco la scelta dell'utente, controllo che non scelga lo stesso giocatore di prima
+		do {
+			choicePlayer2 = acquisisciInputInt(0, nPlayers);
+
+			if (choicePlayer2 == choicePlayer1) {
+				printf("\nHai scelto due volte lo stesso giocatore, riprova\n");
 			}
-		} while (iPlayer2 < 0 || iPlayer2 > i - 1 || iPlayer2 == iPlayer1); //in caso di errore si ripete il ciclo
+		} while (choicePlayer2 == choicePlayer1);
 
-		i        = 0; //reset indice
-		headCarte  = (*carteGiocate); //assegnazione carte giocate ad headCfu
-		pPlayer2 = playerList; //pPlayer2 parte dalla testa della lista dei giocatori
 
-		do { //ciclo per determinare la scelta del secondo giocatore
-			if (i == iPlayer2) { //quando i raggiunge la l'indice del secondo giocatore
-				pCarta2 = headCarte; //assegno la carta del giocatore scelto
-			} else { //altrimenti controlla il giocatore successivo
-				headCarte  = headCarte->next; //carta successiva
-				pPlayer2 = pPlayer2->nextPlayer; //giocatore successivo
-				i++; //indice successivo
+		i         = 0; // Reset indice
+		currCarte = (*carteGiocate); // Reset lista carte
+		currPlayer  = playerList; // Reset lista giuocatori
+
+		// Individuo la carta del secondo giocatore da scambiare
+		do {
+			if (i == choicePlayer2) {
+				pCarta2 = currCarte;    // Salvo la carta del giocatore scelto
+				pPlayer2 = currPlayer;  // Salvo il giocatore a cui verrà scambiata la carta
+			} else {                    // Altrimenti continuo al prossimo giocatore e carta
+				currPlayer = currPlayer->nextPlayer;
+				currCarte  = currCarte->next;
+				i++;
 			}
-		} while (pCarta2 == NULL); //il ciclo termina quando la carta viene assegnata
+		} while (pCarta2 == NULL);  // Ciclo fin quando non viene assegnata la carta
 
-		/* non modifico l'ordine della lista attraverso i puntatori, modifico i contenuti e riassegno la carta
-		 * successiva corretta per avere l'ordine della lista */
-		cartaCfu2 = (*pCarta2); //salvo il contenuto della carta giocatore 2 nella struttura ausiliaria
-		*pCarta2 = (*pCarta1); //assegno il contenuto della carta del giocatore 1 al giocatore 2
-		//ristabilisco l'ordine della lista usando la carta ausiliaria
+		/*
+		 * Poichè abbiamo una relazione biunivoca tra giocatroe e carta nella lista di carte giocate, è più comodo
+		 * scambiare i contenuti dei nodi, piuttosto che i nodi in se e per se
+		 */
+
+		// TODO CONTROLLA
+		cartaCfu2 = (*pCarta2); // salvo il contenuto della carta giocatore 2 nella struttura ausiliaria
+		*pCarta2 = (*pCarta1);  // assegno il contenuto della carta del giocatore 1 al giocatore 2
+								// ristabilisco l'ordine della lista usando la carta ausiliaria
 		pCarta2->next = cartaCfu2.next;
 		cartaCfu1 = (*pCarta1); //salvo il contenuto della carta giocatore 1 nella struttura ausiliaria
 		(*pCarta1) = cartaCfu2; //assegno il contenuto della carta del giocatore 2 al giocatore 1
 		//ristabilisco l'ordine della lista usando la carta ausiliaria
 		pCarta1->next = cartaCfu1.next;
 		printf("%s e %s si sono scambiati le carte!\n"
-		       "%s -> Carta: %s\n%s -> Carta: %s",
+		       "%s <- Carta: %s\n"
+			   "%s <- Carta: %s",
 		       pPlayer1->username, pPlayer2->username,
 		       pPlayer1->username, pCarta1->name,
 			   pPlayer2->username, pCarta2->name);
 		/*arrRisolte[] tiene conto delle carte che hanno risolto l'effetto con corrispondenza tra indice dell'array e
 		 * posizione della carta nella lista, questo vuol dire che se due carte vengono scambiate devo scambiare anche
 		 * il controllo delle risoluzioni delle carte */
-		check = arrRisolte[iPlayer1];
-		arrRisolte[iPlayer1] = arrRisolte[iPlayer2];
-		arrRisolte[iPlayer2] = check;
+		check = arrRisolte[choicePlayer1];
+		arrRisolte[choicePlayer1] = arrRisolte[choicePlayer2];
+		arrRisolte[choicePlayer2] = check;
 	}
 }
 

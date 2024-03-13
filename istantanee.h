@@ -27,6 +27,6 @@ void risolviInstantPerdita(Player *playerList, CartaCfu *pCartaCfu, CartaOstacol
                            CartaOstacolo **pCartaOstacolo);
 void effettoSALVA(CartaCfu *pCartaCfu,
                   CartaOstacolo **mazzoOstacoli, CartaOstacolo **pCartaOstacolo);
-void effettoDIROTTA(Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **pCartaOstacolo);
+void effettoDIROTTA(Player *pPlayer, Player *playerList, CartaCfu *pCartaCfu, CartaOstacolo **pCartaOstacolo);
 
 #endif //PR1_PROJECT_ISTANTANEE_H

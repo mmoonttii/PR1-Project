@@ -47,6 +47,6 @@ void effettoDOPPIOE(bool *checkDOPPIOE);
 void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti);
 
 // ====================================================================================================================
-void effettoSCAMBIAC(CartaCfu **carteGiocate, Player *playerList, bool arrRisolte[]);
+void effettoSCAMBIAC(CartaCfu **carteGiocate, Player *playerList, bool arrRisolte[], int nPlayers);
 
 #endif //PR1_PROJECT_EFFETTI_H
