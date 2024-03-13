@@ -1,7 +1,3 @@
-//
-// Created by Monti on 26/02/24.
-//
-
 #include "effetti.h"
 
 /*
@@ -34,8 +30,9 @@ typedef enum {
  * @param turno Turno *: struttura turno
  * @param checkDOPPIOE bool *: puntatore al booleano di controllo attivazione effetto DOPPIOE
  */
-void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti, Turno *turno,
-                     bool *checkDOPPIOE) {
+void gestioneEffetti(int nPlayers, Player *playerList,
+					 CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
+					 Turno *turno, bool *checkDOPPIOE) {
 	bool *arrRisolte    = NULL;     // Array controllo risoluzione carta
 	int cfuMax          = INT_MIN;  // Cfu maggiori tra le carte giocate
 	Player *currPlayer  = NULL;     // Puntatore al giocatore corrente
@@ -44,9 +41,12 @@ void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, Cart
 	arrRisolte = allocaArrBool(nPlayers); // Alloco l'array di controllo risoluzione carte
 	currPlayer = playerList;    // Init di currPlayer a playerList
 
+	// Per ogni giocatore
 	for (int j = 0; j < nPlayers; ++j) {
 		currCarta = turno->carteGiocate;
 		cfuMax    = INT_MIN;
+
+		// Trovo quale carta che è stata giocata, del quale non è stato ancora risolto l'effetto, ha i cfu massimi
 		for (int i = 0; i < nPlayers; i++) {
 			if (!arrRisolte[i] && currCarta->cfu > cfuMax) {
 				cfuMax = currCarta->cfu;
@@ -57,8 +57,10 @@ void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, Cart
 		currCarta  = turno->carteGiocate;
 		currPlayer = playerList;
 
+		// Trovati i cfu massimi, trovo quale carta, non ancora risolta ha questi cfu
 		for (int i = 0; i < nPlayers; ++i) {
 			if (!arrRisolte[i] && currCarta->cfu == cfuMax) {
+				// E ne risolvo l'effetto
 				if (currCarta->effect != ANNULLA) {
 					arrRisolte[i] = risolviEffetti(i, currPlayer, nPlayers, playerList,
 					                               currCarta, mazzoCfu, mazzoScarti,
@@ -66,6 +68,7 @@ void gestioneEffetti(int nPlayers, Player *playerList, CartaCfu **mazzoCfu, Cart
 					                               arrRisolte, checkDOPPIOE);
 					enterClear();
 				} else {
+					// L'effetto annulla annulla tutti gli effetti successivi, quindi posso far finire i cicli
 					printf("La carta %s di %s ha annullato tutti gli altri effetti delle carte\n",
 					       currCarta->name, currPlayer->username);
 					i = nPlayers;
@@ -103,7 +106,7 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 
 	switch (currCarta->effect) {
 		case SCARTAP:
-			effettoSCARTAP(mazzoScarti, currPlayer, iPlayer, turno);
+			effettoSCARTAP(iPlayer, currPlayer, mazzoScarti, turno);
 			break;
 		case RUBA:
 			effettoRUBA(playerList, currPlayer);
@@ -118,7 +121,7 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 			effettoSCARTAC(currPlayer, mazzoScarti);
 			break;
 		case SCAMBIAP:
-			effettoSCAMBIAP(turno, nPlayers, playerList);
+			effettoSCAMBIAP(nPlayers, playerList, turno);
 			break;
 		case DOPPIOE:
 			effettoDOPPIOE(checkDOPPIOE);
@@ -130,12 +133,13 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 			effettoSCAMBIAC(&(turno->carteGiocate), playerList, arrRisolte, nPlayers);
 			break;
 		default:
+			printf("\nErrore\n");
 			break;
 	}
 	return true;
 }
 
-// ====================================================================================================================
+// ==== EFFETTI ========================================================================================================
 /**
  * effettoSCARTAP subroutine per l'effetto SCARTAP: \n
  * 	Scarta una carta CFU punto e aggiungi il suo punteggio a quello del turno \n
@@ -144,43 +148,45 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
  * @param iPlayer int: indice giocatore
  * @param turno Turno *: struttura turno
  */
-void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, int iPlayer, Turno *turno) {
-	int nonGiocabile      = 0,        // Numero carte non giocabili
-		numCarte          = 0;            // Numero carte totali
-	bool flag             = false;           // controllo
-	CartaCfu *choosenCard = NULL,   // carta scelta
-			 *currMano    = NULL;   // puntatore per scorrere la lista di carte in mano
+void effettoSCARTAP(int iPlayer, Player *pPlayer,
+					CartaCfu **mazzoScarti, Turno *turno) {
+	bool emptyMano        = false,  // Bool presenza carte in mano
+		 allIstantanee    = true;   // Bool solo carte istantanee in mano
+	CartaCfu *choosenCard = NULL,   // Carta scelta
+			 *currMano    = NULL;   // Carta corrente della lista
 
 	currMano = pPlayer->manoCarteCfu;
 
-	if(pPlayer->manoCarteCfu==NULL) { // se la mano è vuota la variabile è settata true
-		flag = true;
+	if (pPlayer->manoCarteCfu==NULL) { // Flaggo che la mano è vuota
+		emptyMano = true;
 	}
 
-	while (currMano != NULL) {
-		if (isIstantanea(currMano)) { // In questa fase non sono ammesse carte istantanee
-			nonGiocabile++;           // incremento le carte non giocabili
-		}
-		numCarte++; // conto il numero di carte
-		currMano = currMano->next; // passaggio alla carta successiva
-	}
+	// Controllo che si abbia almeno una carta non istantanea
+	allIstantanee = tutteIstantaneeCheck(currMano);
 
-	currMano = pPlayer->manoCarteCfu;
+	if (!allIstantanee && !emptyMano) { // Se si può scartare almeno una carta
+		// Permetto di scegliere una carta: utilizzo la subroutine chooseCarta() disabilitando le funzioni che
+		// permettono di ripescare la mano di carte
+		choosenCard = chooseCarta(&currMano, NULL, NULL, SPAREGGIO);
 
-	if (nonGiocabile != numCarte && flag != false) { // se c'è almeno una carta giocabile
-		choosenCard = chooseCarta(&currMano, NULL, mazzoScarti, SPAREGGIO);
+		// Estraggo la carta dalla mano
 		choosenCard = estraiCartaCfu(&currMano, choosenCard);
-		turno->points[iPlayer] += choosenCard->cfu;  //assegno i punti della carta al punteggio del giocatore
-		printf("%s aggiungi %d CFU al tuo punteggio parziale!\n", pPlayer->username, choosenCard->cfu);
-		//la carta viene scartata
-		choosenCard->next = (*mazzoScarti);
-		(*mazzoScarti) = choosenCard;
-	} else { //se non ci sono carte giocabili
-		printf("Nessuna carta scartabile in questo turno! Potrebbe essere un bel problema...\n");
+
+		// Assegno i punti della carta estratta ai punti del giocatore
+		turno->points[iPlayer] += choosenCard->cfu;
+
+		printf("%s ha adesso %d Cfu in più, per un totale di %d Cfu\n",
+			   pPlayer->username, choosenCard->cfu, turno->points[iPlayer]);
+
+		// Scarto la carta
+		*mazzoScarti = cartaCfuInTesta(*mazzoScarti, choosenCard);
+
+	} else { // Se non si hanno carte ammesse
+		printf("Non puoi scartare nessuna carta, mi dispiace\n");
 	}
 }
 
-// ====================================================================================================================
+// =====================================================================================================================
 /**
  * effettoRUBA() subroutine per effetto RUBA:\n
  * 	Guarda la mano di un collega e ruba una carta a scelta
@@ -188,14 +194,15 @@ void effettoSCARTAP(CartaCfu **mazzoScarti, Player *pPlayer, int iPlayer, Turno 
  * @param pPlayer Player *: player a cui appartiene la carta
  */
 void effettoRUBA(Player *playerList, Player *pPlayer) {
-	Player *currPlayer   = NULL;
-	CartaCfu *stolenCard = NULL;
+	Player      *currPlayer = NULL; // Player corrente della lista
+	CartaCfu    *stolenCard = NULL; // Carta rubata
 	int i      = 0,
 		choice = 0;
 	bool reTry = false;
 	currPlayer = playerList;
 
 	printf("\nA chi vuoi rubare una carta?\n");
+	// Stampo i giocatori evitando di stampare il proprio giocatore
 	while (currPlayer != NULL){
 		if (strcmp(currPlayer->username, pPlayer->username) != 0) {
 			printf("[%d] %s\n", i, currPlayer->username);
@@ -203,32 +210,22 @@ void effettoRUBA(Player *playerList, Player *pPlayer) {
 		i++;
 	}
 
-	currPlayer = playerList;
+	// Acquiscp la scelta dell'utente, raggiungo il player selezionato, richiedo l'input se si è selezionato se stessi
 	do {
-		reTry = false;
-		printf("\n>>> ");
-		scanf("%d", &choice);
-
-		if (choice < 0 || choice > i) {
-			printf("\nIl valore inserito non è valido, riprova\n");
-			reTry = true;
-		} else {
-			for (int j = 0; j < choice; ++j) {
+		currPlayer = playerList;
+		choice = acquisisciInputInt(0, i - 1);
+		for (int j = 0; j < choice; ++j) {
 				currPlayer = currPlayer->nextPlayer;
-			}
-			if (strcmp(currPlayer->username, pPlayer->username) == 0) {
-				printf("\nIl valore inserito non è valido, riprova\n");
-				reTry = true;
-			}
+		}
+		if (currPlayer == pPlayer) {
+			printf("\nNon puoi rubare una carta a te stesso\n");
+			reTry = true;
 		}
 	} while (reTry);
 
-	currPlayer = playerList;
-	for (int j = 0; j < choice; ++j) {
-		currPlayer = currPlayer->nextPlayer;
-	}
-
+	// Rubo la carta con la funzione steal
 	stolenCard = steal(currPlayer);
+	// Aggiungo la carta alla mano del giocatore
 	cartaCfuInTesta(pPlayer->manoCarteCfu, stolenCard);
 
 }
@@ -241,8 +238,9 @@ void effettoRUBA(Player *playerList, Player *pPlayer) {
 CartaCfu *steal(Player *pPlayer) {
 	CartaCfu *curr       = pPlayer->manoCarteCfu,
 			 *stolenCard = NULL;
-	int      i           = 0,
-	         choice      = 0;
+
+	int i      = 0,
+	    choice = 0;
 
 	// Mostra carte che si possono rubare
 	printf("\nQuale carta vuoi rubare a %s?\n", pPlayer->username);
@@ -259,131 +257,107 @@ CartaCfu *steal(Player *pPlayer) {
 	return stolenCard;
 }
 
-// ====================================================================================================================
-
+// =====================================================================================================================
 /**
  * effettoSCAMBIADS() subroutine per effetto SCAMBIADS:\n
  * 	Scambia questa carta con quella di un altro giocatore, purché senza effetto
- * @param iPlayer int:
- * @param pPlayer Player *:
- * @param nPlayers int:
- * @param playerList Player *:
- * @param pCarta CartaCfu *:
+ * @param iPlayer int: indice del giocatore che sta attuando l'effetto
+ * @param pPlayer Player *: puntatore al player che sta risolvendo l'effetto
+ * @param nPlayers int: numero di player in gioco
+ * @param playerList Player *: lista di playerzz
  * @param turno Turno *:
  * @param arrRisolte bool *:
  */
 void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 					  int nPlayers, Player *playerList,
-					  CartaCfu *pCarta,
+					  CartaCfu *cartaPlayer,
 					  Turno *turno, bool arrRisolte[]) {
 	Player *playerScambio = NULL; // puntatore in cui salvare il giocatore con cui si effettua lo scambio
 
 	CartaCfu *currCarte    = NULL, // variabile ausiliaria per scorrere la lista delle carte giocate
-			 *pCartaPlayer = NULL, // puntatore per salvare la carta del giocatore
 			 *pChoosenCard = NULL, // puntatore per salvare la carta scelta dal giocatore
 			 choosenCardAux,
 			 cartaPlayerAux;
 	bool check;
 
-	int i = 0, // i: contatore per i cicli do-while
-		choice = 0, // choice: variabile in cui inserire l'indice della carta scelta
-		noScambio = 0; // noScambia: contatore carte con cui non è possibile effettuare lo scambio
+	int i         = 0, // Counter cicli
+		choice    = 0, // Indice carta scelta
+		noScambio = 0; // Countere carte non scambiabili
 
-	currCarte = turno->carteGiocate;
+	currCarte = turno->carteGiocate; // Assegno la lista delle carte giocate
+	i = 0;
 
-	do { // ciclo per trovare la carta del giocatore
-		if (i == iPlayer){ // se l'indice del ciclo e quello del giocatore coincidono salvo la carta del giocatore
-			pCartaPlayer = currCarte;
-		}
-		if (currCarte == NULL){ // controllo, se non trova la carta giocata e le carte sono terminate esco per evitare errori
-			printf("Carta del giocatore non trovata, uscita con errore!");
-			exit(EXIT_FAILURE);
-		}
-		currCarte = currCarte->next;
-		i++;
-	} while (pCartaPlayer == NULL);
-
-	currCarte = turno->carteGiocate; // assegno la lista delle carte giocate
-	i         = 0;
-
-	printf("\nCarte giocate questo turno:");
-	do {
-		if (i != iPlayer) {
-			printf("[%d] Carta di %s:\n", i, pPlayer->username);
-			printSingleCartaCfu(currCarte);
-			if (currCarte->effect != NESSUNO) { // se la carta  ha effetti non può essere scambiata
-				printf("| Questa carta ha un effetto, quindi non puoi prenderla, mi dispiace\n");
-				noScambio++; // incremento carte non scambiabili
-			}
+	printf("\nCarte giocate questo turno: ");
+	while (currCarte != NULL) {
+		if (i == iPlayer) { // Non si può scambiare la carta con se stessa
+			noScambio++;    // Incremento le carte non scambiabili
 		} else {
-			noScambio++; // incremento le carte non scambiabili
+			printf("\n[%d] Carta di %s:\n", i, pPlayer->username);
+			printSingleCartaCfu(currCarte);
+
+			if (currCarte->effect != NESSUNO) { // Se la carta ha effetti non può essere scambiata
+				printf("| Questa carta ha un effetto, non puoi prenderla\n");
+				noScambio++; // Incremento carte non scambiabili
+			}
 		}
 		i++;
 		currCarte  = currCarte->next;
 		playerList = playerList->nextPlayer;
-	} while (currCarte != NULL);
+	}
 
-	if (i == noScambio) { // se il numero di carte coincide con il numero di carte non scambiabili termina la funzione
-		printf("Nessuna carta con cui scambiare la tua!\n");
+	if (i == noScambio) { // Se il numero di carte coincide con il numero di carte non scambiabili termina la funzione
+		printf("Non puoi scambiare nessuna carta\n");
 	} else {
 		do {
+			// Acquisisco con quale carta il giocatore vuole scambiare la propria
 			do {
-				printf("\n>>> ");
-				scanf("%d", &choice);
-				if(choice < 0 || choice > i|| choice == iPlayer) {
-					printf("Errore, riprovare\n");
+				choice = acquisisciInputInt(0, i);
+				if (choice == iPlayer) {
+					printf("Non puioi scegliere te stesso, riprova\n");
 				}
-			} while (choice < 0 || choice > i-1 || choice == iPlayer);
+			} while (choice == iPlayer);
 
 			i = 0;
 			playerScambio = playerList;
 			currCarte     = turno->carteGiocate;
 
-			do {
-				if (i == choice) {
-					pChoosenCard = currCarte;
-				} else {
-					i++;
-					currCarte     = currCarte->next;
-					playerScambio = playerScambio->nextPlayer;
-				}
-			} while (pChoosenCard == NULL);
+			// Salvo la carta che si ha scelto
+			for (int j = 0; j < choice; ++j) {
+				currCarte     = currCarte->next;
+				playerScambio = playerScambio->nextPlayer;
+			}
+			pChoosenCard = currCarte;
 
-			if (pChoosenCard->effect != NESSUNO){ // se la carta non poteva essere presa stampa un errore
+			// Rifiuto la carta che non ha effetto NESSUNO e chiedo nuovamente l'input
+			if (pChoosenCard->effect != NESSUNO){
 				printf("Non puoi prendere questa carta, riprova\n");
 			}
-		} while (pChoosenCard->effect != NESSUNO); //se la carta non poteva essere presa ripeto la scelta
+		} while (pChoosenCard->effect != NESSUNO);
 
 
-		/* tolgo i punti della carta del giocatore che sta facendo la scelta e gli assegno i punti
-		 * della carta che ha scelto */
-		turno->points[iPlayer] -= pCartaPlayer->cfu;
+		// Tolgo i punti della carta del giocatore che ha attivato l'effeto e gli assegno i punti della carta scelta
+		turno->points[iPlayer] -= cartaPlayer->cfu;
 		turno->points[iPlayer] += pChoosenCard->cfu;
 
-		/* tolgo i punti della carta scelta al giocatore che possedeva quella carta e gli
-		* assegno i punti della carta del giocatore che sta scambiando le carte */
-
+		/* tolgo i punti della carta scelta al giocatore che la possedeva e gli assegno quelli della carta del
+		 * giocatore che sta scambiando le carte */
 		turno->points[choice] -= pChoosenCard->cfu;
-		turno->points[choice] += pCartaPlayer->cfu;
+		turno->points[choice] += cartaPlayer->cfu;
 
-		choosenCardAux = (*pChoosenCard); // assegno il contenuto della carta a una struttura ausiliaria
-		// scambio le informazioni tra la carta giocatore e la carta scelta
-		*pChoosenCard = (*pCartaPlayer);
-		// assegno il successivo della carta ausiliaria in modo da ristabilire l'ordine della lista
-		pChoosenCard->next = choosenCardAux.next;
-		//assegno il contenuto della carta del giocatore a una carta
-		cartaPlayerAux = (*pCartaPlayer);
-		(*pCartaPlayer) = choosenCardAux; //assegno il contenuto della carta alla carta del giocatore
-		//assegnazione del successivo della cat per ristabilire l'ordine della lista
-		pCartaPlayer->next = cartaPlayerAux.next;
+		// Scambio le due carte
+
+		choosenCardAux = (*pChoosenCard);   // Salvo la carta scekta in una aux
+		*pChoosenCard = (*cartaPlayer);     // Salvo la carta del giocatore nella carta scelta
+		pChoosenCard->next = choosenCardAux.next;   // Ristabilisco l'ordine di lista
+		cartaPlayerAux = (*cartaPlayer);    // Salvo la carta player in aux
+		(*cartaPlayer) = choosenCardAux;    // Salvo la carta del giocatore dall'aux
+		cartaPlayer->next = cartaPlayerAux.next;    // Ristabilisco l'oridine della lista
 
 		printf("%s e %s si sono scambiati le carte!\n", pPlayer->username, playerScambio->username);
-		printf("%s prende carta: %s\n", pPlayer->username, pCartaPlayer->name);
-		printf("%s -> Carta: %s\n", playerScambio->username, pChoosenCard->name);
+		printf("%s -> %s\n", pPlayer->username, cartaPlayer->name);
+		printf("%s -> %s\n", playerScambio->username, pChoosenCard->name);
 
-		/*effetti[] tiene conto delle carte che hanno risolto l'effetto con corrispondenza tra indice dell'array e
-		 * posizione della carta nella lista, questo vuol dire che se due carte vengono scambiate devo scambiare anche
-		 * il controllo delle risoluzioni delle carte */
+		// Aggiorno l'array arrRisolte che segna se ho risolto una carta o no
 		check = arrRisolte[iPlayer];
 		arrRisolte[iPlayer] = arrRisolte[choice];
 		arrRisolte[iPlayer] = check;
@@ -391,119 +365,100 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 }
 
 
-// ====================================================================================================================
+// =====================================================================================================================
 /**
  * effettoSCARTAE() subroutine per l'effetto SCARTAE:\n
  * 	Scarta una carta CFU punto con effetto e aggiungi il suo punteggio a quello del turno
- * @param iPlayer int:
- * @param pPlayer Player *:
- * @param mazzoScarti CartaCfu **:
- * @param turno Turno *:
+ * @param iPlayer int: indice del giocatore attuale
+ * @param pPlayer Player *: giocatore attuale
+ * @param mazzoScarti CartaCfu **: mazzo degli scatti
+ * @param turno Turno *: struttura del turno
  */
 void effettoSCARTAE(int iPlayer, Player *pPlayer,
 					CartaCfu **mazzoScarti, Turno *turno) {
-	//variabili contatore per il numero di carte e il numero di carte non scartabili
-	int nonGiocabile    = 0, nCarte = 0;
-	bool flag           = false; // bool di controllo
-	CartaCfu *cartaCfu  = NULL, // puntatore in cui viene salvata la carta scartata
-			 *currCarte = NULL; // puntatore ausiliario per scorrere la lista
-	currCarte = pPlayer->manoCarteCfu; // assegnazione della mano al puntatore ausiliario
+	int nonGiocabile = 0,   // Carte non scartabili
+		nCarte       = 0;   // Numero di carre
+	bool canPlay = false;   // Bool carte in mano
+	CartaCfu *discardedCarta = NULL, // Carta scartata
+			 *currCarte      = NULL; // Carta corrente della lista
 
+	currCarte = pPlayer->manoCarteCfu; // La lista da scoreere è la mano del giocatore
+
+	// Il giocatore deve avere carte in mano per attivare l'effetto
 	if (pPlayer->manoCarteCfu == NULL) {
-		flag = true; //se il giocatore non ha carte in mano flag va a true
+		canPlay = true;
 	}
 
-	while (currCarte != NULL) { //ciclo che continua fino alla fine della lista delle carte in mano
-		if (currCarte->effect == NESSUNO || currCarte->cfu == 0) { //controllo se non sono giocabili
+	// Scorro la lista della mano
+	while (currCarte != NULL) {
+		if (currCarte->effect == NESSUNO || currCarte->cfu == 0) { // Le carte giocabili sono quelle con effetto
 			nonGiocabile++;
 		}
-		nCarte++; //conteggio carte
-		currCarte = currCarte->next; // passaggio alla prossima carta
+		nCarte++; // Conta carte
+		currCarte = currCarte->next; // Next carta
 	}
 
-	if (nonGiocabile != nCarte && !flag) { // se c'è almeno una carta ed è giocabile
-		cartaCfu = discard(pPlayer); // scelta della carta attraverso subroutine sceltaCarta()
-		turno->points[iPlayer] += cartaCfu->cfu; // aggiungo i punti della carta scartata
-		cartaCfuInCoda(mazzoScarti, cartaCfu);
-	} else { // se non ci sono carte giocabili esco dalla subroutine senza fare nulla
-		printf("Nessuna carta scartabile in questo turno!\n");
+	if (nonGiocabile != nCarte && !canPlay) {   // Se si ha almeno una carta giocabile
+		discardedCarta = discard(pPlayer);      // Posso selezionare una carta da scartare
+		turno->points[iPlayer] += discardedCarta->cfu;  // Aumento i punti della carta scartata
+		cartaCfuInCoda(mazzoScarti, discardedCarta); // Aggiungo la carta in coda al manzo scarti
+	} else {    // Altrimenti esco dalla subroutine
+		printf("Non puoi scartare nessuna carta\n");
 	}
 }
 
 /**
  * discard() subroutine per scartare una carta
- * @param pPlayer Player *:
- * @return
+ * @param pPlayer Player *: player da cui scartare la carta
+ * @return CartaCfu *: puntatore a carta scartata
  */
 CartaCfu *discard(Player *pPlayer) {
-	CartaCfu *currCarte   = NULL,
-			 *choosenCard = NULL,
-			 *prev        = NULL;
-	/* choice: indice carta scelta dal pPlayer
-	 * index: indice di ogni carta (inizializzato a -1 in modo che il conteggio parta da 0)
-	 */
-	int choice            = 0, // choice: indice carta scelta dal pPlayer
-		index             = 0, // index: indice di ogni carta (inizializzato a -1 in modo che il conteggio parta da 0)
-		nonScartabile     = -1;
-	bool flag; // booleano di controllo
+	CartaCfu *currCarte   = NULL, // Carta corrente della lista
+			 *choosenCard = NULL, // Carta scelta da scartare
+			 *prev        = NULL; // Carta precedente
 
-	currCarte = pPlayer->manoCarteCfu; //currCarte prende la testa della mano di carte del pPlayer
-	printf("Scegli una carta da scartare, ricorda: solo carte punto con effetto:\n");
-	do {
-		if (currCarte->cfu != 0 && currCarte->effect != NESSUNO) {
-			printSingleCartaCfu(currCarte);
-			printf("\n");
-		} else {
-			printSingleCartaCfu(currCarte);
-			printf("| Carta senza effetto o senza punti: Non puoi scartare questa carta");
-			printf("\n");
+	int choice        = 0, // Indice carta scelta
+		count         = 0, // Indice di ogni carta
+		nonScartabile = 0; // Carte non scartabili
+	bool flag; // BANDIERA ROSSA
+
+	currCarte = pPlayer->manoCarteCfu; // currCarte prende la testa della mano di carte del pPlayer
+
+	// Stampa mano carte
+	printf("Scegli una carta con effetto da scartare:\n");
+	while (currCarte != NULL) {
+		printSingleCartaCfu(currCarte);
+
+		if (currCarte->cfu == 0 || currCarte->effect == NESSUNO) {
+			printf("| Non puoi scartare una carta senza punti e effetto\n");
 			nonScartabile++;
 		}
-		index++;
-		currCarte = currCarte->next; // il puntatore va alla prossima carta
-	} while (currCarte != NULL); // continua fino all'ultima carta
+		currCarte = currCarte->next; // Next carta
+	}
 
-	if (nonScartabile == index){
+	count = contaCarteCfu(currCarte);
+	// Se non si hanno carte scartabili, lascio la subroutine
+	if (nonScartabile == count){
 		printf("Nessuna carta scartabile in questo turno!\n");
 		choosenCard = NULL;
-	} else {
-
+	} else { // Altrimenti
 		do {
-			flag      = false;
+			// Acquisisco scelta
 			currCarte = pPlayer->manoCarteCfu;
-			printf(">>> ");
-			scanf("%d", &choice); //acquisizione scelta carta
-
-			if (choice < 0 || choice > index) {
-				printf("\nInput non valido, riprovare\n");
-				flag = true;
-			} else {
-				for (int i = 0; i < index; ++i) {
-					currCarte = currCarte->next;
-				}
-				if (currCarte->effect == NESSUNO || currCarte->cfu == 0) {
-					printf("\nHai scelto una carta che non puoi scartare, riprova\n");
-					flag = true;
-				}
-			}
-		} while (flag);
-
-		if (choice == 0) {
-			choosenCard = pPlayer->manoCarteCfu; // la carta prende la testa della lista
-			pPlayer->manoCarteCfu = pPlayer->manoCarteCfu->next; // cambio della testa della lista
-			choosenCard->next = NULL; // la carta successiva a quella scelta prende NULL come indirizzo
-		} else {
-			// ciclo for per raggiungere la carta precedente a quella scelta tramite puntatore currCarte
-			for (int i  = 0; i < choice; ++i) {
-				prev      = currCarte;
+			choice = acquisisciInputInt(0, count);
+			// Controllo che la scelta sia valida
+			for (int i = 0; i < choice; ++i) {
 				currCarte = currCarte->next;
 			}
-			choosenCard = currCarte; // puntatore alla carta scelta dall'utente
-			prev->next      = currCarte->next; // la lista viene generata senza la carta
-			currCarte->next = NULL; // la carta successiva a quella scelta prende NULL come indirizzo
-		}
+			if (currCarte->effect == NESSUNO || currCarte->cfu == 0) {
+				printf("\nHai scelto una carta che non puoi scartare, riprova\n");
+			}
+		} while (currCarte->effect == NESSUNO || currCarte->cfu == 0);
+
+		// Trovata una carta ammissibile la posso estrarre
+		choosenCard = estraiCartaCfu(&(pPlayer->manoCarteCfu), choosenCard);
 	}
-	return choosenCard; // ritorno della carta selezionata
+	return choosenCard; // Ritorno carta selezionata
 }
 
 // ====================================================================================================================
@@ -515,94 +470,79 @@ CartaCfu *discard(Player *pPlayer) {
  */
 void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 	//variabili per contare il numero di carte, quante sono state scartate e la scelta della carta
-	int nDiscardedCarte = 0,
-	    choice          = 0,
-	    i               = 0;
+	int numDiscarded = 0, // Carte scartate
+	    choice       = 0, // Scelta
+		countCarte;
 
-	bool stop = false; //bool di controllo per fermare il ciclo per scartare
+	bool leave           = false; // Flag di uscita ciclo
 
-	CartaCfu *currCarte      = NULL, //puntatore ausiliario per scorrere la lista
-			 *discardedCarta = NULL, //puntatore dove salvare la carta scartata
-			 *prev           = NULL;
+	CartaCfu *currCarte      = NULL, // Carta corrente della lisra
+			 *discardedCarta = NULL; // Carta scartata
 
-	do { //ciclo per ripetere lo scartare la carta
-		currCarte = pPlayer->manoCarteCfu; //assegnazione lista delle carte ad currCarte
-		if (currCarte == NULL) { //se non ci sono carte
-			printf("Non hai carte da scartare!\n");
-			stop = true; // blocco del ciclo
-		} else {
-			while (currCarte != NULL) { //controlla tutte le carte
-				printf("[%d] ", i + 1);
-				printSingleCartaCfu(currCarte);
-				currCarte = currCarte->next; //passaggio alla prossima carta
-				i++;
-			}
-			printf("[0] Non scartare nulla\n");
-
-			choice = acquisisciInputInt(0, i);
-			choice--;
-
-			if (choice == -1) { // se non si vogliono scartare carte
-				printf("Hai scelto di non scartare carte\n");
-				stop = true; //blocco il ciclo
-
-			} else if (choice == 0) { //eliminazione carta in testa
-				discardedCarta = pPlayer->manoCarteCfu; // selezione carta scartata
-				pPlayer->manoCarteCfu  = discardedCarta->next; // cambio testa della lista
-				// inserimento in testa nella pila degli scarti
-				cartaCfuInCoda(mazzoScarti, discardedCarta);
-				nDiscardedCarte++; // incremento carte scartate
-
-			} else { //scarta carta in mezzo alla lista o in coda
-				currCarte = pPlayer->manoCarteCfu; // assegnazione lista carte ad currCarte
-				//ciclo per arrivare alla carta precedente di quella scelta
-				for (int j = 0; j < choice; ++j) {
-					prev      = currCarte;
-					currCarte = currCarte->next; //passaggio alla carta successiva
-				}
-				discardedCarta = currCarte; //la carta scartata è la successiva ad currCarte
-				prev->next = discardedCarta->next; //rimuovo la carta dalla lista delle carte in mano
-
-				// inserimento in testa nella pila degli scarti
-				cartaCfuInCoda(mazzoScarti, discardedCarta);
-				nDiscardedCarte++; //incremento il numero di carte scartate
-			}
-		}
-		if (nDiscardedCarte == MAX_SCARTABILI){ // se ho raggiunto il massimo di carte scartate
-			stop = true; // blocco il ciclo
-		}
-	} while (!stop); // il ciclo continua finché la variabile di controllo è a false
-
-	if (nDiscardedCarte > 0) { //se ho scartato almeno una carta
-		printf("Hai scartato %d carte\n", nDiscardedCarte);
-	} else {
-		printf("Non hai scartato nessuna carta\n");
+	currCarte = pPlayer->manoCarteCfu;
+	countCarte = contaCarteCfu(currCarte);
+	if (countCarte == 0) {
+		printf("Non puoi scartare carte\n");
 	}
+
+	do {
+		currCarte = pPlayer->manoCarteCfu; // Init currCarte alla mano
+
+		// Stampo carte della mano
+		for (int j = 1; j < countCarte; ++j) {
+			printf("[%d] ", j);
+			printSingleCartaCfu(currCarte);
+			currCarte = currCarte->next; // Next carta
+		}
+		printf("[0] Non scartare altre carte\n");
+
+		currCarte = pPlayer->manoCarteCfu; // Init currCarte alla mano
+		choice = acquisisciInputInt(0, countCarte);
+		choice--; // Decremento choice perchè j è iniziato da 1
+
+		if (choice == -1) { // Se non si vogliono scartare carte
+			printf("Non scarti altre carte\n");
+			leave = true; // Lascio il ciclo
+		} else {
+			discardedCarta = indexEstraiCartaCfu(&currCarte, choice); // Estraggo la carta choice-esima
+			*mazzoScarti = cartaCfuInTesta(*mazzoScarti, discardedCarta); // Aggiungo al mazzo scarti
+			numDiscarded++; // Incremento contatore carte scartate
+		}
+
+		if (numDiscarded == MAX_SCARTABILI){ // Se è stato raggiunto il massimo di carte scartate
+			printf("Hai scartato il massimo numero di carte\n");
+			leave = true; // Lascio il ciclo
+		}
+	} while (!leave); // Continuo se leave è false
+	printf("Hai scartato %d carte\n", numDiscarded);
 }
 
 // ====================================================================================================================
 /**
  * effettoSCAMBIAP() subroutine per l'effetto SCAMBIAP\n:
  * 	Scambia il punteggio del turno maggiore e minore dopo il calcolo del punteggio di base
- * @param turno
- * @param nPlayers
- * @param playerList
+ * @param nPlayers int: numero di giocatori
+ * @param playerList Player *: lista di giocatori
+ * @param turno Turno *: struttura turno
  */
-void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList) {
+void effettoSCAMBIAP(int nPlayers, Player *playerList, Turno *turno) {
 	Player *playerHead = playerList;
+	// Se il punteggio di vincita e perdita sono uguali, i giocatori sono tutti pari e non ci sono scambi
 	if (turno->cfuToLose != turno->cfuToWin) {
+		// Ciclando su tutti i giocatori
 		for (int i = 0; i < nPlayers; ++i) {
+			// Se ha i punti maggiori, gli assegno i punti minori
 			if (turno->points[i] == turno->cfuToWin){
 				turno->points[i] = turno->cfuToLose;
-				printf("%s passa al punteggio minimo! [%d CFU]\n", playerHead->username, turno->cfuToLose);
-			} else if (turno->points[i]==turno->cfuToLose){
+				printf("%s ha %d Cfu\n", playerHead->username, turno->cfuToLose);
+			} else if (turno->points[i]==turno->cfuToLose) { // Altrimenti se ha i punti minori, gli assegno i maggiori
 				turno->points[i] = turno->cfuToWin;
-				printf("%s passa al punteggio massimo!  [%d CFU]\n", playerHead->username, turno->cfuToWin);
+				printf("%s ha %d Cfu\n", playerHead->username, turno->cfuToWin);
 			}
 			playerHead = playerHead->nextPlayer;
 		}
 	} else {
-		printf("I giocatori al momento sono tutti pari! Nessuno scambio\n");
+		printf("I giocatori sono tutti pari, non ci sono scambi da fare\n");
 	}
 }
 
@@ -610,7 +550,7 @@ void effettoSCAMBIAP(Turno *turno, int nPlayers, Player *playerList) {
 /**
  * effettoDOPPIOE() subroutine per l'effetto DOPPIOE:\n
  * 	Raddoppia gli effetti delle carte che aumentano o diminuiscono il punteggio (per tutti)
- * @param checkDOPPIOE
+ * @param checkDOPPIOE bool *: puntatore al booleano che indica l'atticazione o meno di quest'effetto
  */
 void effettoDOPPIOE(bool *checkDOPPIOE) {
 	*checkDOPPIOE = true;
@@ -633,15 +573,16 @@ void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti
 
 	int choice; // Scelta carta da tenere
 
-	if (contaCarteCfu(*mazzoCfu) <= CARTE_SBIRCIABILI) {
+	// Se nel mazzo non ci sono abbastanza carte per sbirciare, lo rimescolo
+	if (contaCarteCfu(*mazzoCfu) < CARTE_SBIRCIABILI) {
 		*mazzoCfu = mescolaMazzo(mazzoScarti);
 	}
+	// Estraggo una lista delle prime due carte
 	carteSbirciate = indexEstraiCartaCfu(mazzoCfu, 0);
 	carteSbirciate->next = indexEstraiCartaCfu(mazzoCfu, 0);
 
 	currCartaCfu = carteSbirciate;
 	printf("%s sta sbirciando nel mazzo:\n", pPlayer->username);
-
 	// Stampa carte sbirciate
 	for (int i = 0; i < CARTE_SBIRCIABILI; ++i) {
 		printf("[%d]", i);

@@ -41,7 +41,6 @@ int main() {
 	// Flag di controllo
 	bool leave        = false, // Condizione di uscita dal menu
 		 endGame      = false, // Condizione di termine partita
-		 spareggi,             // Condizione di risoluzione spareggi
 		 checkDOPPIOE = false; // Condizione di applicazione effetto DOPPIOE
 
 	Turno turno = {}; // Struttura turno
@@ -174,6 +173,7 @@ int main() {
 		if (!endGame) {
 			printf("\nDistribuendo le nuove carte...\n");
 			pPlayer = playerList;
+			// Distribuisco le carte a tutti i giocatori ancora in giuoco fino ad averne 5 in mano
 			for (int i = 0; i < nPlayers; ++i) {
 				distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
 				pPlayer = pPlayer->nextPlayer;
