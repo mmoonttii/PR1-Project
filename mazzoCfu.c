@@ -203,7 +203,7 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 	counter = contaCarteCfu(mano); // Conto le carte inizialmente in mano
 
 	// Fin quando la mano è composta da 5 carte o meno
-	while (counter < CARTE_PER_MANO){
+	while (counter <= CARTE_PER_MANO){
 		// Se il mazzo delle carte è vuoto, lo rimescolo
 		if (*mazzoCfu == NULL){
 			*mazzoCfu = mescolaMazzo(mazzoScarti);
@@ -316,9 +316,11 @@ int contaCarteCfu(CartaCfu *mazzoCfu) {
  * @return bool: true se la carta è istantanea, false altrimenti
  */
 bool isIstantanea(CartaCfu *cartaCfu) {
-	bool ris;
+	bool ris = false;
 	// Se l'effetto della carta è compreso tra AUMENTA e DIROTTA allora la carta è istantanea
-	ris = (cartaCfu->cfu >=AUMENTA && cartaCfu->effect <= DIROTTA) ? true : false;
+	if (cartaCfu->effect >=AUMENTA) {
+		ris = true;
+	}
 	return ris;
 }
 

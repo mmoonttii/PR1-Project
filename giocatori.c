@@ -167,7 +167,7 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 			scanf(" %[^\n]31s", temp);
 
 			if (!checkUsernames(playersList, temp)) {
-				strcpy(playersList->username, temp);
+				strcpy(newPlayer->username, temp);
 			} else {
 				printf("\nUsername già inserito, riprova");
 			}

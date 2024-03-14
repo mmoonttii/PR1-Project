@@ -123,10 +123,14 @@ int main() {
 		minMax(turno.points, nPlayers, &turno.cfuToLose, &turno.cfuToWin);
 
 		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno, &checkDOPPIOE);
+		printPunti(&turno, playerList, nPlayers);
 
 		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno, checkDOPPIOE);
+		printPunti(&turno, playerList, nPlayers);
+
 
 		winnersLosers(&turno, playerList, nPlayers);
+
 		printLosers(turno.losers);
 		printWinners(turno.winners);
 
@@ -136,7 +140,7 @@ int main() {
 		 */
 
 		// Se non ci sono giocatori perdenti o vincenti (quindi cfuToWin == cfuToLose), la carta va in fondo al mazzo
-		if (turno.winners == NULL && turno.losers == NULL) {
+		if (turno.cfuToLose == turno.cfuToWin) {
 			printf("\nTutti i giocatori sono a parimerito\n"
 				   "La carta ostacolo di questo turno verrà messa alla fine del mazzo\n");
 			ostacoloInCoda(turno.cartaOstacolo, &mazzoOstacoli);
@@ -154,9 +158,8 @@ int main() {
 				printf("\nRisoluzione spareggi");
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
-
 			// Assegno la carta ostacolo al giocatore perdente
-			pLoser->listaCarteOstacolo = ostacoloInTesta(pLoser->listaCarteOstacolo, turno.cartaOstacolo);
+			ostacoloALoser(&turno, playerList, pLoser);
 		}
 
 		// ==== FINE DEL TURNO ==========

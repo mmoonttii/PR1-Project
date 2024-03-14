@@ -50,6 +50,8 @@ int contaLosers(Turno *turno);
 
 void puntiCarteOstacolo(Player *playerList);
 
+void ostacoloALoser(Turno *turno, Player *playersList, Player *pLoser);
+
 // ============ CHIUSURA ===============================================================================================
 void end(Player *playerList, CartaCfu *mazzoCfu, CartaCfu *mazzoScarti, CartaOstacolo *mazzoOstacoli, Turno *turno);
 

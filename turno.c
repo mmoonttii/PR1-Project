@@ -29,11 +29,11 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 
 	do {
 		// Controllo che il giocatore possa giocare carte
-		tutteIstantanee = tutteIstantaneeCheck(*manoCarteCfu);
+		tutteIstantanee = tutteIstantaneeCheck(currMano);
 
 		// Se ha almeno una carta giocabile posso stampare la sua mano
 		if (tutteIstantanee == false) {
-			printMano(*manoCarteCfu);
+			printMano(currMano);
 		}
 
 		// Se tutte le carte in mano sono istantanee e il rimescolamento della mano è concesso
@@ -62,7 +62,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 
 			// Controllo se è istantanea, se non è istantanea posso restituirla, altrimenti chiedo nuovamente al
 			// giocatore
-			instant = isIstantanea(choosenCard) ? true : false;
+			instant = isIstantanea(choosenCard);
 			if (instant) {
 				printf("\nLa carta scelta è una carta istantanea, scegline un'altra carta\n");
 			}
@@ -258,8 +258,10 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 	printf("\nSpareggio tra:\n");
 	while (currPlayer != NULL) {
 		printf("%s\n", currPlayer->username);
+		currPlayer = currPlayer->nextPlayer;
 	}
 
+	currPlayer = turno->losers;
 	// Ciclo sui giocatori, per permettere di giocare le carte
 	while (!loser && currPlayer != NULL ) {
 		// Controllo che il giocatore abbia carte da giocare questo turno
@@ -315,7 +317,7 @@ void printWinners(Player *playerList) {
 	Player *curr = playerList;
 	printf("\nVincitori:\n");
 	while (curr != NULL){
-		printf("%31s\n", curr->username);
+		printf("%s\n", curr->username);
 		curr = curr->nextPlayer;
 	}
 }
@@ -348,7 +350,7 @@ void printLosers(Player *playerList) {
 	Player *curr = playerList;
 	printf("\nPerdenti:\n");
 	while (curr != NULL){
-		printf("%31s\n", curr->username);
+		printf("%s\n", curr->username);
 		curr = curr->nextPlayer;
 	}
 }
@@ -386,6 +388,24 @@ void puntiCarteOstacolo (Player *playerList) {
 	}
 }
 
+/**
+ * ostacoloAlLoser() si occupa di trovare il perdente nella lista dei giocatori e assegnarli la carta ostacolo che
+ * gli spetta
+ * @param turno Turno *: struttura turno
+ * @param playersList Player *: lista dei giocatori
+ * @param pLoser Player *: copia del giocatore perdente
+ */
+void ostacoloALoser(Turno *turno, Player *playersList, Player *pLoser) {
+	CartaOstacolo *ostacolo = NULL;
+	ostacolo = turno->cartaOstacolo;
+
+	while (playersList != NULL) {
+		if (strcmp(playersList->username, pLoser->username) == 0) {
+			playersList->listaCarteOstacolo = ostacoloInTesta(playersList->listaCarteOstacolo, ostacolo);
+		}
+		playersList = playersList->nextPlayer;
+	}
+}
 // ============ CHIUSURA ===============================================================================================
 /**
  * end() è la subroutine per chiudere una partita che si occupa di liberare la memoria

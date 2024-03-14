@@ -102,20 +102,46 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 					CartaCfu **mazzoCfu, CartaCfu **mazzoScarti,
                     Turno *turno,
                     bool arrRisolte[], bool *checkDOPPIOE) {
-	printf("Risolvo effetto della carta %s di %s\n", currPlayer->username, currCarta->name);
+
+	char *effetti[] = {"Carta senza effetto",
+	                   "Scarta una carta CFU punto e aggiungi il suo punteggio quello del turno",
+	                   "Guarda la mano di un collega e ruba una carta a scelta",
+	                   "Scambia questa carta con quella di un altro giocatore, purché senza effetto",
+	                   "Scarta una carta CFU punto con effetto e aggiungi il suo punteggio a quello del turno",
+	                   "Scarta da uno a tre carte dalla tua mano",
+	                   "Scambia il punteggio del turno maggiore e minore dopo il calcolo del punteggio di base",
+	                   "Raddoppia gli effetti delle carte che aumentano o diminuiscono il punteggio (per tutti)",
+	                   "Guarda due carte in cima al mazzo, prendine una e scarta l’altra",
+	                   "Scambia le carte punto di due giocatori qualsiasi",
+	                   "Annulla gli effetti di tutte le carte punto durante il turno",
+	                   "Aumenta di 2 CFU il punteggio del turno di un giocatore a scelta",
+	                   "Diminuisci di 2 CFU il punteggio del turno di un giocatore a scelta",
+	                   "Inverti punteggio minimo e massimo del turno",
+	                   "Metti la carta Ostacolo che stai per prendere in fondo al mazzo",
+	                   "Dai la carta che stai per prendere ad un altro giocatore a tua scelta"
+	};
+
+	printf("Risolvo effetto della carta %s di %s\n", currCarta->name,currPlayer->username);
+	printf("\n| %s\n", effetti[currCarta->effect]);
 
 	switch (currCarta->effect) {
 		case SCARTAP:
 			effettoSCARTAP(iPlayer, currPlayer, mazzoScarti, turno);
+			// Ricalcolo i punteggi massimi e minimi
+			minMax(turno->points, nPlayers, &(turno->cfuToLose), &(turno->cfuToLose));
 			break;
 		case RUBA:
 			effettoRUBA(playerList, currPlayer);
 			break;
 		case SCAMBIADS:
 			effettoSCAMBIADS(iPlayer, currPlayer, nPlayers, playerList, currCarta, turno, arrRisolte);
+			// Ricalcolo i punteggi massimi e minimi
+			minMax(turno->points, nPlayers, &(turno->cfuToLose), &(turno->cfuToLose));
 			break;
 		case SCARTAE:
 			effettoSCARTAE(iPlayer, currPlayer, mazzoScarti, turno);
+			// Ricalcolo i punteggi massimi e minimi
+			minMax(turno->points, nPlayers, &(turno->cfuToLose), &(turno->cfuToLose));
 			break;
 		case SCARTAC:
 			effettoSCARTAC(currPlayer, mazzoScarti);
@@ -131,10 +157,15 @@ bool risolviEffetti(int iPlayer, Player *currPlayer,
 			break;
 		case SCAMBIAC:
 			effettoSCAMBIAC(nPlayers, playerList, &(turno->carteGiocate), arrRisolte);
+			/* Poichè questo effetto viene effettuato prima di ogni altro effetto, per ricalcolare i punteggi posso
+			 * richiamare la subroutine calcolaPunteggio
+			 */
+			calcolaPunteggio(turno, playerList, nPlayers, !SPAREGGIO);
+			break;
+		case NESSUNO:
 			break;
 		default:
-			printf("\nErrore\n");
-			break;
+			if (DBG) printf("\n-- printf scurrile rimosso --\n");
 	}
 	return true;
 }
@@ -208,6 +239,7 @@ void effettoRUBA(Player *playerList, Player *pPlayer) {
 			printf("[%d] %s\n", i, currPlayer->username);
 		}
 		i++;
+		currPlayer = currPlayer->nextPlayer;
 	}
 
 	// Acquiscp la scelta dell'utente, raggiungo il player selezionato, richiedo l'input se si è selezionato se stessi
@@ -302,8 +334,8 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 		}
 		i++;
 		currCarte  = currCarte->next;
-		playerList = playerList->nextPlayer;
 	}
+
 
 	if (i == noScambio) { // Se il numero di carte coincide con il numero di carte non scambiabili termina la funzione
 		printf("Non puoi scambiare nessuna carta\n");
@@ -358,9 +390,10 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 		printf("%s -> %s\n", playerScambio->username, pChoosenCard->name);
 
 		// Aggiorno l'array arrRisolte che segna se ho risolto una carta o no
-		check = arrRisolte[iPlayer];
+		// arrRisolte[giocatore che sta eseguendo] prende lo stato del giocatore scelto
 		arrRisolte[iPlayer] = arrRisolte[choice];
-		arrRisolte[iPlayer] = check;
+		// arrRisolte[giocatore che riceve questa carta] prende true
+		arrRisolte[choice] = true;
 	}
 }
 
@@ -421,10 +454,12 @@ CartaCfu *discard(Player *pPlayer) {
 		nonScartabile = 0; // Carte non scartabili
 
 	currCarte = pPlayer->manoCarteCfu; // currCarte prende la testa della mano di carte del pPlayer
+	count = contaCarteCfu(currCarte);
 
 	// Stampa mano carte
 	printf("Scegli una carta con effetto da scartare:\n");
-	while (currCarte != NULL) {
+	for (int i = 0; i < count; ++i) {
+		printf("[%d] ", i);
 		printSingleCartaCfu(currCarte);
 
 		if (currCarte->cfu == 0 || currCarte->effect == NESSUNO) {
@@ -434,7 +469,6 @@ CartaCfu *discard(Player *pPlayer) {
 		currCarte = currCarte->next; // Next carta
 	}
 
-	count = contaCarteCfu(currCarte);
 	// Se non si hanno carte scartabili, lascio la subroutine
 	if (nonScartabile == count){
 		printf("Nessuna carta scartabile in questo turno!\n");
@@ -708,6 +742,11 @@ void effettoSCAMBIAC(int nPlayers, Player *playerList,
 		check = arrRisolte[choicePlayer1];
 		arrRisolte[choicePlayer1] = arrRisolte[choicePlayer2];
 		arrRisolte[choicePlayer2] = check;
+
+		/* Poichè questo effetto viene effettuato prima di ogni altro effetto, per ricalcolare i punteggi posso
+		 * richiamare la subroutine calcolaPunteggio
+		 */
+
 	}
 }
 
