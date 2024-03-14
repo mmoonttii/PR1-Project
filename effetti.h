@@ -1,7 +1,3 @@
-//
-// Created by Monti on 26/02/24.
-//
-
 #ifndef PR1_PROJECT_EFFETTI_H
 #define PR1_PROJECT_EFFETTI_H
 

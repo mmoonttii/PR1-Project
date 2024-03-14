@@ -1,4 +1,3 @@
-
 #ifndef PR1_PROJECT_ERRORS_H
 #define PR1_PROJECT_ERRORS_H
 

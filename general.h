@@ -24,17 +24,19 @@
 #define LEAVE_GAME      0      // Scelta menu: lascia gioco
 #define CFU_WINNER      60     // Numero di CFU per vincere la partita
 #define SPAREGGIO       false  // Flag per indicare se gestire il turno come spareggio o come turno regolare
-#define SAVES_EXTENSION ".sav"
-#define BIN_READ        "rb"
-#define BIN_WRITE       "wb"
-#define EXTENSION_LEN   4
+#define SAVES_EXTENSION ".sav" // Estenione dei file di salvataggio
+#define BIN_READ        "rb"   // Parametro di lettura file binari
+#define BIN_WRITE       "wb"   // Parametro di scrittura file binari
+#define EXTENSION_LEN   4      // Lunghezza dell'estensione dei file
+
+// Percorsi ai file
 #define FILE_PERSONAGGI "personaggi.txt"
 #define FILE_CARTE_CFU  "carte.txt"
 #define FILE_OSTACOLI   "ostacoli.txt"
 #define FILE_LOG        "log.txt"
 
-// TODO: settare DBG a flase
-#define DBG             true
+// Debug
+#define DBG             false   // Se true: attiva delle stampe di debug
 
 // =========== CARTE CFU ===============================================================================================
 

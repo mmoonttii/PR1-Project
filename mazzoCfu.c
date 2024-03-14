@@ -189,6 +189,20 @@ void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
 }
 
 /**
+ * estraiTesta() estrae la carta di indice 0 da un mazzo di carte cfu
+ * @param mazzoCfu CartaCfu **: mazzo da cui estrarre la testa
+ * @return CartaCfu *: carta estratta
+ */
+CartaCfu *estraiTesta(CartaCfu **mazzoCfu) {
+	CartaCfu *headCard = NULL;
+	// Salvo la testa della lista
+	headCard = *mazzoCfu;
+	// Assegno come testa della lista il next
+	*mazzoCfu = (*mazzoCfu)->next;
+	return headCard;
+}
+
+/**
  * distribuisciCarte() è la subroutine che si occupa di distribuire carte ai giocatori fin quando questi non hanno
  * 5 carte in mano
  * @param mano CartaCfu *: puntatore alla mano del giocatore, al quale si vogliono aggiungere carte
@@ -203,14 +217,14 @@ CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazz
 	counter = contaCarteCfu(mano); // Conto le carte inizialmente in mano
 
 	// Fin quando la mano è composta da 5 carte o meno
-	while (counter <= CARTE_PER_MANO){
+	while (counter < CARTE_PER_MANO){
 		// Se il mazzo delle carte è vuoto, lo rimescolo
 		if (*mazzoCfu == NULL){
 			*mazzoCfu = mescolaMazzo(mazzoScarti);
 		}
 
-		cartaCfu = indexEstraiCartaCfu(mazzoCfu, 0);    // Estraggo dal mazzo la prima carta
-		mano = cartaCfuInTesta(mano, cartaCfu);     // E la inserisco in coda alla mano
+		cartaCfu = estraiTesta(mazzoCfu); // Estraggo dal mazzo la prima carta
+		mano = cartaCfuInTesta(mano, cartaCfu); // E la inserisco in testa alla mano
 		counter++; // Incremento il contatore delle carte in mano
 	}
 	return mano;

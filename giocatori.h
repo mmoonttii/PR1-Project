@@ -1,7 +1,3 @@
-//
-// Created by Monti on 07/02/24.
-//
-
 #ifndef PR1_PROJECT_GIOCATORI_H
 #define PR1_PROJECT_GIOCATORI_H
 

@@ -24,7 +24,7 @@ void saveOnFile(char *saveName, FILE *fSave,
 		nCfu                    = 0;    // Numero di carte cfu da scrivere
 
 	rewind(fSave); // Mi assicuro di essere all'inizio del file di salvataggio
-	printf("Salvataggio su %s in corso...", saveName);
+	printf("\nSalvataggio su %s in corso...", saveName);
 
 	// Scrittura Giocatori
 	fwrite(nPlayers, sizeof(int), SAVES_UNIT, fSave);
@@ -45,7 +45,7 @@ void saveOnFile(char *saveName, FILE *fSave,
 	fwrite(&nOstacoli, sizeof(int), SAVES_UNIT, fSave);
 	writeOstacoliList(fSave, nOstacoli, mazzoOstacoli);
 
-	if (DBG) printf("\nDBG: save complete");
+	printf("\nSalvataggio completato\n");
 }
 
 /**
@@ -195,6 +195,7 @@ Player *readPlayersList(FILE *fSave, int nPlayers) {
 		}
 
 		// LEggo le carte della mano del giocatore
+		newPlayer->manoCarteCfu = NULL;
 		newPlayer->manoCarteCfu = readCfuList(fSave, CARTE_PER_MANO);
 
 		// Leggo il numero di carte ostacolo che ha il giocatore
@@ -264,7 +265,8 @@ CartaOstacolo *readOstacoliList(FILE *fSave, int n) {
 			exit(ERR_READ_SAVE_OSTACOLI);
 		}
 		// Aggiungo la carta alla lista da restituire
-		ostacoliList = ostacoloInTesta(newOstacolo, ostacoliList);
+		ostacoliList = ostacoloInTesta(ostacoliList, newOstacolo);
+		newOstacolo = NULL;
 	}
 	if (DBG) printf("\nDBG: read %d carteOstacolo", n);
 	return ostacoliList;

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.26)
 project(66424_montalto_lorenzo C)
 
 set(CMAKE_C_STANDARD 99)

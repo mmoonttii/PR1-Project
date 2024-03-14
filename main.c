@@ -23,10 +23,10 @@ int main() {
 		 *fLog  = NULL; // File di log
 
 	// Personaggi e giocatori
-	Character     charactersArr[N_PERSONAGGI] = {};   // Array dei personaggi
-	Player        *playerList                 = NULL, // Lista dei giocatori
-				  *pPlayer                    = NULL, // Puntatore al Player attuale
-				  *pLoser                     = NULL; // Puntatore al Player perdente
+	Character charactersArr[N_PERSONAGGI] = {};   // Array dei personaggi
+	Player    *playerList                 = NULL, // Lista dei giocatori
+			  *pPlayer                    = NULL, // Puntatore al Player attuale
+			  *pLoser                     = NULL; // Puntatore al Player perdente
 
 	// Carte
 	CartaCfu      *mazzoCfu      = NULL, // Lista mazzo pesca Carte Cfu
@@ -128,7 +128,6 @@ int main() {
 		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno, checkDOPPIOE);
 		printPunti(&turno, playerList, nPlayers);
 
-
 		winnersLosers(&turno, playerList, nPlayers);
 
 		printLosers(turno.losers);
@@ -158,8 +157,8 @@ int main() {
 				printf("\nRisoluzione spareggi");
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
-			// Assegno la carta ostacolo al giocatore perdente
-			ostacoloALoser(&turno, playerList, pLoser);
+			// Chiedo al perdente se vuole giocare una carta istantanea e gestisco la carta ostacolo
+			gestioneInstantPerdita(&turno, pLoser, playerList, &mazzoOstacoli, fLog);
 		}
 
 		// ==== FINE DEL TURNO ==========
@@ -178,7 +177,7 @@ int main() {
 			pPlayer = playerList;
 			// Distribuisco le carte a tutti i giocatori ancora in giuoco fino ad averne 5 in mano
 			for (int i = 0; i < nPlayers; ++i) {
-				distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
+				pPlayer->manoCarteCfu = distribuisciCarte(pPlayer->manoCarteCfu, &mazzoCfu, &mazzoScarti);
 				pPlayer = pPlayer->nextPlayer;
 			}
 		}

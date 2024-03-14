@@ -194,13 +194,20 @@ void loadGame(char *saveName, int *nPlayers,
               CartaOstacolo **mazzoOstacoli) {
 	FILE *fSave = NULL;
 	// Input nome salvataggio
-	printf("\nInserisci il nome del salvataggio che vuoi caricare\n"
-		   "(Non includere estensione .sav): ");
-	scanf(" %[^\n]31s", saveName);
-	strcat(saveName, SAVES_EXTENSION);
+	do {
+		printf("\nInserisci il nome del salvataggio che vuoi caricare\n"
+			   "(Non includere estensione .sav): ");
+		scanf(" %[^\n]31s", saveName);
+		strcat(saveName, SAVES_EXTENSION);
 
-	printf("\nCaricamento salvataggio esistente in corso");
-	fSave = openFile(saveName, BIN_READ);
+		printf("\nCaricamento salvataggio esistente in corso");
+		fSave = openFile(saveName, BIN_READ);
+
+		if (fSave == NULL) {
+			printf("C'è stato un errore nella lettura del file,\n"
+				   "Potresti aver inserito un nome errato, riprova\n");
+		}
+	} while (fSave == NULL);
 
 	// Caricamento salvataggio
 	loadSaveFromFile(saveName, fSave, nPlayers, playerList,

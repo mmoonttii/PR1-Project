@@ -1,7 +1,3 @@
-//
-// Created by Monti on 07/03/24.
-//
-
 #ifndef PR1_PROJECT_ISTANTANEE_H
 #define PR1_PROJECT_ISTANTANEE_H
 #include "general.h"
@@ -9,6 +5,8 @@
 #define ADDING 2
 #define ON 2
 #define OFF 1
+#define SI 1
+#define NO 0
 
 // ========== ISTANTANEE PUNTEGGIO =====================================================================================
 void gestioneInstantPunteggio(int nPlayers, Player *playerList,
@@ -33,12 +31,10 @@ void effettoDIMINUISCI(int nPlayers, Player *playerList,
 void effettoINVERTI(int nPlayers, Turno *turno);
 
 // ========== ISTANTANEE PERDITA =======================================================================================
-void gestioneInstantPerdita(int numTurno,
-							Player *pPlayer, Player *playerList,
-							CartaOstacolo **mazzoOstacoli, CartaOstacolo **pCartaOstacolo,
-							FILE *fLog);
+void
+gestioneInstantPerdita(Turno *turno, Player *pLoser, Player *playerList, CartaOstacolo **mazzoOstacoli, FILE *fLog);
 
-CartaCfu *giocaInstantPerdita(int numTurno, Player *pPlayer, FILE *fLog);
+CartaCfu *giocaInstantPerdita(Turno *turno, Player *pLoser, Player *playersList, FILE *fLog);
 
 bool isIstantaneaPerdita(CartaCfu *cartaCfu);
 
@@ -46,11 +42,8 @@ void risolviInstantPerdita(Player *playerList, CartaCfu *pCartaCfu,
 						   CartaOstacolo **mazzoOstacoli, CartaOstacolo **pCartaOstacolo);
 
 /* ---------- Effetti ----------------------------------------------------------------------------------------------- */
-void effettoSALVA(CartaCfu *pCartaCfu,
-                  CartaOstacolo **mazzoOstacoli, CartaOstacolo **pCartaOstacolo);
+void effettoSALVA(CartaOstacolo **mazzoOstacoli, CartaOstacolo *pCartaOstacolo);
 
-void effettoDIROTTA(Player *pPlayer, Player *playerList,
-					CartaCfu *pCartaCfu,
-					CartaOstacolo **pCartaOstacolo);
+void effettoDIROTTA(Player *pPlayer, Player *playerList, CartaOstacolo **pCartaOstacolo);
 
 #endif //PR1_PROJECT_ISTANTANEE_H

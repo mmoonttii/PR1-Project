@@ -1,6 +1,5 @@
 #include "general.h"
 
-
 // ============ UTILITIES =================================================
 /**
  * randRange() è la subroutine che restiuisce un numero pseudorandom intero compreso tra due interi

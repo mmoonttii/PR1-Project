@@ -19,7 +19,7 @@
 CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 					  CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti,
 					  bool rimescolaMano) {
-	CartaCfu *currMano    = *manoCarteCfu,      // Puntatore della lista delle carte in mano
+	CartaCfu *currMano    = NULL,      // Puntatore della lista delle carte in mano
 	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
 	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
 	int      choice       = 0;                  // Indice della carta scelta dal player
@@ -27,7 +27,9 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 	     tutteIstantanee  = true,               // Flag mano tutta di carte istantanee per rimescolare la mano
 		 giocabile        = true;               // Flag possibilità di scegliere carta
 
+
 	do {
+		currMano = *manoCarteCfu;
 		// Controllo che il giocatore possa giocare carte
 		tutteIstantanee = tutteIstantaneeCheck(currMano);
 
@@ -64,7 +66,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 			// giocatore
 			instant = isIstantanea(choosenCard);
 			if (instant) {
-				printf("\nLa carta scelta è una carta istantanea, scegline un'altra carta\n");
+				printf("\nLa carta scelta è una carta istantanea, scegline un'altra\n");
 			}
 		} while (instant);
 	} else {
@@ -125,6 +127,10 @@ void infoGiocatori(Player *listaGiocatori,
 	int count = 0,
 		input;
 
+	curr          = listaGiocatori;
+	choosenPlayer = listaGiocatori;
+
+
 	printf("\nDi quale giocatore vuoi avere informazioni?\n");
 
 	// Stampa dei giocatori dei quali si possono avere informazioni
@@ -161,9 +167,12 @@ void infoGiocatori(Player *listaGiocatori,
  */
 void calcolaPunteggio(Turno *turno, Player *playerList,
 					  int nPlayers, bool characters) {
-	Player *currPlayer = playerList;
-	CartaCfu *currCfu  = turno->carteGiocate;
+	Player *currPlayer = NULL;
+	CartaCfu *currCfu  = NULL;
 	int modifier       = 0;
+
+	currPlayer = playerList;
+	currCfu    = turno->carteGiocate;
 
 	// Alloco array di punti
 	if (turno->points == NULL) {
@@ -191,7 +200,8 @@ void calcolaPunteggio(Turno *turno, Player *playerList,
  * @param nPlayers int: numero di giocatroi
  */
 void printPunti(Turno *turno, Player *playerList, int nPlayers) {
-	Player *pPlayer = playerList; // puntatore al player attuale
+	Player *pPlayer = NULL; // puntatore al player attuale
+	pPlayer = playerList; // puntatore al player attuale
 
 	printf("\nPunti Cfu del turno %d\n", turno->numTurno);
 	// Ciclo sul numero di giocatori
@@ -246,12 +256,10 @@ void winnersLosers(Turno *turno, Player *playersList, int nPlayers) {
  */
 Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, CartaCfu **mazzoCfu, FILE *fLog) {
 	Turno spareggio = {}; // Struttura turno che identifica questo spareggio
-	Player *playerList  = NULL,
-		   *currPlayer  = NULL,
+	Player *currPlayer  = NULL,
 		   *pLoser      = NULL;
 	CartaCfu *currCarta = NULL;
-	bool tutteIstantanee,
-		 loser = false;
+	bool loser = false;
 
 	currPlayer = turno->losers;
 
@@ -263,10 +271,11 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 
 	currPlayer = turno->losers;
 	// Ciclo sui giocatori, per permettere di giocare le carte
-	while (!loser && currPlayer != NULL ) {
+	while (!loser && currPlayer != NULL) {
 		// Controllo che il giocatore abbia carte da giocare questo turno
 		currCarta = currPlayer->manoCarteCfu;
 		if (contaCarteCfu(currCarta) > 0 && !tutteIstantaneeCheck(currCarta)) {
+			printf("\n%s:\n", currPlayer->username);
 			giocaCarta(&spareggio, currPlayer, mazzoCfu, NULL, fLog, SPAREGGIO);
 			currPlayer = currPlayer->nextPlayer;
 		} else {
@@ -277,22 +286,23 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 		}
 	}
 
+	currPlayer = turno->losers;
 	// Se non c'è un perdente per mancanzza di carte in mano
 	if (!loser) {
 		// Calcolo punteggi
-		calcolaPunteggio(&spareggio, playerList, countLosers, SPAREGGIO);
-		printPunti(&spareggio, playerList, countLosers);
+		calcolaPunteggio(&spareggio, currPlayer, countLosers, SPAREGGIO);
+		printPunti(&spareggio, currPlayer, countLosers);
 
 		// Vincitori e perdenti
-		winnersLosers(&spareggio, playerList, countLosers);
+		winnersLosers(&spareggio, currPlayer, countLosers);
 		printLosers(spareggio.losers);
 	}
 
 	countLosers = contaLosers(&spareggio); // Conta i giocatori che hanno perso
 
 	// Se il giocatore perdente è solo uno, posso restituirlo come perdente
-	if (countLosers == 1) {
-		currPlayer = playerList;
+	if (countLosers == 1 || loser) {
+		currPlayer = turno->losers;
 		while (spareggio.losers != NULL) {
 			if (strcmp(spareggio.losers->username, currPlayer->username) == 0) {
 				pLoser = currPlayer;
@@ -405,6 +415,7 @@ void ostacoloALoser(Turno *turno, Player *playersList, Player *pLoser) {
 		}
 		playersList = playersList->nextPlayer;
 	}
+
 }
 // ============ CHIUSURA ===============================================================================================
 /**

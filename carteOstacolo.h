@@ -1,7 +1,3 @@
-//	getchar();
-// Created by Monti on 07/02/24.
-//
-
 #ifndef PR1_PROJECT_CARTEOSTACOLO_H
 #define PR1_PROJECT_CARTEOSTACOLO_H
 

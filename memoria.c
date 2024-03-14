@@ -1,6 +1,3 @@
-//
-// Created by Monti on 24/02/24.
-//
 #include "memoria.h"
 #include "carteOstacolo.h"
 #include "giocatori.h"

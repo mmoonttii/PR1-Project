@@ -1,7 +1,3 @@
-//
-// Created by Monti on 07/02/24.
-//
-
 #include "giocatori.h"
 #include "carteOstacolo.h"
 #include "memoria.h"
@@ -175,6 +171,7 @@ Player *initGiocatori(int nGiocatori, Character personaggi[],
 
 		// Inizializza la struttura con 0 cfu, mano di carte, carte ostacolo e prossimo gicatore a null
 		newPlayer->cfu                = 0; // Punteggio di partenza
+		newPlayer->manoCarteCfu       = NULL;
 		newPlayer->manoCarteCfu       = distribuisciCarte(newPlayer->manoCarteCfu, mazzoCfu, mazzoScarti); // Mano iniziale
 		newPlayer->listaCarteOstacolo = NULL;
 		newPlayer->nextPlayer         = NULL;

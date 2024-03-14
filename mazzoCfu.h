@@ -19,6 +19,8 @@ CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu);
 
 void cartaCfuInCoda(CartaCfu **mazzoCfu, CartaCfu *cartaCfu);
 
+CartaCfu *estraiTesta(CartaCfu **mazzoCfu);
+
 CartaCfu *distribuisciCarte(CartaCfu *mano, CartaCfu **mazzoCfu, CartaCfu **mazzoScarti);
 
 CartaCfu * scartaCarte(CartaCfu **daScartare, CartaCfu *mazzoScarti);

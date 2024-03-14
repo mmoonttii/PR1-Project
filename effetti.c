@@ -304,7 +304,8 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 					  int nPlayers, Player *playerList,
 					  CartaCfu *cartaPlayer,
 					  Turno *turno, bool arrRisolte[]) {
-	Player *playerScambio = NULL; // puntatore in cui salvare il giocatore con cui si effettua lo scambio
+	Player *playerScambio = NULL, // puntatore in cui salvare il giocatore con cui si effettua lo scambio
+		   *currPlayer    = NULL; // puntatore attuale della lisra
 
 	CartaCfu *currCarte    = NULL, // variabile ausiliaria per scorrere la lista delle carte giocate
 			 *pChoosenCard = NULL, // puntatore per salvare la carta scelta dal giocatore
@@ -317,6 +318,7 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 		noScambio = 0; // Countere carte non scambiabili
 
 	currCarte = turno->carteGiocate; // Assegno la lista delle carte giocate
+	currPlayer = playerList;
 	i = 0;
 
 	printf("\nCarte giocate questo turno: ");
@@ -334,6 +336,7 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 		}
 		i++;
 		currCarte  = currCarte->next;
+		currPlayer = currPlayer->nextPlayer;
 	}
 
 
@@ -469,6 +472,7 @@ CartaCfu *discard(Player *pPlayer) {
 		currCarte = currCarte->next; // Next carta
 	}
 
+	currCarte = pPlayer->manoCarteCfu;
 	// Se non si hanno carte scartabili, lascio la subroutine
 	if (nonScartabile == count){
 		printf("Nessuna carta scartabile in questo turno!\n");
@@ -497,11 +501,10 @@ CartaCfu *discard(Player *pPlayer) {
 /**
  * effettoSCARTAC() subroutine per l'effetto SCARTAC:\n
  * 	Scarta da uno a tre carte dalla tua mano
- * @param pPlayer Player *:
- * @param mazzoScarti CartaCfu **:
+ * @param pPlayer Player *: giocatore che scarta le carte
+ * @param mazzoScarti CartaCfu **: mazzo degli scarti
  */
 void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
-	//variabili per contare il numero di carte, quante sono state scartate e la scelta della carta
 	int numDiscarded = 0, // Carte scartate
 	    choice       = 0, // Scelta
 		countCarte;
@@ -512,16 +515,19 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 			 *discardedCarta = NULL; // Carta scartata
 
 	currCarte = pPlayer->manoCarteCfu;
+
 	countCarte = contaCarteCfu(currCarte);
 	if (countCarte == 0) {
 		printf("Non puoi scartare carte\n");
+		leave = true;
 	}
 
 	do {
 		currCarte = pPlayer->manoCarteCfu; // Init currCarte alla mano
+		countCarte = contaCarteCfu(currCarte);
 
 		// Stampo carte della mano
-		for (int j = 1; j < countCarte; ++j) {
+		for (int j = 1; j <= countCarte; ++j) {
 			printf("[%d] ", j);
 			printSingleCartaCfu(currCarte);
 			currCarte = currCarte->next; // Next carta
@@ -530,18 +536,18 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 
 		currCarte = pPlayer->manoCarteCfu; // Init currCarte alla mano
 		choice = acquisisciInputInt(0, countCarte);
-		choice--; // Decremento choice perchè j è iniziato da 1
 
-		if (choice == -1) { // Se non si vogliono scartare carte
+		if (choice == 0) { // Se non si vogliono scartare carte
 			printf("Non scarti altre carte\n");
 			leave = true; // Lascio il ciclo
 		} else {
+			choice--;
 			discardedCarta = indexEstraiCartaCfu(&currCarte, choice); // Estraggo la carta choice-esima
 			*mazzoScarti = cartaCfuInTesta(*mazzoScarti, discardedCarta); // Aggiungo al mazzo scarti
 			numDiscarded++; // Incremento contatore carte scartate
 		}
-
-		if (numDiscarded == MAX_SCARTABILI){ // Se è stato raggiunto il massimo di carte scartate
+		// Se è stato raggiunto il numero massimo di carte scartabili o il numero di carte in mano
+		if (numDiscarded == MAX_SCARTABILI || numDiscarded == countCarte){
 			printf("Hai scartato il massimo numero di carte\n");
 			leave = true; // Lascio il ciclo
 		}
@@ -610,8 +616,8 @@ void effettoSBIRCIA(CartaCfu **mazzoCfu, Player *pPlayer, CartaCfu **mazzoScarti
 		*mazzoCfu = mescolaMazzo(mazzoScarti);
 	}
 	// Estraggo una lista delle prime due carte
-	carteSbirciate = indexEstraiCartaCfu(mazzoCfu, 0);
-	carteSbirciate->next = indexEstraiCartaCfu(mazzoCfu, 0);
+	carteSbirciate = estraiTesta(mazzoCfu);
+	carteSbirciate->next = estraiTesta(mazzoCfu);
 
 	currCartaCfu = carteSbirciate;
 	printf("%s sta sbirciando nel mazzo:\n", pPlayer->username);
