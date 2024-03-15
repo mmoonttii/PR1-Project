@@ -9,9 +9,8 @@
 #define NO 0
 
 // ========== ISTANTANEE PUNTEGGIO =====================================================================================
-void gestioneInstantPunteggio(int nPlayers, Player *playerList,
-							  FILE *fLog, Turno *turno,
-							  bool checkDOPPIOE);
+void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno, bool checkDOPPIOE,
+                              CartaCfu **mazzoScarti);
 
 CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno);
 
@@ -32,7 +31,8 @@ void effettoINVERTI(int nPlayers, Turno *turno);
 
 // ========== ISTANTANEE PERDITA =======================================================================================
 void
-gestioneInstantPerdita(Turno *turno, Player *pLoser, Player *playerList, CartaOstacolo **mazzoOstacoli, FILE *fLog);
+gestioneInstantPerdita(Turno *turno, Player *pLoser, Player *playerList, CartaOstacolo **mazzoOstacoli, FILE *fLog,
+                       CartaCfu **mazzoScarti);
 
 CartaCfu *giocaInstantPerdita(Turno *turno, Player *pLoser, Player *playersList, FILE *fLog);
 

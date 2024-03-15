@@ -136,23 +136,26 @@ CartaCfu *indexEstraiCartaCfu(CartaCfu **mazzoCfu, int index) {
  * @return CartaCfu *: carta estratta
  */
 CartaCfu *estraiCartaCfu(CartaCfu **mazzoCfu, CartaCfu *cartaCfu) {
-	CartaCfu *curr      = *mazzoCfu,
-			 *prev      = *mazzoCfu,
+	CartaCfu *curr      = NULL,
+			 *prev      = NULL,
 			 *extracted = NULL;
 
 	bool leave = false;
+
+	curr = *mazzoCfu;
+	prev = *mazzoCfu;
 
 	while (!leave) {
 		// Se la testa del mazzo è la carta richiesta, posso estrarla
 		if (*mazzoCfu == cartaCfu) {
 			extracted = *mazzoCfu;
-			*mazzoCfu  = (*mazzoCfu)->next;
+			*mazzoCfu = (*mazzoCfu)->next;
 			extracted->next = NULL;
 			leave = true;
 		// Se prev.next è la carta richiesta posso estrarla
 		} else if (prev->next == cartaCfu) {
 			extracted       = prev->next;
-			prev->next      = extracted->next;
+			prev->next      = prev->next->next;
 			extracted->next = NULL;
 			leave = true;
 		// Altrimenti passo alla prossima carta
@@ -290,9 +293,8 @@ void printSingleCartaCfu(CartaCfu *pCfu) {
  * @param listaCarteCfu CartaCfu *: lista di carte da stampare
  */
 void printMano(CartaCfu *listaCarteCfu) {
-	CartaCfu *curr       = listaCarteCfu;
-	bool tutteIstantanee = true;
-	int i                = 0;
+	CartaCfu *curr = listaCarteCfu;
+	int i          = 0;
 
 	printf("\n==== CARTE CFU ====\n");
 	// Finchè la condizione di stop è rispettata

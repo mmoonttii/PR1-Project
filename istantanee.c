@@ -13,15 +13,12 @@
  * @param turno Turno *: struttura Turno
  * @param checkDOPPIOE bool: indicatore di attivazione effetto checkDOPPIOE
  */
-void gestioneInstantPunteggio(int nPlayers, Player *playerList,
-							  FILE *fLog, Turno *turno,
-							  bool checkDOPPIOE) {
+void gestioneInstantPunteggio(int nPlayers, Player *playerList, FILE *fLog, Turno *turno, bool checkDOPPIOE,
+                              CartaCfu **mazzoScarti) {
 	int choice           = 0;
 	Player *currPlayer   = NULL;
 	CartaCfu *playedCard = NULL;
 	bool stop = false;
-
-	currPlayer = playerList;
 
 	// Ciclo in azione fino a quando non viene fermato da una scelta dell'utente
 	while (!stop) {
@@ -52,6 +49,7 @@ void gestioneInstantPunteggio(int nPlayers, Player *playerList,
 			// Se la scelta della carta punteggio è andata a buon fine posso risolverne l'effetto
 			if (playedCard != NULL) {
 				risolviInstantPunteggio(nPlayers, playerList, playedCard, turno, checkDOPPIOE);
+				*mazzoScarti = cartaCfuInTesta(*mazzoScarti, playedCard);
 			}
 		}
 	}
@@ -70,7 +68,8 @@ CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno) {
 	int      cardCount    = 0,
 	         choice       = 0;
 	bool     atLeastOneInstant = false,
-	         instantCheck      = false;
+	         instantCheck      = false,
+			 leave             = true;
 
 	currCarte = pPlayer->manoCarteCfu;
 
@@ -86,7 +85,7 @@ CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno) {
 	if (atLeastOneInstant) {
 		cardCount = contaCarteCfu(pPlayer->manoCarteCfu);
 		// Stampo le carte della mano
-		for (int i = 0; i < cardCount; ++i) {
+		for (int i = 1; i <= cardCount; ++i) {
 			printf("[%d] ", i);
 			printSingleCartaCfu(currCarte);
 			if (isIstantaneaPunteggio(currCarte)) {
@@ -94,25 +93,30 @@ CartaCfu *giocaInstantPunteggio(Player *pPlayer, FILE *fLog, int numTurno) {
 			}
 			currCarte = currCarte->next;
 		}
-
+		printf("\n[0] Non giocare nessuna carta\n");
 		// Acquisisco scelta dell'utente
 		do {
-			choice    = acquisisciInputInt(0, cardCount);
-			currCarte = pPlayer->manoCarteCfu;
+			leave = true;
+			choice = acquisisciInputInt(0, cardCount);
+			if (choice == 0) {
+				printf("Non giochi nessuna carta\n");
+			} else {
+				choice--;
+				currCarte = pPlayer->manoCarteCfu;
 
-			// Identifico la carta scelta dal giocatore
-			choosenCard = findCartaCfu(currCarte, choice);
-			instantCheck = isIstantaneaPunteggio(choosenCard);
-
-			// Lascio il loop solo se la carta selezionata è ammissibile in questa fase
-			if (!instantCheck) {
-				printf("\nHai selezionato una carta che non è istantanea, riprova");
+				// Identifico la carta scelta dal giocatore
+				choosenCard  = findCartaCfu(currCarte, choice);
+				instantCheck = isIstantaneaPunteggio(choosenCard);
+				// Lascio il loop solo se la carta selezionata è ammissibile in questa fase
+				if (!instantCheck) {
+					printf("\nHai selezionato una carta che non è istantanea, riprova");
+					leave = false;
+				}
 			}
-
-		} while (!instantCheck);
+		} while (!leave);
 
 		// Una volta lasciato il loop posso estrarre la carta e stampare sul log
-		choosenCard = estraiCartaCfu(&currCarte, choosenCard);
+		choosenCard = estraiCartaCfu(&pPlayer->manoCarteCfu, choosenCard);
 		logPrintLn(fLog, numTurno, pPlayer->username, choosenCard->name);
 	} else {
 		// Se non si hanno carte istantanee
@@ -253,13 +257,10 @@ void effettoINVERTI(int nPlayers, Turno *turno) {
  * @param pLoser Player *: puntatore al giocatore attuale
  * @param playerList Player *: lista di fiocatori
  * @param mazzoOstacoli CartaOstacolo **: mazzo degli ostacoli
- * @param pCartaOstacolo CartaOstacolo **: puntatore alla carta ostacolo che ha fatto perdere il giocatore
  * @param fLog FILE *: puntatore al file di log
  */
-void gestioneInstantPerdita(Turno *turno,
-							Player *pLoser, Player *playerList,
-							CartaOstacolo **mazzoOstacoli,
-							FILE *fLog) {
+void gestioneInstantPerdita(Turno *turno, Player *pLoser, Player *playerList, CartaOstacolo **mazzoOstacoli, FILE *fLog,
+                            CartaCfu **mazzoScarti) {
 	int choice;
 	CartaCfu *choosenCard = NULL,
 			 *currCarte = NULL;
@@ -284,10 +285,10 @@ void gestioneInstantPerdita(Turno *turno,
 
 		// Svolgo l'azione richiesta
 		switch (choice) {
-			case NO:
+			case SI:
 				choosenCard = giocaInstantPerdita(turno, pLoser, playerList, fLog);
 				break;
-			case SI:
+			case NO:
 				choosenCard = NULL;
 				break;
 		}
@@ -298,7 +299,9 @@ void gestioneInstantPerdita(Turno *turno,
 
 	if (choosenCard != NULL) {
 		risolviInstantPerdita(playerList, choosenCard, mazzoOstacoli, &(turno->cartaOstacolo));
+		*mazzoScarti = cartaCfuInTesta(*mazzoScarti, choosenCard);
 	} else {
+		printf("\nStai prendendo la carta ostacolo\n");
 		ostacoloALoser(turno, playerList, pLoser);
 	}
 
@@ -352,7 +355,7 @@ CartaCfu *giocaInstantPerdita(Turno *turno, Player *pLoser, Player *playersList,
 	} while (!instantCheck);
 
 	// Scelta una carta, la estraggo dalla mano e la restituisco
-	choosenCard = estraiCartaCfu(&currCarte, choosenCard);
+	choosenCard = estraiCartaCfu(&pPlayer->manoCarteCfu, choosenCard);
 	logPrintLn(fLog, turno->numTurno, pPlayer->username, choosenCard->name);
 
 	return choosenCard;

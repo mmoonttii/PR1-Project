@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: 66424_montalto_lorenzo
+# Project: PR1-Project
 # Configurations: Debug
 # =============================================================================
 
@@ -39,104 +39,127 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /Users/monti/Projects/66424_montalto_lorenzo/cmake-build-debug/
+cmake_ninja_workdir = /Users/monti/Projects/PR1-Project/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target 66424_montalto_lorenzo
+# Object build statements for EXECUTABLE target PR1-Project
 
 
 #############################################
-# Order-only phony target for 66424_montalto_lorenzo
+# Order-only phony target for PR1-Project
 
-build cmake_object_order_depends_target_66424_montalto_lorenzo: phony || CMakeFiles/66424_montalto_lorenzo.dir
+build cmake_object_order_depends_target_PR1-Project: phony || CMakeFiles/PR1-Project.dir
 
-build CMakeFiles/66424_montalto_lorenzo.dir/main.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/main.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/main.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/main.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/main.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/main.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/general.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/general.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/general.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/general.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/general.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/general.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/carteOstacolo.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/carteOstacolo.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/carteOstacolo.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/carteOstacolo.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/carteOstacolo.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/carteOstacolo.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/giocatori.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/giocatori.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/giocatori.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/giocatori.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/giocatori.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/giocatori.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/turno.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/turno.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/turno.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/turno.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/turno.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/turno.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/memoria.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/memoria.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/memoria.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/memoria.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/memoria.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/memoria.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/mazzoCfu.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/mazzoCfu.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/mazzoCfu.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/mazzoCfu.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/mazzoCfu.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/mazzoCfu.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/effetti.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/effetti.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/effetti.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/effetti.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/saves.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/saves.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/saves.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/saves.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/starting.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/starting.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/starting.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/starting.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/starting.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/starting.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
-build CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o: C_COMPILER__66424_montalto_lorenzo_unscanned_Debug /Users/monti/Projects/66424_montalto_lorenzo/istantanee.c || cmake_object_order_depends_target_66424_montalto_lorenzo
-  DEP_FILE = CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o.d
-  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
-  OBJECT_FILE_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build CMakeFiles/PR1-Project.dir/istantanee.c.o: C_COMPILER__PR1-Project_unscanned_Debug /Users/monti/Projects/PR1-Project/istantanee.c || cmake_object_order_depends_target_PR1-Project
+  DEP_FILE = CMakeFiles/PR1-Project.dir/istantanee.c.o.d
+  FLAGS = -g -std=gnu99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/PR1-Project.dir
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_PDB = PR1-Project.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target 66424_montalto_lorenzo
+# Link build statements for EXECUTABLE target PR1-Project
 
 
 #############################################
-# Link the executable 66424_montalto_lorenzo
+# Link the executable PR1-Project
 
-build 66424_montalto_lorenzo: C_EXECUTABLE_LINKER__66424_montalto_lorenzo_Debug CMakeFiles/66424_montalto_lorenzo.dir/main.c.o CMakeFiles/66424_montalto_lorenzo.dir/general.c.o CMakeFiles/66424_montalto_lorenzo.dir/carteOstacolo.c.o CMakeFiles/66424_montalto_lorenzo.dir/giocatori.c.o CMakeFiles/66424_montalto_lorenzo.dir/turno.c.o CMakeFiles/66424_montalto_lorenzo.dir/memoria.c.o CMakeFiles/66424_montalto_lorenzo.dir/mazzoCfu.c.o CMakeFiles/66424_montalto_lorenzo.dir/effetti.c.o CMakeFiles/66424_montalto_lorenzo.dir/saves.c.o CMakeFiles/66424_montalto_lorenzo.dir/starting.c.o CMakeFiles/66424_montalto_lorenzo.dir/istantanee.c.o
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2
-  OBJECT_DIR = CMakeFiles/66424_montalto_lorenzo.dir
+build PR1-Project: C_EXECUTABLE_LINKER__PR1-Project_Debug CMakeFiles/PR1-Project.dir/main.c.o CMakeFiles/PR1-Project.dir/general.c.o CMakeFiles/PR1-Project.dir/carteOstacolo.c.o CMakeFiles/PR1-Project.dir/giocatori.c.o CMakeFiles/PR1-Project.dir/turno.c.o CMakeFiles/PR1-Project.dir/memoria.c.o CMakeFiles/PR1-Project.dir/mazzoCfu.c.o CMakeFiles/PR1-Project.dir/effetti.c.o CMakeFiles/PR1-Project.dir/saves.c.o CMakeFiles/PR1-Project.dir/starting.c.o CMakeFiles/PR1-Project.dir/istantanee.c.o
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk
+  OBJECT_DIR = CMakeFiles/PR1-Project.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = 66424_montalto_lorenzo
-  TARGET_PDB = 66424_montalto_lorenzo.dbg
+  TARGET_COMPILE_PDB = CMakeFiles/PR1-Project.dir/
+  TARGET_FILE = PR1-Project
+  TARGET_PDB = PR1-Project.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/monti/Projects/66424_montalto_lorenzo/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /Users/monti/Projects/PR1-Project/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -147,7 +170,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/monti/Projects/66424_montalto_lorenzo/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake --regenerate-during-build -S/Users/monti/Projects/66424_montalto_lorenzo -B/Users/monti/Projects/66424_montalto_lorenzo/cmake-build-debug
+  COMMAND = cd /Users/monti/Projects/PR1-Project/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake --regenerate-during-build -S/Users/monti/Projects/PR1-Project -B/Users/monti/Projects/PR1-Project/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -163,9 +186,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /Users/monti/Projects/66424_montalto_lorenzo/cmake-build-debug
+# Folder: /Users/monti/Projects/PR1-Project/cmake-build-debug
 
-build all: phony 66424_montalto_lorenzo
+build all: phony PR1-Project
 
 # =============================================================================
 # Built-in targets
@@ -174,14 +197,14 @@ build all: phony 66424_montalto_lorenzo
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /Users/monti/Projects/66424_montalto_lorenzo/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCCompilerABI.c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCompilerIdDetection.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompileFeatures.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeFindBinUtils.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseImplicitIncludeInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseImplicitLinkInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseLibraryArchitecture.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystem.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeTestCompilerCommon.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ADSP-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ARMCC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ARMClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Borland-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Cray-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GHS-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/HP-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IAR-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Intel-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/LCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/MSVC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/NVHPC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/PGI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/PathScale-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SCO-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/TI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Tasking-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Watcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/XL-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/zOS-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Internal/FeatureTesting.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /Users/monti/Projects/PR1-Project/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /Users/monti/Projects/66424_montalto_lorenzo/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCCompiler.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCCompilerABI.c /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeCompilerIdDetection.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompileFeatures.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeFindBinUtils.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseImplicitIncludeInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseImplicitLinkInfo.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeParseLibraryArchitecture.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystem.cmake.in /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeTestCompilerCommon.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ADSP-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ARMCC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/ARMClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/AppleClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Borland-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Cray-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GHS-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/HP-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IAR-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Intel-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/LCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/MSVC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/NVHPC-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/PGI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/PathScale-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SCO-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/TI-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Tasking-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/Watcom-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/XL-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Compiler/zOS-C-DetermineCompiler.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Internal/FeatureTesting.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /Users/monti/Projects/PR1-Project/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
 
 
 #############################################

@@ -39,7 +39,7 @@ void gestioneEffetti(int nPlayers, Player *playerList,
 	CartaCfu *currCarta = NULL;     // Puntatore alla carta corrente
 
 	arrRisolte = allocaArrBool(nPlayers); // Alloco l'array di controllo risoluzione carte
-	currPlayer = playerList;    // Init di currPlayer a playerList
+	currPlayer = playerList; // Init di currPlayer alla lista
 
 	// Per ogni giocatore
 	for (int j = 0; j < nPlayers; ++j) {
@@ -56,7 +56,6 @@ void gestioneEffetti(int nPlayers, Player *playerList,
 
 		currCarta  = turno->carteGiocate;
 		currPlayer = playerList;
-
 		// Trovati i cfu massimi, trovo quale carta, non ancora risolta ha questi cfu
 		for (int i = 0; i < nPlayers; ++i) {
 			if (!arrRisolte[i] && currCarta->cfu == cfuMax) {
@@ -311,7 +310,6 @@ void effettoSCAMBIADS(int iPlayer, Player *pPlayer,
 			 *pChoosenCard = NULL, // puntatore per salvare la carta scelta dal giocatore
 			 choosenCardAux,
 			 cartaPlayerAux;
-	bool check;
 
 	int i         = 0, // Counter cicli
 		choice    = 0, // Indice carta scelta
@@ -436,7 +434,8 @@ void effettoSCARTAE(int iPlayer, Player *pPlayer,
 	if (nonGiocabile != nCarte && !canPlay) {   // Se si ha almeno una carta giocabile
 		discardedCarta = discard(pPlayer);      // Posso selezionare una carta da scartare
 		turno->points[iPlayer] += discardedCarta->cfu;  // Aumento i punti della carta scartata
-		cartaCfuInCoda(mazzoScarti, discardedCarta); // Aggiungo la carta in coda al manzo scarti
+		// Aggiungi carta al manzo scarti
+		*mazzoScarti = cartaCfuInTesta(*mazzoScarti, discardedCarta);
 	} else {    // Altrimenti esco dalla subroutine
 		printf("Non puoi scartare nessuna carta\n");
 	}
@@ -449,8 +448,7 @@ void effettoSCARTAE(int iPlayer, Player *pPlayer,
  */
 CartaCfu *discard(Player *pPlayer) {
 	CartaCfu *currCarte   = NULL, // Carta corrente della lista
-			 *choosenCard = NULL, // Carta scelta da scartare
-			 *prev        = NULL; // Carta precedente
+			 *choosenCard = NULL; // Carta scelta da scartare
 
 	int choice        = 0, // Indice carta scelta
 		count         = 0, // Indice di ogni carta
@@ -492,7 +490,7 @@ CartaCfu *discard(Player *pPlayer) {
 		} while (currCarte->effect == NESSUNO || currCarte->cfu == 0);
 
 		// Trovata una carta ammissibile la posso estrarre
-		choosenCard = estraiCartaCfu(&(pPlayer->manoCarteCfu), choosenCard);
+		choosenCard = estraiCartaCfu(&pPlayer->manoCarteCfu, currCarte);
 	}
 	return choosenCard; // Ritorno carta selezionata
 }
@@ -533,8 +531,6 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 			currCarte = currCarte->next; // Next carta
 		}
 		printf("[0] Non scartare altre carte\n");
-
-		currCarte = pPlayer->manoCarteCfu; // Init currCarte alla mano
 		choice = acquisisciInputInt(0, countCarte);
 
 		if (choice == 0) { // Se non si vogliono scartare carte
@@ -542,13 +538,12 @@ void effettoSCARTAC(Player *pPlayer, CartaCfu **mazzoScarti) {
 			leave = true; // Lascio il ciclo
 		} else {
 			choice--;
-			discardedCarta = indexEstraiCartaCfu(&currCarte, choice); // Estraggo la carta choice-esima
+			discardedCarta = indexEstraiCartaCfu(&(pPlayer->manoCarteCfu), choice); // Estraggo la carta choice-esima
 			*mazzoScarti = cartaCfuInTesta(*mazzoScarti, discardedCarta); // Aggiungo al mazzo scarti
 			numDiscarded++; // Incremento contatore carte scartate
 		}
 		// Se è stato raggiunto il numero massimo di carte scartabili o il numero di carte in mano
 		if (numDiscarded == MAX_SCARTABILI || numDiscarded == countCarte){
-			printf("Hai scartato il massimo numero di carte\n");
 			leave = true; // Lascio il ciclo
 		}
 	} while (!leave); // Continuo se leave è false
@@ -674,15 +669,13 @@ void effettoSCAMBIAC(int nPlayers, Player *playerList,
 	         cartaCfu1,
 	         cartaCfu2;
 
-	Player *currPlayer = playerList,
-		   // Puntatori a giocatori scelti
+	Player // Puntatori a giocatori scelti
 		   *pPlayer1   = NULL,
 		   *pPlayer2   = NULL;
 
 	bool check = false; // bool di controllo
 
-	int i             = 1, // Index cicli
-		choicePlayer1 = 0, // Index carta giocatore 1
+	int choicePlayer1 = 0, // Index carta giocatore 1
 		choicePlayer2 = 0; // Index carta giocatore 2
 
 	// Ciclo per stampare le carte giocate

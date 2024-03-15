@@ -57,7 +57,7 @@ void enterClear() {
  */
 void minMax(int arr[], int size, int *min, int *max) {
 	// Inizializzo minimo e massimo ai limiti di sistems
-	*min = INT_MAX,
+	*min = INT_MAX;
 	*max = INT_MIN;
 
 	// Ciclo sull'array

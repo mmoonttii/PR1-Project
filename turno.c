@@ -20,8 +20,7 @@ CartaCfu *chooseCarta(CartaCfu **manoCarteCfu,
 					  CartaCfu **mazzoCarteCfu, CartaCfu **mazzoScarti,
 					  bool rimescolaMano) {
 	CartaCfu *currMano    = NULL,      // Puntatore della lista delle carte in mano
-	         *choosenCard = NULL,               // Pointer alla carta giocata in questo turno
-	         *prev        = NULL;               // Pointer alla carta precedente quella giocata
+	         *choosenCard = NULL;               // Pointer alla carta giocata in questo turno
 	int      choice       = 0;                  // Indice della carta scelta dal player
 	bool instant,                               // Flag carta istantanea per chiedere una carta diversa
 	     tutteIstantanee  = true,               // Flag mano tutta di carte istantanee per rimescolare la mano
@@ -301,7 +300,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 	countLosers = contaLosers(&spareggio); // Conta i giocatori che hanno perso
 
 	// Se il giocatore perdente è solo uno, posso restituirlo come perdente
-	if (countLosers == 1 || loser) {
+	if (countLosers <= 1 || loser) {
 		currPlayer = turno->losers;
 		while (spareggio.losers != NULL) {
 			if (strcmp(spareggio.losers->username, currPlayer->username) == 0) {
@@ -314,7 +313,7 @@ Player *gestisciSpareggi(int countLosers, Turno *turno, CartaCfu **mazzoScarti, 
 		printf("\nRisoluzione spareggi");
 		pLoser = gestisciSpareggi(countLosers, &spareggio, mazzoScarti, mazzoCfu, fLog);
 	}
-
+	freeIntArr(spareggio.points);
 	return pLoser;
 }
 
@@ -388,7 +387,6 @@ int contaLosers(Turno *turno) {
  */
 void puntiCarteOstacolo (Player *playerList) {
 	Player        *currPlayer   = playerList; // Testa della lista giocatori
-	CartaOstacolo *currOstacoli = NULL;       // Testa della lista di ostacoli di ogni giocatore
 	int countOstacoli           = 0;          // Contatore di ostacoli per ogni giocatore
 
 	while (currPlayer != NULL) {    // Per ogni giocatore

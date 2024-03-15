@@ -181,7 +181,6 @@ void initNewGame(Character charactersArr[],
  * 	- carica i giocatori con personaggi, carte in mano e ostacoli\n
  * 	- carica i mazzi di carte\n
  * @param saveName string[31 + 4 + 1]: nome del salvataggio + estensione '.sav' + '/0'
- * @param fSave FILE *: puntatore al file da cui bisogna caricare
  * @param nPlayers int *: puntatore al numero di giocatori nella partita
  * @param playerList Player **: doppio puntatore alla testa della lista di giocatori in partita
  * @param mazzoCfu CartaCfu **: doppio puntatore alla testa del mazzo delle carte Cfu

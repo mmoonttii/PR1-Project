@@ -160,7 +160,7 @@ void printOstacoli(CartaOstacolo *listaOstacoli){
 /**
  * contaOstacoli() conta il numero di nodi CartaOstacolo in una lista
  * @param listaOstacoli CartaOstacolo *: lista da contare
- * @return
+ * @return int: numero di carte ostacolo nel mazzo
  */
 int contaOstacoli(CartaOstacolo *listaOstacoli) {
 	CartaOstacolo *curr = listaOstacoli; // Nodo corrente dell lista

@@ -64,6 +64,8 @@ int main() {
 
 	while (endGame != true) {
 		// Salvataggio partita
+		printf("\n========== TURNO %d ==========\n", turno.numTurno);
+
 		fSave = openFile(saveName, BIN_WRITE);
 		saveOnFile(saveName, fSave, &nPlayers, playerList,
 		           mazzoCfu, mazzoScarti,
@@ -71,7 +73,6 @@ int main() {
 		fclose(fSave);
 
 		pPlayer = playerList;
-		printf("\n========== TURNO %d ==========\n", turno.numTurno);
 
 		// Pesca e stampa della carta del turno
 		turno.cartaOstacolo = pescaCartaOstacolo(&mazzoOstacoli);
@@ -125,7 +126,7 @@ int main() {
 		gestioneEffetti(nPlayers, playerList, &mazzoCfu, &mazzoScarti, &turno, &checkDOPPIOE);
 		printPunti(&turno, playerList, nPlayers);
 
-		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno, checkDOPPIOE);
+		gestioneInstantPunteggio(nPlayers, playerList, fLog, &turno, checkDOPPIOE, &mazzoScarti);
 		printPunti(&turno, playerList, nPlayers);
 
 		winnersLosers(&turno, playerList, nPlayers);
@@ -158,7 +159,7 @@ int main() {
 				pLoser = gestisciSpareggi(losersCount, &turno, &mazzoScarti, &mazzoCfu, fLog);
 			}
 			// Chiedo al perdente se vuole giocare una carta istantanea e gestisco la carta ostacolo
-			gestioneInstantPerdita(&turno, pLoser, playerList, &mazzoOstacoli, fLog);
+			gestioneInstantPerdita(&turno, pLoser, playerList, &mazzoOstacoli, fLog, &mazzoScarti);
 		}
 
 		// ==== FINE DEL TURNO ==========

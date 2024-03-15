@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.26)
-project(66424_montalto_lorenzo C)
+cmake_minimum_required(VERSION 3.27)
+project(PR1-Project C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(66424_montalto_lorenzo
+add_executable(PR1-Project
 		main.c
 		general.c
 		general.h
